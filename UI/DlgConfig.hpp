@@ -26,10 +26,12 @@ class DlgConfig: public QDialog
 typedef enum {
     COLUMN_NAME,
     COLUMN_LONG_NAME,
-    COLUMN_TYPE,
     COLUMN_IP_ADDRESS,
     COLUMN_NETWORK_MASK,
     COLUMN_HARDWARE_ADDRESS
 } COLUMN_TITLES;
+
+// Add some extra space in the columns to make the view more clear
+#define COLUMN_EXTRA_SIZE 30
 
 #endif // DLGCONFIG_HPP
