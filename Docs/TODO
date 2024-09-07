@@ -1,0 +1,2 @@
+- DlgConfig: add a refresh button for the interface list
+- DlgConfig: offer to exclude loopback interface
