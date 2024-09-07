@@ -41,6 +41,9 @@ DlgConfig::DlgConfig(QWidget* parent)
         ui->TableInterfaces->horizontalHeader()->resizeSection(i, ui->TableInterfaces->horizontalHeader()->sectionSize(i) + COLUMN_EXTRA_SIZE);
     }
 
+    // Finally, adjust the size to fit the content
+    adjustSize();
+
     // Connections
     connect(ui->CheckShowOnlyIPv4, &QCheckBox::checkStateChanged, this, [this]() { refreshInterfaces(); });
     connect(ui->CheckShowOnlyAvailable, &QCheckBox::checkStateChanged, this, [this]() { refreshInterfaces(); });
@@ -107,7 +110,6 @@ void DlgConfig::refreshInterfaces()
         // Interface properties
         // Default: IP and Network Mask are from the first entry of the list, regardeless of the protocol
         // The IPv4 IP and Network Mask will be retrieved right after and used if available
-        QString      Name            = Interface.name();
         QString      LongName        = Interface.humanReadableName();
         QHostAddress IPaddress       = Interface.addressEntries().at(0).ip();
         QHostAddress NetworkMask     = Interface.addressEntries().at(0).netmask();
@@ -124,7 +126,6 @@ void DlgConfig::refreshInterfaces()
         }
 
         // Create graphical items
-        QTableWidgetItem* ItemName            = new QTableWidgetItem(Name);
         QTableWidgetItem* ItemLongName        = new QTableWidgetItem(LongName);
         QTableWidgetItem* ItemIPaddress       = new QTableWidgetItem(IPaddress.toString());
         QTableWidgetItem* ItemNetworkMask     = new QTableWidgetItem(NetworkMask.toString());
@@ -134,7 +135,6 @@ void DlgConfig::refreshInterfaces()
         int NewRowIndex = ui->TableInterfaces->rowCount();
         ui->TableInterfaces->setRowCount(NewRowIndex + 1);
 
-        ui->TableInterfaces->setItem(NewRowIndex, COLUMN_NAME, ItemName);
         ui->TableInterfaces->setItem(NewRowIndex, COLUMN_LONG_NAME, ItemLongName);
         ui->TableInterfaces->setItem(NewRowIndex, COLUMN_IP_ADDRESS, ItemIPaddress);
         ui->TableInterfaces->setItem(NewRowIndex, COLUMN_NETWORK_MASK, ItemNetworkMask);

@@ -21,17 +21,28 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(Folco
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
+
         Global.hpp
 
+        # Ressources
         Ressources/Icons.qrc
 
+        # UI
         UI/TrayIcon.hpp
         UI/TrayIcon.cpp
         UI/DlgConfig.hpp
         UI/DlgConfig.cpp
         UI/DlgConfig.ui
+
+        # Data
+        Configuration/IFCfg.hpp
+        Configuration/IFCfg.cpp
+        Configuration/IFCfgList.hpp
+        Configuration/IFCfgList.cpp
+
+        # Docs
         Docs/TODO
-    )
+)
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET Folco APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
 #                 ${CMAKE_CURRENT_SOURCE_DIR}/android)

@@ -24,7 +24,6 @@ class DlgConfig: public QDialog
 };
 
 typedef enum {
-    COLUMN_NAME,
     COLUMN_LONG_NAME,
     COLUMN_IP_ADDRESS,
     COLUMN_NETWORK_MASK,

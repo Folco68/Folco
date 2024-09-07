@@ -42,11 +42,6 @@
          </column>
          <column>
           <property name="text">
-           <string>Long name</string>
-          </property>
-         </column>
-         <column>
-          <property name="text">
            <string>IP address</string>
           </property>
          </column>
@@ -78,9 +73,6 @@
        </item>
        <item>
         <widget class="QCheckBox" name="CheckKeepOnlyConfigured">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
          <property name="text">
           <string>Show only interfaces that you configured</string>
          </property>
