@@ -1,4 +1,6 @@
 #include "DlgConfig.hpp"
+#include "../Configuration/IFCfg.hpp"
+#include "../Configuration/IFCfgList.hpp"
 #include "../Global.hpp"
 #include "ui_DlgConfig.h"
 #include <QAbstractItemView>
@@ -45,9 +47,10 @@ DlgConfig::DlgConfig(QWidget* parent)
     adjustSize();
 
     // Connections
-    connect(ui->CheckShowOnlyIPv4, &QCheckBox::checkStateChanged, this, [this]() { refreshInterfaces(); });
+    connect(ui->CheckShowOnlyIEthWiFi, &QCheckBox::checkStateChanged, this, [this]() { refreshInterfaces(); });
     connect(ui->CheckShowOnlyAvailable, &QCheckBox::checkStateChanged, this, [this]() { refreshInterfaces(); });
-    connect(ui->CheckKeepOnlyConfigured, &QCheckBox::checkStateChanged, this, [this]() { refreshInterfaces(); });
+    connect(ui->CheckShowOnlyConfigured, &QCheckBox::checkStateChanged, this, [this]() { refreshInterfaces(); });
+    connect(ui->TableInterfaces, &QTableWidget::itemSelectionChanged, this, [this]() { refreshEasySwitchTable(); });
 }
 
 DlgConfig::~DlgConfig()
@@ -67,45 +70,50 @@ void DlgConfig::refreshInterfaces()
 {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ///                                                                                                                             ///
-    ///                                                         Remove current data                                                 ///
-    ///                                                                                                                             ///
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // Retrieve table dimensions
-    int RowCount    = ui->TableInterfaces->rowCount();
-    int ColumnCount = ui->TableInterfaces->columnCount();
-
-    // Delete the QTableWidgetItem of each cell
-    for (int i = 0; i < RowCount; i++) {
-        for (int j = 0; j < ColumnCount; j++) {
-            delete ui->TableInterfaces->item(i, j);
-        }
-    }
-
-    // All cells are empty, remove them
-    ui->TableInterfaces->setRowCount(0);
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ///                                                                                                                             ///
     ///                                       List interfaces and display their data in the table                                   ///
     ///                                                                                                                             ///
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    // Clear the current content
+    ui->TableInterfaces->clearContents();
+    ui->TableInterfaces->setRowCount(0);
+
+    // Grab all interfaces
     QList<QNetworkInterface> Interfaces = QNetworkInterface::allInterfaces();
+
+    // Disable sorting to prevent sorting while we populate the line
+    ui->TableInterfaces->setSortingEnabled(false);
 
     for (int i = 0; i < Interfaces.size(); i++) {
         // Current interface
         QNetworkInterface Interface = Interfaces.at(i);
 
-        // Filters
-        if (ui->CheckShowOnlyIPv4->isChecked() && ((Interface.type() != QNetworkInterface::Ethernet) && (Interface.type() != QNetworkInterface::Wifi))) {
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ///                                                                                                                     ///
+        ///                                                         Filters                                                     ///
+        ///                                                                                                                     ///
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        // Display only Ethernet and Wi-Fi interfaces
+        if (ui->CheckShowOnlyIEthWiFi->isChecked() && ((Interface.type() != QNetworkInterface::Ethernet) && (Interface.type() != QNetworkInterface::Wifi))) {
             continue;
         }
 
+        // Display only active interfaces
         if (ui->CheckShowOnlyAvailable->isChecked() && !(Interface.flags() & QNetworkInterface::IsUp)) {
-            // Keep only configured
             continue;
         }
+
+        // Display only interfaces which have a configuration
+        if (ui->CheckShowOnlyConfigured->isChecked() && !IFCfgList::instance()->hasConfiguration(Interface.hardwareAddress())) {
+            continue;
+        }
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ///                                                                                                                     ///
+        ///                                                         Display                                                     ///
+        ///                                                                                                                     ///
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         // Interface properties
         // Default: IP and Network Mask are from the first entry of the list, regardeless of the protocol
@@ -131,13 +139,54 @@ void DlgConfig::refreshInterfaces()
         QTableWidgetItem* ItemNetworkMask     = new QTableWidgetItem(NetworkMask.toString());
         QTableWidgetItem* ItemHardwareAddress = new QTableWidgetItem(HardwareAddress);
 
-        // Install graphical items
+        // Add one line to the table
         int NewRowIndex = ui->TableInterfaces->rowCount();
         ui->TableInterfaces->setRowCount(NewRowIndex + 1);
 
-        ui->TableInterfaces->setItem(NewRowIndex, COLUMN_LONG_NAME, ItemLongName);
-        ui->TableInterfaces->setItem(NewRowIndex, COLUMN_IP_ADDRESS, ItemIPaddress);
-        ui->TableInterfaces->setItem(NewRowIndex, COLUMN_NETWORK_MASK, ItemNetworkMask);
-        ui->TableInterfaces->setItem(NewRowIndex, COLUMN_HARDWARE_ADDRESS, ItemHardwareAddress);
+        // Insert items of the entry
+        ui->TableInterfaces->setItem(NewRowIndex, COLUMN_IF_NAME, ItemLongName);
+        ui->TableInterfaces->setItem(NewRowIndex, COLUMN_IF_IP_ADDRESS, ItemIPaddress);
+        ui->TableInterfaces->setItem(NewRowIndex, COLUMN_IF_NETWORK_MASK, ItemNetworkMask);
+        ui->TableInterfaces->setItem(NewRowIndex, COLUMN_IF_HARDWARE_ADDRESS, ItemHardwareAddress);
+    }
+    // Re-enable sorting
+    ui->TableInterfaces->setSortingEnabled(true);
+}
+
+void DlgConfig::refreshEasySwitchTable()
+{
+    // Clear the current content
+    ui->TableInterfaces->clearContents();
+    ui->TableInterfaces->setRowCount(0);
+
+    // Get the hw address of the current item
+    int     CurrentRow      = ui->TableInterfaces->currentRow();
+    QString HardwareAddress = ui->TableInterfaces->item(CurrentRow, COLUMN_IF_HARDWARE_ADDRESS)->text();
+
+    // Retrieve the configuration of the current item if one exists
+    IFCfg* Cfg = IFCfgList::instance()->ifCfg(HardwareAddress);
+    if (Cfg != nullptr) {
+        // Disable sorting to prevent sorting while we populate the line
+        ui->TableEasySwitch->setSortingEnabled(false);
+
+        QList<QVector<QString>> Configuration = Cfg->configuration();
+        for (int i = 0; i < Configuration.size(); i++) {
+            QVector<QString>  Entry           = Configuration[i];
+            QTableWidgetItem* ItemIPaddress   = new QTableWidgetItem(Entry.at(0));
+            QTableWidgetItem* ItemNetworkMask = new QTableWidgetItem(Entry.at(1));
+            QTableWidgetItem* ItemGateway     = new QTableWidgetItem(Entry.at(2));
+
+            // Add one line to the table
+            int CurrentRow = ui->TableEasySwitch->rowCount();
+            ui->TableEasySwitch->setRowCount(CurrentRow + 1);
+
+            // Insert items of the entry
+            ui->TableEasySwitch->setItem(i, COLUMN_CONFIG_IP_ADDRESS, ItemIPaddress);
+            ui->TableEasySwitch->setItem(i, COLUMN_CONFIG_NETWORK_MASK, ItemNetworkMask);
+            ui->TableEasySwitch->setItem(i, COLUMN_CONFIG_GATEWAY, ItemGateway);
+        }
+
+        // Disable sorting to prevent sorting while we populate the line
+        ui->TableEasySwitch->setSortingEnabled(true);
     }
 }

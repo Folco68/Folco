@@ -58,7 +58,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QCheckBox" name="CheckShowOnlyIPv4">
+        <widget class="QCheckBox" name="CheckShowOnlyIEthWiFi">
          <property name="text">
           <string>Show only Ethernet and Wi-Fi interfaces</string>
          </property>
@@ -72,7 +72,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QCheckBox" name="CheckKeepOnlyConfigured">
+        <widget class="QCheckBox" name="CheckShowOnlyConfigured">
          <property name="text">
           <string>Show only interfaces that you configured</string>
          </property>
