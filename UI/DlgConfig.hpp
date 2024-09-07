@@ -20,8 +20,9 @@ class DlgConfig: public QDialog
 
     Ui::DlgConfig* ui;
 
-    void refreshInterfaces();
-    void refreshEasySwitchTable();
+    void refreshInterface();
+    void interfaceSelectionChanged();
+    void addConfiguration();
 };
 
 typedef enum {

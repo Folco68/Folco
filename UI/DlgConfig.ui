@@ -34,7 +34,7 @@
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
-        <widget class="QTableWidget" name="TableInterfaces">
+        <widget class="QTableWidget" name="TableInterface">
          <column>
           <property name="text">
            <string>Name</string>
@@ -80,13 +80,13 @@
        </item>
       </layout>
      </widget>
-     <widget class="QGroupBox" name="GroupEsasiSwitch">
+     <widget class="QGroupBox" name="GroupConfiguration">
       <property name="title">
-       <string>Esay switch configuration</string>
+       <string>Configuration</string>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
-        <widget class="QTableWidget" name="TableEasySwitch">
+        <widget class="QTableWidget" name="TableConfiguration">
          <column>
           <property name="text">
            <string>IPv4</string>
@@ -105,9 +105,12 @@
         </widget>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="HLayoutEasySwitch">
+        <layout class="QHBoxLayout" name="HLayoutConfiguration">
          <item>
           <widget class="QPushButton" name="ButtonAdd">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
             <string>Add</string>
            </property>
@@ -115,6 +118,9 @@
          </item>
          <item>
           <widget class="QPushButton" name="ButtonEdit">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
             <string>Edit</string>
            </property>
@@ -122,13 +128,16 @@
          </item>
          <item>
           <widget class="QPushButton" name="ButtonRemove">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
             <string>Remove</string>
            </property>
           </widget>
          </item>
          <item>
-          <spacer name="HSpacerEasySwitch">
+          <spacer name="HSpacerConfiguration">
            <property name="orientation">
             <enum>Qt::Orientation::Horizontal</enum>
            </property>

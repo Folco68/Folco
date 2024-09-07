@@ -2,6 +2,7 @@
 #include "../Configuration/IFCfg.hpp"
 #include "../Configuration/IFCfgList.hpp"
 #include "../Global.hpp"
+#include "DlgEditConfig.hpp"
 #include "ui_DlgConfig.h"
 #include <QAbstractItemView>
 #include <QAbstractSocket>
@@ -10,6 +11,7 @@
 #include <QList>
 #include <QNetworkAddressEntry>
 #include <QNetworkInterface>
+#include <QPushButton>
 #include <QString>
 #include <QTableView>
 #include <QTableWidget>
@@ -23,34 +25,35 @@ DlgConfig::DlgConfig(QWidget* parent)
     ui->setupUi(this);
     setWindowTitle(QString("%1 - Configuration").arg(APPLICATION_NAME));
 
-    // Setup the interfaces table
-    ui->TableInterfaces->setShowGrid(true);
-    ui->TableInterfaces->setSortingEnabled(true);
-    ui->TableInterfaces->setAlternatingRowColors(true);
-    ui->TableInterfaces->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    ui->TableInterfaces->setSelectionMode(QAbstractItemView::SingleSelection);
-    ui->TableInterfaces->setSelectionBehavior(QAbstractItemView::SelectRows);
-    ui->TableInterfaces->verticalHeader()->setVisible(false);
-    ui->TableInterfaces->horizontalHeader()->setStretchLastSection(true);
+    // Setup the Interface table
+    ui->TableInterface->setShowGrid(true);
+    ui->TableInterface->setSortingEnabled(true);
+    ui->TableInterface->setAlternatingRowColors(true);
+    ui->TableInterface->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->TableInterface->setSelectionMode(QAbstractItemView::SingleSelection);
+    ui->TableInterface->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->TableInterface->verticalHeader()->setVisible(false);
+    ui->TableInterface->horizontalHeader()->setStretchLastSection(true);
 
-    // Populate the interface table
-    refreshInterfaces();
+    // Populate the Interface table
+    refreshInterface();
 
     // Resize the columns only once and here (ie: not at the end of refreshInterfaces()), to avoid a setStretchSection() bug
-    ui->TableInterfaces->resizeColumnsToContents();
+    ui->TableInterface->resizeColumnsToContents();
 
-    for (int i = 0; i < ui->TableInterfaces->columnCount(); i++) {
-        ui->TableInterfaces->horizontalHeader()->resizeSection(i, ui->TableInterfaces->horizontalHeader()->sectionSize(i) + COLUMN_EXTRA_SIZE);
+    for (int i = 0; i < ui->TableInterface->columnCount(); i++) {
+        ui->TableInterface->horizontalHeader()->resizeSection(i, ui->TableInterface->horizontalHeader()->sectionSize(i) + COLUMN_EXTRA_SIZE);
     }
 
     // Finally, adjust the size to fit the content
     adjustSize();
 
     // Connections
-    connect(ui->CheckShowOnlyIEthWiFi, &QCheckBox::checkStateChanged, this, [this]() { refreshInterfaces(); });
-    connect(ui->CheckShowOnlyAvailable, &QCheckBox::checkStateChanged, this, [this]() { refreshInterfaces(); });
-    connect(ui->CheckShowOnlyConfigured, &QCheckBox::checkStateChanged, this, [this]() { refreshInterfaces(); });
-    connect(ui->TableInterfaces, &QTableWidget::itemSelectionChanged, this, [this]() { refreshEasySwitchTable(); });
+    connect(ui->CheckShowOnlyIEthWiFi, &QCheckBox::checkStateChanged, this, [this]() { refreshInterface(); });
+    connect(ui->CheckShowOnlyAvailable, &QCheckBox::checkStateChanged, this, [this]() { refreshInterface(); });
+    connect(ui->CheckShowOnlyConfigured, &QCheckBox::checkStateChanged, this, [this]() { refreshInterface(); });
+    connect(ui->TableInterface, &QTableWidget::itemSelectionChanged, this, [this]() { interfaceSelectionChanged(); });
+    connect(ui->ButtonAdd, &QPushButton::clicked, this, [this]() { addConfiguration(); });
 }
 
 DlgConfig::~DlgConfig()
@@ -66,7 +69,7 @@ int DlgConfig::execDlgConfig()
     return 0;
 }
 
-void DlgConfig::refreshInterfaces()
+void DlgConfig::refreshInterface()
 {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ///                                                                                                                             ///
@@ -75,14 +78,14 @@ void DlgConfig::refreshInterfaces()
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Clear the current content
-    ui->TableInterfaces->clearContents();
-    ui->TableInterfaces->setRowCount(0);
+    ui->TableInterface->clearContents();
+    ui->TableInterface->setRowCount(0);
 
     // Grab all interfaces
     QList<QNetworkInterface> Interfaces = QNetworkInterface::allInterfaces();
 
     // Disable sorting to prevent sorting while we populate the line
-    ui->TableInterfaces->setSortingEnabled(false);
+    ui->TableInterface->setSortingEnabled(false);
 
     for (int i = 0; i < Interfaces.size(); i++) {
         // Current interface
@@ -126,6 +129,7 @@ void DlgConfig::refreshInterfaces()
         // Browse all the available addresses for this interface
         // Pick the IPv4 address if one is available, else stick to the default one
         QList<QNetworkAddressEntry> Addresses = Interface.addressEntries();
+
         for (int j = 0; j < Addresses.count(); j++) {
             if (Addresses.at(j).ip().protocol() == QAbstractSocket::IPv4Protocol) {
                 IPaddress   = Addresses.at(j).ip();
@@ -140,53 +144,74 @@ void DlgConfig::refreshInterfaces()
         QTableWidgetItem* ItemHardwareAddress = new QTableWidgetItem(HardwareAddress);
 
         // Add one line to the table
-        int NewRowIndex = ui->TableInterfaces->rowCount();
-        ui->TableInterfaces->setRowCount(NewRowIndex + 1);
+        int NewRowIndex = ui->TableInterface->rowCount();
+        ui->TableInterface->setRowCount(NewRowIndex + 1);
 
         // Insert items of the entry
-        ui->TableInterfaces->setItem(NewRowIndex, COLUMN_IF_NAME, ItemLongName);
-        ui->TableInterfaces->setItem(NewRowIndex, COLUMN_IF_IP_ADDRESS, ItemIPaddress);
-        ui->TableInterfaces->setItem(NewRowIndex, COLUMN_IF_NETWORK_MASK, ItemNetworkMask);
-        ui->TableInterfaces->setItem(NewRowIndex, COLUMN_IF_HARDWARE_ADDRESS, ItemHardwareAddress);
+        ui->TableInterface->setItem(NewRowIndex, COLUMN_IF_NAME, ItemLongName);
+        ui->TableInterface->setItem(NewRowIndex, COLUMN_IF_IP_ADDRESS, ItemIPaddress);
+        ui->TableInterface->setItem(NewRowIndex, COLUMN_IF_NETWORK_MASK, ItemNetworkMask);
+        ui->TableInterface->setItem(NewRowIndex, COLUMN_IF_HARDWARE_ADDRESS, ItemHardwareAddress);
     }
     // Re-enable sorting
-    ui->TableInterfaces->setSortingEnabled(true);
+    ui->TableInterface->setSortingEnabled(true);
 }
 
-void DlgConfig::refreshEasySwitchTable()
+void DlgConfig::interfaceSelectionChanged()
 {
-    // Clear the current content
-    ui->TableInterfaces->clearContents();
-    ui->TableInterfaces->setRowCount(0);
+    // Clear the current content of the Configuration Table,
+    // because it will be adapted to the selected interface
+    ui->TableConfiguration->clearContents();
+    ui->TableConfiguration->setRowCount(0);
 
-    // Get the hw address of the current item
-    int     CurrentRow      = ui->TableInterfaces->currentRow();
-    QString HardwareAddress = ui->TableInterfaces->item(CurrentRow, COLUMN_IF_HARDWARE_ADDRESS)->text();
+    // Don't perform anything if there is no interface selected
+    if (!ui->TableInterface->selectedItems().empty()) {
 
-    // Retrieve the configuration of the current item if one exists
-    IFCfg* Cfg = IFCfgList::instance()->ifCfg(HardwareAddress);
-    if (Cfg != nullptr) {
-        // Disable sorting to prevent sorting while we populate the line
-        ui->TableEasySwitch->setSortingEnabled(false);
+        // Get the hw address of the current item
+        int     CurrentRow      = ui->TableInterface->currentRow();
+        QString HardwareAddress = ui->TableInterface->item(CurrentRow, COLUMN_IF_HARDWARE_ADDRESS)->text();
 
-        QList<QVector<QString>> Configuration = Cfg->configuration();
-        for (int i = 0; i < Configuration.size(); i++) {
-            QVector<QString>  Entry           = Configuration[i];
-            QTableWidgetItem* ItemIPaddress   = new QTableWidgetItem(Entry.at(0));
-            QTableWidgetItem* ItemNetworkMask = new QTableWidgetItem(Entry.at(1));
-            QTableWidgetItem* ItemGateway     = new QTableWidgetItem(Entry.at(2));
+        // Retrieve the configuration of the current item if one exists
+        IFCfg* Cfg = IFCfgList::instance()->ifCfg(HardwareAddress);
+        if (Cfg != nullptr) {
 
-            // Add one line to the table
-            int CurrentRow = ui->TableEasySwitch->rowCount();
-            ui->TableEasySwitch->setRowCount(CurrentRow + 1);
+            // Disable sorting while we populate the line
+            ui->TableConfiguration->setSortingEnabled(false);
+            QList<QList<QString>> Configuration = Cfg->configuration();
 
-            // Insert items of the entry
-            ui->TableEasySwitch->setItem(i, COLUMN_CONFIG_IP_ADDRESS, ItemIPaddress);
-            ui->TableEasySwitch->setItem(i, COLUMN_CONFIG_NETWORK_MASK, ItemNetworkMask);
-            ui->TableEasySwitch->setItem(i, COLUMN_CONFIG_GATEWAY, ItemGateway);
+            for (int i = 0; i < Configuration.size(); i++) {
+                QList<QString>    Entry           = Configuration[i];
+                QTableWidgetItem* ItemIPaddress   = new QTableWidgetItem(Entry.at(0));
+                QTableWidgetItem* ItemNetworkMask = new QTableWidgetItem(Entry.at(1));
+                QTableWidgetItem* ItemGateway     = new QTableWidgetItem(Entry.at(2));
+
+                // Add one line to the table
+                int CurrentRow = ui->TableConfiguration->rowCount();
+                ui->TableConfiguration->setRowCount(CurrentRow + 1);
+
+                // Insert items of the entry
+                ui->TableConfiguration->setItem(i, COLUMN_CONFIG_IP_ADDRESS, ItemIPaddress);
+                ui->TableConfiguration->setItem(i, COLUMN_CONFIG_NETWORK_MASK, ItemNetworkMask);
+                ui->TableConfiguration->setItem(i, COLUMN_CONFIG_GATEWAY, ItemGateway);
+            }
+
+            // Disable sorting to prevent sorting while we populate the line
+            ui->TableConfiguration->setSortingEnabled(true);
         }
 
-        // Disable sorting to prevent sorting while we populate the line
-        ui->TableEasySwitch->setSortingEnabled(true);
+        // If an interface is selected, we can always add a new configuration
+        ui->ButtonAdd->setEnabled(true);
+    }
+    // Nothing is selected in the Interface table, so we can't add any configuration
+    else {
+        ui->ButtonAdd->setDisabled(true);
+    }
+}
+
+void DlgConfig::addConfiguration()
+{
+    QList<QString> Configuration = DlgEditConfig::dlgNewConfig(this);
+    if (!Configuration.isEmpty()) {
+        // Add a new configuration to the current inteface
     }
 }

@@ -1,6 +1,9 @@
 - DlgConfig: add a refresh button for the interface list
 o DlgConfig: offer to exclude loopback interface (-> Show only IPV4 discards loopback interfaces)
 + DlgConfig: remove internal type display
-- DlgConfig: setup the Interface table (coluwn width, alternate columns, selection mode and so on)
++ DlgConfig: setup the Interface table (coluwn width, alternate columns, selection mode and so on)
 + DlgConfig: set window title
 + DlgConfig: add an horizontal splitter between the tables
+- DlgCongif: setup the Configuration table
+- set an application Icon
+- DlgEditConfig: validate IP

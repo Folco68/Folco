@@ -33,6 +33,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         UI/DlgConfig.hpp
         UI/DlgConfig.cpp
         UI/DlgConfig.ui
+        UI/DlgEditConfig.hpp
+        UI/DlgEditConfig.cpp
+        UI/DlgEditConfig.ui
 
         # Data
         Configuration/IFCfg.hpp

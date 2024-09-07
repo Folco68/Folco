@@ -18,6 +18,7 @@ class IFCfgList
     static IFCfgList* ifcfglist;
     IFCfgList();
 
+    // An IFCfg must not exist without at least one entry
     QList<IFCfg*> List;
 };
 
