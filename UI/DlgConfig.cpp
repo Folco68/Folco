@@ -1,6 +1,6 @@
 #include "DlgConfig.hpp"
-#include "../Configuration/IFCfg.hpp"
-#include "../Configuration/IFCfgList.hpp"
+#include "../Configuration/IFConfig.hpp"
+#include "../Configuration/IFConfigList.hpp"
 #include "../Global.hpp"
 #include "DlgEditConfig.hpp"
 #include "ui_DlgConfig.h"
@@ -108,7 +108,7 @@ void DlgConfig::refreshInterface()
         }
 
         // Display only interfaces which have a configuration
-        if (ui->CheckShowOnlyConfigured->isChecked() && !IFCfgList::instance()->hasConfiguration(Interface.hardwareAddress())) {
+        if (ui->CheckShowOnlyConfigured->isChecked() && !IFConfigList::instance()->hasConfiguration(Interface.hardwareAddress())) {
             continue;
         }
 
@@ -161,8 +161,8 @@ void DlgConfig::interfaceSelectionChanged()
 {
     // Clear the current content of the Configuration Table,
     // because it will be adapted to the selected interface
-    ui->TableConfiguration->clearContents();
-    ui->TableConfiguration->setRowCount(0);
+    ui->TablePredefined->clearContents();
+    ui->TablePredefined->setRowCount(0);
 
     // Don't perform anything if there is no interface selected
     if (!ui->TableInterface->selectedItems().empty()) {
@@ -172,31 +172,30 @@ void DlgConfig::interfaceSelectionChanged()
         QString HardwareAddress = ui->TableInterface->item(CurrentRow, COLUMN_IF_HARDWARE_ADDRESS)->text();
 
         // Retrieve the configuration of the current item if one exists
-        IFCfg* Cfg = IFCfgList::instance()->ifCfg(HardwareAddress);
-        if (Cfg != nullptr) {
-
+        IFConfig* Interface = IFConfigList::instance()->ifConfig(HardwareAddress);
+        if (Interface != nullptr) {
             // Disable sorting while we populate the line
-            ui->TableConfiguration->setSortingEnabled(false);
-            QList<QList<QString>> Configuration = Cfg->configuration();
+            ui->TablePredefined->setSortingEnabled(false);
+            QList<Configuration> ConfigList = Interface->configurations();
 
-            for (int i = 0; i < Configuration.size(); i++) {
-                QList<QString>    Entry           = Configuration[i];
-                QTableWidgetItem* ItemIPaddress   = new QTableWidgetItem(Entry.at(0));
-                QTableWidgetItem* ItemNetworkMask = new QTableWidgetItem(Entry.at(1));
-                QTableWidgetItem* ItemGateway     = new QTableWidgetItem(Entry.at(2));
+            for (int i = 0; i < ConfigList.size(); i++) {
+                Configuration     Config          = ConfigList.at(i);
+                QTableWidgetItem* ItemIPaddress   = new QTableWidgetItem(Config.ipAddress());
+                QTableWidgetItem* ItemNetworkMask = new QTableWidgetItem(Config.networkMask());
+                QTableWidgetItem* ItemGateway     = new QTableWidgetItem(Config.gateway());
 
                 // Add one line to the table
-                int CurrentRow = ui->TableConfiguration->rowCount();
-                ui->TableConfiguration->setRowCount(CurrentRow + 1);
+                int CurrentRow = ui->TablePredefined->rowCount();
+                ui->TablePredefined->setRowCount(CurrentRow + 1);
 
                 // Insert items of the entry
-                ui->TableConfiguration->setItem(i, COLUMN_CONFIG_IP_ADDRESS, ItemIPaddress);
-                ui->TableConfiguration->setItem(i, COLUMN_CONFIG_NETWORK_MASK, ItemNetworkMask);
-                ui->TableConfiguration->setItem(i, COLUMN_CONFIG_GATEWAY, ItemGateway);
+                ui->TablePredefined->setItem(i, COLUMN_CONFIG_IP_ADDRESS, ItemIPaddress);
+                ui->TablePredefined->setItem(i, COLUMN_CONFIG_NETWORK_MASK, ItemNetworkMask);
+                ui->TablePredefined->setItem(i, COLUMN_CONFIG_GATEWAY, ItemGateway);
             }
 
             // Disable sorting to prevent sorting while we populate the line
-            ui->TableConfiguration->setSortingEnabled(true);
+            ui->TablePredefined->setSortingEnabled(true);
         }
 
         // If an interface is selected, we can always add a new configuration
@@ -210,8 +209,11 @@ void DlgConfig::interfaceSelectionChanged()
 
 void DlgConfig::addConfiguration()
 {
-    QList<QString> Configuration = DlgEditConfig::dlgNewConfig(this);
-    if (!Configuration.isEmpty()) {
-        // Add a new configuration to the current inteface
+    Configuration Config = DlgEditConfig::dlgNewConfig(this);
+    // Add a new configuration to the current inteface if the dialog was validated
+    if (Config.isValid()) {
+        int     CurrentRow      = ui->TableInterface->currentRow();
+        QString HardwareAddress = ui->TableInterface->item(CurrentRow, COLUMN_IF_HARDWARE_ADDRESS)->text();
+        IFConfigList::instance()->addConfiguration(HardwareAddress, Config);
     }
 }

@@ -6,154 +6,186 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1000</width>
-    <height>700</height>
+    <width>1028</width>
+    <height>342</height>
    </rect>
-  </property>
-  <property name="minimumSize">
-   <size>
-    <width>1000</width>
-    <height>700</height>
-   </size>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_3">
+  <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
-    <widget class="QSplitter" name="splitter">
-     <property name="orientation">
-      <enum>Qt::Orientation::Vertical</enum>
-     </property>
-     <property name="childrenCollapsible">
-      <bool>false</bool>
-     </property>
-     <widget class="QGroupBox" name="GroupInterfaces">
-      <property name="title">
-       <string>Available interfaces</string>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <item>
-        <widget class="QTableWidget" name="TableInterface">
-         <column>
+    <layout class="QHBoxLayout" name="HLayoutBoxes">
+     <item>
+      <widget class="QGroupBox" name="GroupInterfaces">
+       <property name="title">
+        <string>Interface selection</string>
+       </property>
+       <layout class="QFormLayout" name="formLayout">
+        <item row="0" column="0">
+         <widget class="QLabel" name="LabelInterface">
           <property name="text">
-           <string>Name</string>
+           <string>Interface:</string>
           </property>
-         </column>
-         <column>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QComboBox" name="ComboInterface">
+          <property name="minimumSize">
+           <size>
+            <width>400</width>
+            <height>0</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="LabelCurrentIP">
           <property name="text">
-           <string>IP address</string>
+           <string>Current IP:</string>
           </property>
-         </column>
-         <column>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLineEdit" name="EditCurrentIP">
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="LabelMACaddress">
           <property name="text">
-           <string>Mask</string>
+           <string>MAC address:</string>
           </property>
-         </column>
-         <column>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QLineEdit" name="EditMACaddress">
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QCheckBox" name="CheckShowOnlyEthernet">
           <property name="text">
-           <string>MAC address</string>
+           <string>Show only Ethernet / Wi-Fi interfaces</string>
           </property>
-         </column>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="CheckShowOnlyIEthWiFi">
-         <property name="text">
-          <string>Show only Ethernet and Wi-Fi interfaces</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="CheckShowOnlyAvailable">
-         <property name="text">
-          <string>Show only available interfaces</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="CheckShowOnlyConfigured">
-         <property name="text">
-          <string>Show only interfaces that you configured</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QGroupBox" name="GroupConfiguration">
-      <property name="title">
-       <string>Configuration</string>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
-       <item>
-        <widget class="QTableWidget" name="TableConfiguration">
-         <column>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QCheckBox" name="CheckShowOnlyActive">
           <property name="text">
-           <string>IPv4</string>
+           <string>Show only active interfaces</string>
           </property>
-         </column>
-         <column>
+         </widget>
+        </item>
+        <item row="5" column="1">
+         <widget class="QCheckBox" name="CheckShowOnlyPredefined">
           <property name="text">
-           <string>Subnet mask</string>
+           <string>Show only interfaces with predefined address</string>
           </property>
-         </column>
-         <column>
-          <property name="text">
-           <string>Gateway</string>
+         </widget>
+        </item>
+        <item row="6" column="1">
+         <spacer name="VSpacerInterfaces">
+          <property name="orientation">
+           <enum>Qt::Orientation::Vertical</enum>
           </property>
-         </column>
-        </widget>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="HLayoutConfiguration">
-         <item>
-          <widget class="QPushButton" name="ButtonAdd">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>397</width>
+            <height>89</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="GroupPredefined">
+       <property name="title">
+        <string>Predefined  addresses</string>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QTableWidget" name="TablePredefined">
+          <property name="minimumSize">
+           <size>
+            <width>400</width>
+            <height>0</height>
+           </size>
+          </property>
+          <column>
            <property name="text">
-            <string>Add</string>
+            <string>IPv4</string>
            </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="ButtonEdit">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
+          </column>
+          <column>
            <property name="text">
-            <string>Edit</string>
+            <string>Network mask</string>
            </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="ButtonRemove">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
+          </column>
+          <column>
            <property name="text">
-            <string>Remove</string>
+            <string>Gateway</string>
            </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="HSpacerConfiguration">
-           <property name="orientation">
-            <enum>Qt::Orientation::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
-       </item>
-      </layout>
-     </widget>
-    </widget>
+          </column>
+         </widget>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="VLayoutButtons">
+          <item>
+           <widget class="QPushButton" name="ButtonAdd">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Add</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="ButtonEdit">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Edit</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="ButtonRemove">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Remove</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="VSpacerButtons">
+            <property name="orientation">
+             <enum>Qt::Orientation::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
    </item>
    <item>
     <layout class="QHBoxLayout" name="HLayoutDialog">

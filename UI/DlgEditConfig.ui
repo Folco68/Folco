@@ -93,6 +93,13 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>EditIPaddress</tabstop>
+  <tabstop>EditNetworkMask</tabstop>
+  <tabstop>EditGateway</tabstop>
+  <tabstop>ButtonOK</tabstop>
+  <tabstop>ButtonCancel</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

@@ -38,10 +38,12 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         UI/DlgEditConfig.ui
 
         # Data
-        Configuration/IFCfg.hpp
-        Configuration/IFCfg.cpp
-        Configuration/IFCfgList.hpp
-        Configuration/IFCfgList.cpp
+        Configuration/Configuration.hpp
+        Configuration/Configuration.cpp
+        Configuration/IFConfig.hpp
+        Configuration/IFConfig.cpp
+        Configuration/IFConfigList.hpp
+        Configuration/IFConfigList.cpp
 
         # Docs
         Docs/TODO
