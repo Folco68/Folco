@@ -3,18 +3,18 @@
 #include "ui_DlgEditConfig.h"
 #include <QPushButton>
 
-DlgEditConfig::DlgEditConfig(QWidget* parent, Configuration Config)
+DlgEditConfig::DlgEditConfig(QWidget* parent, PredefinedIP ip)
     : QDialog(parent)
     , ui(new Ui::DlgEditConfig)
 {
     ui->setupUi(this);
 
     // According to the Configuration content, set the window title and the edition fields
-    if (Config.isValid()) {
+    if (ip.isValid()) {
         setWindowTitle(QString("%1 - Edit configuration").arg(APPLICATION_NAME));
-        ui->EditIPaddress->setText(Config.ipAddress());
-        ui->EditNetworkMask->setText(Config.networkMask());
-        ui->EditGateway->setText(Config.gateway());
+        ui->EditIPaddress->setText(ip.ipAddress());
+        ui->EditNetworkMask->setText(ip.networkMask());
+        ui->EditGateway->setText(ip.gateway());
     }
     else {
         setWindowTitle(QString("%1 - New configuration").arg(APPLICATION_NAME));
@@ -33,12 +33,12 @@ DlgEditConfig::~DlgEditConfig()
     delete ui;
 }
 
-Configuration DlgEditConfig::dlgNewConfig(QWidget* parent)
+PredefinedIP DlgEditConfig::dlgNewConfig(QWidget* parent)
 {
-    Configuration  Config;
+    PredefinedIP   IP;
     DlgEditConfig* Dlg = new DlgEditConfig(parent);
     if (Dlg->exec() == QDialog::Accepted) {
-        Config.setConfig(Dlg->ui->EditIPaddress->text(), Dlg->ui->EditNetworkMask->text(), Dlg->ui->EditGateway->text());
+        IP.setPredefinedIP(Dlg->ui->EditIPaddress->text(), Dlg->ui->EditNetworkMask->text(), Dlg->ui->EditGateway->text());
     }
-    return Config;
+    return IP;
 }

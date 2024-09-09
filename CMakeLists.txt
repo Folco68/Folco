@@ -22,32 +22,33 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
 
+        # Main
         Global.hpp
-
-        # Ressources
-        Ressources/Icons.qrc
+        Settings.hpp
+        Settings.cpp
 
         # UI
         UI/TrayIcon.hpp
         UI/TrayIcon.cpp
-        UI/DlgConfig.hpp
-        UI/DlgConfig.cpp
-        UI/DlgConfig.ui
         UI/DlgEditConfig.hpp
         UI/DlgEditConfig.cpp
         UI/DlgEditConfig.ui
+        UI/DlgSettings.hpp
+        UI/DlgSettings.cpp
+        UI/DlgSettings.ui
 
-        # Data
-        Configuration/Configuration.hpp
-        Configuration/Configuration.cpp
-        Configuration/IFConfig.hpp
-        Configuration/IFConfig.cpp
-        Configuration/IFConfigList.hpp
-        Configuration/IFConfigList.cpp
+        # Network
+        Network/PredefinedIP.hpp
+        Network/PredefinedIP.cpp
+        Network/Interface.hpp
+        Network/Interface.cpp
+        Network/InterfaceList.hpp
+        Network/InterfaceList.cpp
 
-        # Docs
-        Docs/TODO
+        # Ressources
+        Ressources/Icons.qrc
 )
+
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET Folco APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
 #                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
