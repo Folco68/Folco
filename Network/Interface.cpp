@@ -13,17 +13,17 @@ void Interface::addPredefinedIP(PredefinedIP ip)
 void Interface::removePredefinedIP(PredefinedIP ip)
 {
     for (int i = 0; i < this->PredefinedIPlist.size(); i++) {
-        // Read the current predefined IP
-        PredefinedIP TmpIP(this->PredefinedIPlist.at(i));
-
-        // Need exact match
-        if ((TmpIP.ipAddress() == ip.ipAddress()) && (TmpIP.networkMask() == ip.networkMask()) && (TmpIP.gateway() == ip.gateway())) {
+        if (this->predefinedIPlist().at(i) == ip) {
             this->PredefinedIPlist.removeAt(i);
-
             // Remove only one instance
             break;
         }
     }
+}
+
+int Interface::predefinedIPcount() const
+{
+    return this->PredefinedIPlist.count();
 }
 
 QString Interface::hardwareAddress() const

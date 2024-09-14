@@ -1,9 +1,6 @@
-- DlgConfig: add a refresh button for the interface list
-o DlgConfig: offer to exclude loopback interface (-> Show only IPV4 discards loopback interfaces)
-+ DlgConfig: remove internal type display
-+ DlgConfig: setup the Interface table (coluwn width, alternate columns, selection mode and so on)
-+ DlgConfig: set window title
-+ DlgConfig: add an horizontal splitter between the tables
-- DlgCongif: setup the Configuration table
 - set an application Icon
-- DlgEditConfig: validate IP
+- DlgEditInterface: validate IP
+- Remember disconnected devices and allow to edit/delete them (usefull for USB-Eth adapters)
++ offer to give a name to preconfigured IPs. This name could be used in the menu
+- offer to configure the display of the IP in the tray menu: custom name/IP, IP/custom name, ...
+- allow to set an interface to DHCP

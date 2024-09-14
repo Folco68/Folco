@@ -1,10 +1,16 @@
 #include "PredefinedIP.hpp"
 
-PredefinedIP::PredefinedIP(QString ip, QString mask, QString gateway)
-    : IPaddress(ip)
+PredefinedIP::PredefinedIP(QString Name, QString ip, QString mask, QString gateway)
+    : Name(Name)
+    , IPaddress(ip)
     , NetworkMask(mask)
     , Gateway(gateway)
 {
+}
+
+QString PredefinedIP::name() const
+{
+    return this->Name;
 }
 
 QString PredefinedIP::ipAddress() const
@@ -27,9 +33,15 @@ bool PredefinedIP::isValid() const
     return !this->IPaddress.isNull();
 }
 
-void PredefinedIP::setPredefinedIP(QString ip, QString mask, QString gateway)
+void PredefinedIP::setPredefinedIP(QString Name, QString ip, QString mask, QString gateway)
 {
+    this->Name        = Name;
     this->IPaddress   = ip;
     this->NetworkMask = mask;
     this->Gateway     = gateway;
+}
+
+bool PredefinedIP::operator==(PredefinedIP ip) const
+{
+    return (this->Name == ip.Name) && (this->IPaddress == ip.IPaddress) && (this->NetworkMask == ip.NetworkMask) && (this->Gateway == ip.Gateway);
 }

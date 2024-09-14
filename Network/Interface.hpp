@@ -11,6 +11,7 @@ class Interface
     Interface(QString hwaddress);
     void                addPredefinedIP(PredefinedIP ip);
     void                removePredefinedIP(PredefinedIP ip);
+    int                 predefinedIPcount() const;
     QString             hardwareAddress() const;
     QList<PredefinedIP> predefinedIPlist() const;
 

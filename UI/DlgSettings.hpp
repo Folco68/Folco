@@ -12,10 +12,10 @@ class DlgSettings: public QDialog
     Q_OBJECT
 
   public:
-    static int execDlgSettings();
+    static void execDlgSettings();
 
   private:
-    explicit DlgSettings(QWidget* parent = nullptr);
+    explicit DlgSettings();
     ~DlgSettings();
 
     Ui::DlgSettings* ui;

@@ -28,11 +28,13 @@ bool InterfaceList::hasConfiguration(QString hwaddress) const
     bool RetVal = false;
 
     for (int i = 0; i < this->List.size(); i++) {
-        if (this->List.at(i)->hardwareAddress() == hwaddress) {
+        Interface* Interface = this->List.at(i);
+        if ((Interface->hardwareAddress() == hwaddress) && (Interface->predefinedIPcount() != 0)) {
             RetVal = true;
             break;
         }
     }
+
     return RetVal;
 }
 

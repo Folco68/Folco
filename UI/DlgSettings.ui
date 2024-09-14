@@ -2,35 +2,43 @@
 <ui version="4.0">
  <class>DlgSettings</class>
  <widget class="QDialog" name="DlgSettings">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>249</width>
+    <height>122</height>
+   </rect>
+  </property>
   <property name="windowTitle">
    <string>Settings</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QCheckBox" name="checkBox_2">
+    <widget class="QCheckBox" name="CheckShowOnlyEthernetWiFi">
      <property name="text">
       <string>Show only Ethernet / Wi-Fi interfaces</string>
      </property>
     </widget>
    </item>
    <item>
-    <widget class="QCheckBox" name="checkBox_3">
+    <widget class="QCheckBox" name="CheckShowOnlyUp">
      <property name="text">
       <string>Show only active interfaces</string>
      </property>
     </widget>
    </item>
    <item>
-    <widget class="QCheckBox" name="checkBox">
+    <widget class="QCheckBox" name="CheckShowOnlyPredefined">
      <property name="text">
-      <string>Show only configured interfaces</string>
+      <string>Show only interfaces with predefined IP</string>
      </property>
     </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout">
+    <layout class="QHBoxLayout" name="HLayoutButtons">
      <item>
-      <spacer name="horizontalSpacer">
+      <spacer name="HSpacerButtons">
        <property name="orientation">
         <enum>Qt::Orientation::Horizontal</enum>
        </property>
@@ -43,16 +51,19 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_2">
+      <widget class="QPushButton" name="ButtonCancel">
        <property name="text">
         <string>Cancel</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="ButtonOK">
        <property name="text">
         <string>OK</string>
+       </property>
+       <property name="default">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -60,6 +71,13 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>CheckShowOnlyEthernetWiFi</tabstop>
+  <tabstop>CheckShowOnlyUp</tabstop>
+  <tabstop>CheckShowOnlyPredefined</tabstop>
+  <tabstop>ButtonOK</tabstop>
+  <tabstop>ButtonCancel</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

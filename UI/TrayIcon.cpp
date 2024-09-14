@@ -1,137 +1,156 @@
 #include "TrayIcon.hpp"
+#include "../Network/InterfaceList.hpp"
+#include "../Settings.hpp"
+#include "DlgEditInterface.hpp"
 #include "DlgSettings.hpp"
+#include <QAction>
 #include <QCoreApplication>
 #include <QCursor>
 #include <QIcon>
+#include <QList>
+#include <QMenu>
+#include <QNetworkInterface>
+#include <QString>
 
 TrayIcon::TrayIcon()
     : QSystemTrayIcon {QIcon(":/Icons/IconBase.png")}
+    , ContextMenu(nullptr)
 {
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ///                                                                                                                             ///
-    ///                                          Create the base of the tray icon context menu                                      ///
-    ///                                                                                                                             ///
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    QMenu* ContextMenu = new QMenu;
-
-    // Create actions. Give the parentality to ContextMenu, avoiding to destroy items by hand on exit
-    QAction* ActionSettings = new QAction("Settings...", ContextMenu);
-    QAction* ActionAbout    = new QAction("About...", ContextMenu);
-    QAction* ActionExit     = new QAction("Exit", ContextMenu);
-
-    // Populate the context menu
-    ContextMenu->addSeparator();
-    ContextMenu->addAction(ActionSettings);
-    ContextMenu->addAction(ActionAbout);
-    ContextMenu->addSeparator();
-    ContextMenu->addAction(ActionExit);
-
-    // Add the context menu to the tray icon
-    setContextMenu(ContextMenu);
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ///                                                                                                                             ///
-    ///                                                     Set base connections                                                    ///
-    ///                                                                                                                             ///
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     // Show the context menu regardless of the trigger (default: only the right click displays the menu)
-    connect(this, &QSystemTrayIcon::activated, this, [ContextMenu]() { ContextMenu->popup(QCursor::pos()); });
-
-    // Configuration dialog
-    connect(ActionSettings, &QAction::triggered, []() { DlgSettings::execDlgSettings(); });
-
-    // Exit the application
-    connect(ActionExit, &QAction::triggered, []() { QCoreApplication::exit(0); });
+    // The menu is created dynamically every time it is triggerred, to refresh the interface list
+    connect(this, &QSystemTrayIcon::activated, this, [this]() { showContextMenu(); });
 }
 
-/*
-void DlgSettings::refreshInterface()
+TrayIcon::~TrayIcon()
 {
+    if (this->ContextMenu != nullptr) {
+        delete this->ContextMenu;
+        this->ContextMenu = nullptr;
+    }
+}
+
+void TrayIcon::showContextMenu()
+{
+    // Delete the previous menu if one was already created
+    if (this->ContextMenu != nullptr) {
+        delete this->ContextMenu;
+        this->ContextMenu = nullptr;
+    }
+
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ///                                                                                                                             ///
-    ///                                       List interfaces and display their data in the table                                   ///
+    ///                                   Generate the list of interfaces according to the settings                                 ///
     ///                                                                                                                             ///
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    // Clear the current content
-    ui->TableInterface->clearContents();
-    ui->TableInterface->setRowCount(0);
+    QList<QNetworkInterface> AllInterfaces = QNetworkInterface::allInterfaces();
+    QList<QNetworkInterface> FilteredNetworkInterfaces;
 
-    // Grab all interfaces
-    QList<QNetworkInterface> Interfaces = QNetworkInterface::allInterfaces();
+    for (int i = 0; i < AllInterfaces.size(); i++) {
 
-    // Disable sorting to prevent sorting while we populate the line
-    ui->TableInterface->setSortingEnabled(false);
-
-    for (int i = 0; i < Interfaces.size(); i++) {
         // Current interface
-        QNetworkInterface Interface = Interfaces.at(i);
+        QNetworkInterface NetworkInterface = AllInterfaces.at(i);
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         ///                                                                                                                     ///
-        ///                                                         Filters                                                     ///
+        ///                               Loop if the current interface matches the filter criteria                             ///
         ///                                                                                                                     ///
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        // Display only Ethernet and Wi-Fi interfaces
-        if (ui->CheckShowOnlyIEthWiFi->isChecked() && ((Interface.type() != QNetworkInterface::Ethernet) && (Interface.type() != QNetworkInterface::Wifi))) {
+        if (Settings::instance()->showOnlyEthernetWifi() && NetworkInterface.type() != QNetworkInterface::Ethernet && NetworkInterface.type() != QNetworkInterface::Wifi) {
             continue;
         }
 
-        // Display only active interfaces
-        if (ui->CheckShowOnlyAvailable->isChecked() && !(Interface.flags() & QNetworkInterface::IsUp)) {
+        if (Settings::instance()->showOnlyUp() && !(NetworkInterface.flags() & QNetworkInterface::IsUp)) {
             continue;
         }
 
-        // Display only interfaces which have a configuration
-        if (ui->CheckShowOnlyConfigured->isChecked() && !IFConfigList::instance()->hasConfiguration(Interface.hardwareAddress())) {
+        if (Settings::instance()->showOnlyPredefined() && !InterfaceList::instance()->hasConfiguration(NetworkInterface.hardwareAddress())) {
             continue;
         }
 
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        ///                                                                                                                     ///
-        ///                                                         Display                                                     ///
-        ///                                                                                                                     ///
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // This interface matches all criteria and will be part of the menu
+        FilteredNetworkInterfaces << NetworkInterface;
+    }
 
-        // Interface properties
-        // Default: IP and Network Mask are from the first entry of the list, regardeless of the protocol
-        // The IPv4 IP and Network Mask will be retrieved right after and used if available
-        QString      LongName        = Interface.humanReadableName();
-        QHostAddress IPaddress       = Interface.addressEntries().at(0).ip();
-        QHostAddress NetworkMask     = Interface.addressEntries().at(0).netmask();
-        QString      HardwareAddress = Interface.hardwareAddress();
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///                                                                                                                     ///
+    ///          Create the dynamic part of the menu, which contains the interfaces with predefined IP address              ///
+    ///                                                                                                                     ///
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        // Browse all the available addresses for this interface
-        // Pick the IPv4 address if one is available, else stick to the default one
-        QList<QNetworkAddressEntry> Addresses = Interface.addressEntries();
+    this->ContextMenu = new QMenu;
 
-        for (int j = 0; j < Addresses.count(); j++) {
-            if (Addresses.at(j).ip().protocol() == QAbstractSocket::IPv4Protocol) {
-                IPaddress   = Addresses.at(j).ip();
-                NetworkMask = Addresses.at(j).netmask();
+    for (int i = 0; i < FilteredNetworkInterfaces.size(); i++) {
+        // Create the Interface item in the main menu
+        QNetworkInterface NetworkInterface       = FilteredNetworkInterfaces.at(i);                   // Current Network Interface
+        QAction*          ActionNetworkInterface = new QAction(NetworkInterface.humanReadableName()); // Name of this Network Interface
+        QString           HardwareAddress        = NetworkInterface.hardwareAddress();                // HW address of this Network Interface
+
+        // There is no stored Interface if there is not at least one predefined IP
+        // So, set the IP count to 0 by default, and update it only if there is really predefined IP
+        Interface* Interface = InterfaceList::instance()->interface(HardwareAddress); // Stored Interface with predefined IP
+        int        IPcount   = 0;                                                     // Count of predefined IP for this Stored Interface
+        if (Interface != nullptr) {
+            IPcount = Interface->predefinedIPcount();
+        }
+
+        // Create the sub-menu containing the predefined IP and the "Edit predefined IP" item
+        QMenu* Submenu = new QMenu;
+
+        if (IPcount != 0) {
+            QList<PredefinedIP> PredefinedIPList = Interface->predefinedIPlist();
+            for (int j = 0; j < IPcount; j++) {
+                PredefinedIP IP = PredefinedIPList.at(i);
+                QString      IPstring(IP.ipAddress());
+                // TODO: complete with netmask?
+                QAction* ActionIP = new QAction(IPstring);
+
+                Submenu->addAction(ActionIP);
+                // TODO                connect(ActionIP, &QAction::triggered, this, setInterfaceIPwithNetSH());
             }
         }
 
-        // Create graphical items
-        QTableWidgetItem* ItemLongName        = new QTableWidgetItem(LongName);
-        QTableWidgetItem* ItemIPaddress       = new QTableWidgetItem(IPaddress.toString());
-        QTableWidgetItem* ItemNetworkMask     = new QTableWidgetItem(NetworkMask.toString());
-        QTableWidgetItem* ItemHardwareAddress = new QTableWidgetItem(HardwareAddress);
+        // Add the "Edit predefined IP" item
+        QAction* ActionEditPredefinedIP = new QAction("Edit predefined IP");
+        Submenu->addSeparator();
+        Submenu->addAction(ActionEditPredefinedIP);
+        connect(ActionEditPredefinedIP, &QAction::triggered, [HardwareAddress]() { DlgEditInterface::execDlgEditInterface(HardwareAddress); });
 
-        // Add one line to the table
-        int NewRowIndex = ui->TableInterface->rowCount();
-        ui->TableInterface->setRowCount(NewRowIndex + 1);
-
-        // Insert items of the entry
-        ui->TableInterface->setItem(NewRowIndex, COLUMN_IF_NAME, ItemLongName);
-        ui->TableInterface->setItem(NewRowIndex, COLUMN_IF_IP_ADDRESS, ItemIPaddress);
-        ui->TableInterface->setItem(NewRowIndex, COLUMN_IF_NETWORK_MASK, ItemNetworkMask);
-        ui->TableInterface->setItem(NewRowIndex, COLUMN_IF_HARDWARE_ADDRESS, ItemHardwareAddress);
+        // Fil the main context menu
+        this->ContextMenu->addAction(ActionNetworkInterface);
+        ActionNetworkInterface->setMenu(Submenu);
     }
-    // Re-enable sorting
-    ui->TableInterface->setSortingEnabled(true);
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///                                                                                                                     ///
+    ///                                                 Fill the end of the menu                                            ///
+    ///                                                                                                                     ///
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // Create the actions
+    QAction* ActionSettings = new QAction("Settings");
+    QAction* ActionAbout    = new QAction("About");
+    QAction* ActionExit     = new QAction("Exit");
+
+    // Fill the menu
+    this->ContextMenu->addSeparator();
+    this->ContextMenu->addAction(ActionSettings);
+    this->ContextMenu->addAction(ActionAbout);
+    this->ContextMenu->addSeparator();
+    this->ContextMenu->addAction(ActionExit);
+
+    // Connect the actions
+    connect(ActionSettings, &QAction::triggered, []() { DlgSettings::execDlgSettings(); });
+    //    connect(ActionAbout, &QAction::triggered, []() { DlgAbout::execDlgAbout(); });
+    connect(ActionExit, &QAction::triggered, []() {
+        Settings::release();
+        QCoreApplication::exit(0);
+    });
+
+    // Add the context menu to the tray icon
+    setContextMenu(this->ContextMenu);
+
+    // Finally, show the context menu at cursor position
+    this->ContextMenu->popup(QCursor::pos());
 }
-*/
