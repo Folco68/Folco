@@ -28,22 +28,25 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         Settings.cpp
 
         # UI
-        UI/TrayIcon.hpp
-        UI/TrayIcon.cpp
-        UI/DlgEditConfig.hpp
-        UI/DlgEditConfig.cpp
-        UI/DlgEditConfig.ui
+        UI/DlgEditInterface.hpp
+        UI/DlgEditInterface.cpp
+        UI/DlgEditInterface.ui
+        UI/DlgEditPredefinedIP.hpp
+        UI/DlgEditPredefinedIP.cpp
+        UI/DlgEditPredefinedIP.ui
         UI/DlgSettings.hpp
         UI/DlgSettings.cpp
         UI/DlgSettings.ui
+        UI/TrayIcon.hpp
+        UI/TrayIcon.cpp
 
         # Network
-        Network/PredefinedIP.hpp
-        Network/PredefinedIP.cpp
         Network/Interface.hpp
         Network/Interface.cpp
         Network/InterfaceList.hpp
         Network/InterfaceList.cpp
+        Network/PredefinedIP.hpp
+        Network/PredefinedIP.cpp
 
         # Ressources
         Ressources/Icons.qrc

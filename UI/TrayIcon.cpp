@@ -65,7 +65,7 @@ void TrayIcon::showContextMenu()
             continue;
         }
 
-        if (Settings::instance()->showOnlyPredefined() && !InterfaceList::instance()->hasConfiguration(NetworkInterface.hardwareAddress())) {
+        if (Settings::instance()->showOnlyPredefined() && !InterfaceList::instance()->hasPredefinedIP(NetworkInterface.hardwareAddress())) {
             continue;
         }
 
@@ -84,22 +84,22 @@ void TrayIcon::showContextMenu()
     for (int i = 0; i < FilteredNetworkInterfaces.size(); i++) {
         // Create the Interface item in the main menu
         QNetworkInterface NetworkInterface       = FilteredNetworkInterfaces.at(i);                   // Current Network Interface
-        QAction*          ActionNetworkInterface = new QAction(NetworkInterface.humanReadableName()); // Name of this Network Interface
+        QAction*          ActionNetworkInterface = new QAction(NetworkInterface.humanReadableName()); // Action (item) of this Network Interface
         QString           HardwareAddress        = NetworkInterface.hardwareAddress();                // HW address of this Network Interface
 
         // There is no stored Interface if there is not at least one predefined IP
         // So, set the IP count to 0 by default, and update it only if there is really predefined IP
-        Interface* Interface = InterfaceList::instance()->interface(HardwareAddress); // Stored Interface with predefined IP
-        int        IPcount   = 0;                                                     // Count of predefined IP for this Stored Interface
-        if (Interface != nullptr) {
-            IPcount = Interface->predefinedIPcount();
+        Interface* StoredInterface = InterfaceList::instance()->interface(HardwareAddress); // Stored Interface with predefined IP
+        int        IPcount         = 0;                                                     // Count of predefined IP for this Stored Interface
+        if (StoredInterface != nullptr) {
+            IPcount = StoredInterface->predefinedIPcount();
         }
 
         // Create the sub-menu containing the predefined IP and the "Edit predefined IP" item
         QMenu* Submenu = new QMenu;
 
         if (IPcount != 0) {
-            QList<PredefinedIP> PredefinedIPList = Interface->predefinedIPlist();
+            QList<PredefinedIP> PredefinedIPList = StoredInterface->predefinedIPlist();
             for (int j = 0; j < IPcount; j++) {
                 PredefinedIP IP = PredefinedIPList.at(i);
                 QString      IPstring(IP.ipAddress());
@@ -115,7 +115,7 @@ void TrayIcon::showContextMenu()
         QAction* ActionEditPredefinedIP = new QAction("Edit predefined IP");
         Submenu->addSeparator();
         Submenu->addAction(ActionEditPredefinedIP);
-        connect(ActionEditPredefinedIP, &QAction::triggered, [HardwareAddress]() { DlgEditInterface::execDlgEditInterface(HardwareAddress); });
+        connect(ActionEditPredefinedIP, &QAction::triggered, [NetworkInterface]() { DlgEditInterface::execDlgEditInterface(NetworkInterface); });
 
         // Fil the main context menu
         this->ContextMenu->addAction(ActionNetworkInterface);

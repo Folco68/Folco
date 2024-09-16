@@ -1,6 +1,9 @@
 - set an application Icon
 - DlgEditInterface: validate IP
-- Remember disconnected devices and allow to edit/delete them (usefull for USB-Eth adapters)
+- Remember disconnected devices and allow to edit/forget them (usefull for USB-Eth adapters)
 + offer to give a name to preconfigured IPs. This name could be used in the menu
 - offer to configure the display of the IP in the tray menu: custom name/IP, IP/custom name, ...
 - allow to set an interface to DHCP
+- look at iterators for QList browsing
+- DlgEditPredefinedIP: merge newPredefinedIP() and editPredefinedIP()
++ IPv4 display does not work in DlgInterface

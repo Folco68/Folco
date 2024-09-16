@@ -35,3 +35,8 @@ QList<PredefinedIP> Interface::predefinedIPlist() const
 {
     return this->PredefinedIPlist;
 }
+
+void Interface::clearContent()
+{
+    this->PredefinedIPlist.clear();
+}

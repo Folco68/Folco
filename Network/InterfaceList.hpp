@@ -13,8 +13,8 @@ class InterfaceList
     static void       release();
 
     Interface* interface(QString hwaddress) const;
-    bool       hasConfiguration(QString hwaddress) const;
-    void       addPredefinedIP(QString hwaddress, PredefinedIP ip);
+    bool       hasPredefinedIP(QString hwaddress) const;
+    void       addInterface(Interface* interface);
 
   private:
     static InterfaceList* interfacelist;
