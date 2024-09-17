@@ -33,7 +33,7 @@ class Settings: public QSettings
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #define KEY_SHOW_ONLY_ETHERNET_WIFI     "ShowOnlyEthernetWiFi"
-#define DEFAULT_SHOW_ONLY_ETHERNET_WIFI false
+#define DEFAULT_SHOW_ONLY_ETHERNET_WIFI true
 
 #define KEY_SHOW_ONLY_UP     "ShowOnlyUp"
 #define DEFAULT_SHOW_ONLY_UP false

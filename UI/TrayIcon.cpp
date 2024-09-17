@@ -57,14 +57,17 @@ void TrayIcon::showContextMenu()
         ///                                                                                                                     ///
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+        // Show only Ethernet and Wi-Fi capable interfaces
         if (Settings::instance()->showOnlyEthernetWifi() && NetworkInterface.type() != QNetworkInterface::Ethernet && NetworkInterface.type() != QNetworkInterface::Wifi) {
             continue;
         }
 
+        // Show only active interface
         if (Settings::instance()->showOnlyUp() && !(NetworkInterface.flags() & QNetworkInterface::IsUp)) {
             continue;
         }
 
+        // Show only interface with predefined IP
         if (Settings::instance()->showOnlyPredefined() && !InterfaceList::instance()->hasPredefinedIP(NetworkInterface.hardwareAddress())) {
             continue;
         }
@@ -87,7 +90,7 @@ void TrayIcon::showContextMenu()
         QAction*          ActionNetworkInterface = new QAction(NetworkInterface.humanReadableName()); // Action (item) of this Network Interface
         QString           HardwareAddress        = NetworkInterface.hardwareAddress();                // HW address of this Network Interface
 
-        // There is no stored Interface if there is not at least one predefined IP
+        // There is no stored Interface if there is not at least one predefined IP <===== TODO: this should be false now
         // So, set the IP count to 0 by default, and update it only if there is really predefined IP
         Interface* StoredInterface = InterfaceList::instance()->interface(HardwareAddress); // Stored Interface with predefined IP
         int        IPcount         = 0;                                                     // Count of predefined IP for this Stored Interface
@@ -98,14 +101,18 @@ void TrayIcon::showContextMenu()
         // Create the sub-menu containing the predefined IP and the "Edit predefined IP" item
         QMenu* Submenu = new QMenu;
 
+        // Create the dynamic part of the menu with the predefined IP
         if (IPcount != 0) {
             QList<PredefinedIP> PredefinedIPList = StoredInterface->predefinedIPlist();
             for (int j = 0; j < IPcount; j++) {
-                PredefinedIP IP = PredefinedIPList.at(i);
-                QString      IPstring(IP.ipAddress());
-                // TODO: complete with netmask?
-                QAction* ActionIP = new QAction(IPstring);
+                PredefinedIP IP = PredefinedIPList.at(j);
+                QString      IPstring;
+                if (!IP.name().isEmpty()) {
+                    IPstring = QString("%1: ").arg(IP.name());
+                }
+                IPstring.append(IP.ipAddress());
 
+                QAction* ActionIP = new QAction(IPstring);
                 Submenu->addAction(ActionIP);
                 // TODO                connect(ActionIP, &QAction::triggered, this, setInterfaceIPwithNetSH());
             }
