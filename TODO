@@ -12,7 +12,6 @@
 
 // NETSH
 
-// I can't get this DHCP stuff working :/
 netsh interface ipv4 set address "[interface name]" dhcp
 netsh interface ipv4 set dns "[interface name]" dhcp
 

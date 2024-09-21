@@ -94,6 +94,7 @@ void TrayIcon::showContextMenu()
         QNetworkInterface NetworkInterface       = FilteredNetworkInterfaces.at(i);                   // Current Network Interface
         QAction*          ActionNetworkInterface = new QAction(NetworkInterface.humanReadableName()); // Action (item) of this Network Interface
         QString           HardwareAddress        = NetworkInterface.hardwareAddress();                // HW address of this Network Interface
+        QString           Name                   = NetworkInterface.humanReadableName();              // Name, used to identify the interface in the netsh commands
 
         // There is no stored Interface if there is not at least one predefined IP <===== TODO: this should be false now
         // So, set the IP count to 0 by default, and update it only if there is really predefined IP
@@ -119,7 +120,7 @@ void TrayIcon::showContextMenu()
 
                 QAction* ActionIP = new QAction(IPstring);
                 Submenu->addAction(ActionIP);
-                connect(ActionIP, &QAction::triggered, this, [this, HardwareAddress, IP]() { configureInterface(HardwareAddress, IP); });
+                connect(ActionIP, &QAction::triggered, this, [this, Name, IP]() { configureInterface(Name, IP); });
             }
         }
 
@@ -127,7 +128,7 @@ void TrayIcon::showContextMenu()
         QAction* ActionUseDHCP = new QAction("Use DHCP");
         Submenu->addSeparator();
         Submenu->addAction(ActionUseDHCP);
-        connect(ActionUseDHCP, &QAction::triggered, this, [this, HardwareAddress]() { configureInterfaceDHCP(HardwareAddress); });
+        connect(ActionUseDHCP, &QAction::triggered, this, [this, Name]() { configureInterfaceDHCP(Name); });
 
         // Add the "Edit predefined IP" item
         QAction* ActionEditPredefinedIP = new QAction("Edit predefined IP");
@@ -173,10 +174,13 @@ void TrayIcon::showContextMenu()
     this->ContextMenu->popup(QCursor::pos());
 }
 
-void TrayIcon::configureInterface(QString hwaddress, PredefinedIP ip)
+void TrayIcon::configureInterface(QString name, PredefinedIP ip)
 {
+    // netsh interface ipv4 set address "[interface name]" dhcp
+    // netsh interface ipv4 set dns "[interface name]" dhcp
 }
 
-void TrayIcon::configureInterfaceDHCP(QString hwaddress)
+void TrayIcon::configureInterfaceDHCP(QString name)
 {
+    // netsh interface ipv4 set address "[interface name]" static [IP] [netmask] [gateway] // gateway and netmask optional, netmask defaults to 255.255.0.0, gateway to nothing
 }

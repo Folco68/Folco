@@ -16,8 +16,8 @@ class TrayIcon: public QSystemTrayIcon
   private:
     void   showContextMenu();
     QMenu* ContextMenu;
-    void   configureInterface(QString hwaddress, PredefinedIP ip);
-    void   configureInterfaceDHCP(QString hwaddress);
+    void   configureInterface(QString name, PredefinedIP ip);
+    void   configureInterfaceDHCP(QString name);
 };
 
 #endif // TRAYICON_HPP
