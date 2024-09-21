@@ -1,6 +1,7 @@
 #ifndef TRAYICON_HPP
 #define TRAYICON_HPP
 
+#include "../Network/PredefinedIP.hpp"
 #include <QMenu>
 #include <QSystemTrayIcon>
 
@@ -15,6 +16,8 @@ class TrayIcon: public QSystemTrayIcon
   private:
     void   showContextMenu();
     QMenu* ContextMenu;
+    void   configureInterface(QString hwaddress, PredefinedIP ip);
+    void   configureInterfaceDHCP(QString hwaddress);
 };
 
 #endif // TRAYICON_HPP

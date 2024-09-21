@@ -1,24 +1,24 @@
-#ifndef DLG_EDIT_INTERFACE_HPP
-#define DLG_EDIT_INTERFACE_HPP
+#ifndef DLG_INTERFACE_HPP
+#define DLG_INTERFACE_HPP
 
 #include "../Network/Interface.hpp"
 #include <QDialog>
 #include <QNetworkInterface>
 
 namespace Ui {
-    class DlgEditInterface;
+    class DlgInterface;
 }
 
-class DlgEditInterface: public QDialog
+class DlgInterface: public QDialog
 {
     Q_OBJECT
 
   public:
-    static void execDlgEditInterface(QNetworkInterface NetworkInterface);
-    ~DlgEditInterface();
+    static void execDlgInterface(QNetworkInterface NetworkInterface);
+    ~DlgInterface();
 
   private:
-    explicit DlgEditInterface(QNetworkInterface NetworkInterface);
+    explicit DlgInterface(QNetworkInterface NetworkInterface);
     void tableSelectionChanged();
     void newPredefinedIP();
     void editPredefinedIP();
@@ -26,7 +26,7 @@ class DlgEditInterface: public QDialog
 
     void writeContent(Interface* interface);
 
-    Ui::DlgEditInterface* ui;
+    Ui::DlgInterface* ui;
 };
 
 typedef enum {
@@ -36,4 +36,4 @@ typedef enum {
     COLUMN_GATEWAY
 } COLUMN_HEADER;
 
-#endif // DLG_EDIT_INTERFACE_HPP
+#endif // DLG_INTERFACE_HPP

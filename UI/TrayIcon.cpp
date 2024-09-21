@@ -1,7 +1,7 @@
 #include "TrayIcon.hpp"
 #include "../Network/InterfaceList.hpp"
 #include "../Settings.hpp"
-#include "DlgEditInterface.hpp"
+#include "DlgInterface.hpp"
 #include "DlgSettings.hpp"
 #include <QAction>
 #include <QCoreApplication>
@@ -84,6 +84,11 @@ void TrayIcon::showContextMenu()
 
     this->ContextMenu = new QMenu;
 
+    // Section title. Can't use QMenu::addSection because Windows 10 don't display it
+    QAction* Title = new QAction("*** Host interfaces ***");
+    Title->setDisabled(true);
+    this->ContextMenu->addAction(Title);
+
     for (int i = 0; i < FilteredNetworkInterfaces.size(); i++) {
         // Create the Interface item in the main menu
         QNetworkInterface NetworkInterface       = FilteredNetworkInterfaces.at(i);                   // Current Network Interface
@@ -114,17 +119,23 @@ void TrayIcon::showContextMenu()
 
                 QAction* ActionIP = new QAction(IPstring);
                 Submenu->addAction(ActionIP);
-                // TODO                connect(ActionIP, &QAction::triggered, this, setInterfaceIPwithNetSH());
+                connect(ActionIP, &QAction::triggered, this, [this, HardwareAddress, IP]() { configureInterface(HardwareAddress, IP); });
             }
         }
+
+        // Add the "Use DHCP" item
+        QAction* ActionUseDHCP = new QAction("Use DHCP");
+        Submenu->addSeparator();
+        Submenu->addAction(ActionUseDHCP);
+        connect(ActionUseDHCP, &QAction::triggered, this, [this, HardwareAddress]() { configureInterfaceDHCP(HardwareAddress); });
 
         // Add the "Edit predefined IP" item
         QAction* ActionEditPredefinedIP = new QAction("Edit predefined IP");
         Submenu->addSeparator();
         Submenu->addAction(ActionEditPredefinedIP);
-        connect(ActionEditPredefinedIP, &QAction::triggered, [NetworkInterface]() { DlgEditInterface::execDlgEditInterface(NetworkInterface); });
+        connect(ActionEditPredefinedIP, &QAction::triggered, this, [NetworkInterface]() { DlgInterface::execDlgInterface(NetworkInterface); });
 
-        // Fil the main context menu
+        // Fill the main context menu
         this->ContextMenu->addAction(ActionNetworkInterface);
         ActionNetworkInterface->setMenu(Submenu);
     }
@@ -160,4 +171,12 @@ void TrayIcon::showContextMenu()
 
     // Finally, show the context menu at cursor position
     this->ContextMenu->popup(QCursor::pos());
+}
+
+void TrayIcon::configureInterface(QString hwaddress, PredefinedIP ip)
+{
+}
+
+void TrayIcon::configureInterfaceDHCP(QString hwaddress)
+{
 }

@@ -5,5 +5,15 @@
 - offer to configure the display of the IP in the tray menu: custom name/IP, IP/custom name, ...
 - allow to set an interface to DHCP
 - look at iterators for QList browsing
-- DlgEditPredefinedIP: merge newPredefinedIP() and editPredefinedIP()
+- DlgPredefinedIP: merge newPredefinedIP() and editPredefinedIP() ??
 + IPv4 display does not work in DlgInterface
+- standardize symbols case
+
+
+// NETSH
+
+// I can't get this DHCP stuff working :/
+netsh interface ipv4 set address "[interface name]" dhcp
+netsh interface ipv4 set dns "[interface name]" dhcp
+
+netsh interface ipv4 set address name="[interface name]" static IP netmask gateway // gateway and netmask optional, netmask defaults to 255.255.0.0, gateway to nothing

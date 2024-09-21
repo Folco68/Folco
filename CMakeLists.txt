@@ -28,12 +28,12 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         Settings.cpp
 
         # UI
-        UI/DlgEditInterface.hpp
-        UI/DlgEditInterface.cpp
-        UI/DlgEditInterface.ui
-        UI/DlgEditPredefinedIP.hpp
-        UI/DlgEditPredefinedIP.cpp
-        UI/DlgEditPredefinedIP.ui
+        UI/DlgInterface.hpp
+        UI/DlgInterface.cpp
+        UI/DlgInterface.ui
+        UI/DlgPredefinedIP.hpp
+        UI/DlgPredefinedIP.cpp
+        UI/DlgPredefinedIP.ui
         UI/DlgSettings.hpp
         UI/DlgSettings.cpp
         UI/DlgSettings.ui

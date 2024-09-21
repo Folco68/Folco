@@ -1,10 +1,10 @@
-#include "DlgEditPredefinedIP.hpp"
-#include "ui_DlgEditPredefinedIP.h"
+#include "DlgPredefinedIP.hpp"
+#include "ui_DlgPredefinedIP.h"
 
 // Support null ptrs. Useless here, but it supports it anyway
-DlgEditPredefinedIP::DlgEditPredefinedIP(QWidget* parent, QString* name, QString* ip, QString* networkmask, QString* gateway)
+DlgPredefinedIP::DlgPredefinedIP(QWidget* parent, QString* name, QString* ip, QString* networkmask, QString* gateway)
     : QDialog(parent)
-    , ui(new Ui::DlgEditPredefinedIP)
+    , ui(new Ui::DlgPredefinedIP)
 {
     ui->setupUi(this);
 
@@ -30,16 +30,16 @@ DlgEditPredefinedIP::DlgEditPredefinedIP(QWidget* parent, QString* name, QString
     connect(ui->EditIPaddress, &QLineEdit::textChanged, this, [this]() { ui->ButtonOK->setEnabled(ui->EditIPaddress->hasAcceptableInput()); });
 }
 
-DlgEditPredefinedIP::~DlgEditPredefinedIP()
+DlgPredefinedIP::~DlgPredefinedIP()
 {
     delete ui;
 }
 
-int DlgEditPredefinedIP::newPredefinedIP(QWidget* parent, QString* name, QString* ip, QString* networkmask, QString* gateway)
+int DlgPredefinedIP::newPredefinedIP(QWidget* parent, QString* name, QString* ip, QString* networkmask, QString* gateway)
 {
     int RetVal;
 
-    DlgEditPredefinedIP* Dlg = new DlgEditPredefinedIP(parent);
+    DlgPredefinedIP* Dlg = new DlgPredefinedIP(parent);
     Dlg->setWindowTitle("New predefined IP");
     RetVal = Dlg->exec();
 
@@ -54,11 +54,11 @@ int DlgEditPredefinedIP::newPredefinedIP(QWidget* parent, QString* name, QString
     return RetVal;
 }
 
-int DlgEditPredefinedIP::editPredefinedIP(QWidget* parent, QString* name, QString* ip, QString* networkmask, QString* gateway)
+int DlgPredefinedIP::editPredefinedIP(QWidget* parent, QString* name, QString* ip, QString* networkmask, QString* gateway)
 {
     int RetVal;
 
-    DlgEditPredefinedIP* Dlg = new DlgEditPredefinedIP(parent, name, ip, networkmask, gateway);
+    DlgPredefinedIP* Dlg = new DlgPredefinedIP(parent, name, ip, networkmask, gateway);
     Dlg->setWindowTitle("Edit predefined IP");
     RetVal = Dlg->exec();
 

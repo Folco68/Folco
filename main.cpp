@@ -3,9 +3,10 @@
 
 int main(int argc, char* argv[])
 {
-    // Create and set up the application
-    // We don't want the application to exit when a window is closed
+    // Create and set up the application0
     QApplication Application(argc, argv);
+
+    // We don't want the application to exit when a window is closed
     Application.setQuitOnLastWindowClosed(false);
 
     // Create and install the tray icon

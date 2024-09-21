@@ -1,8 +1,8 @@
-#include "DlgEditInterface.hpp"
+#include "DlgInterface.hpp"
 #include "../Network/InterfaceList.hpp"
 #include "../Network/PredefinedIP.hpp"
-#include "DlgEditPredefinedIP.hpp"
-#include "ui_DlgEditInterface.h"
+#include "DlgPredefinedIP.hpp"
+#include "ui_DlgInterface.h"
 #include <QAbstractSocket>
 #include <QHostAddress>
 #include <QList>
@@ -12,8 +12,8 @@
 
 // This dialog deals only with QString for editing a PredefinedIP, so that the Interface is not modified if the dialog is cancelled
 
-DlgEditInterface::DlgEditInterface(QNetworkInterface NetworkInterface)
-    : ui(new Ui::DlgEditInterface)
+DlgInterface::DlgInterface(QNetworkInterface NetworkInterface)
+    : ui(new Ui::DlgInterface)
 {
     ui->setupUi(this);
 
@@ -83,12 +83,12 @@ DlgEditInterface::DlgEditInterface(QNetworkInterface NetworkInterface)
     connect(ui->ButtonDeleteIP, &QPushButton::clicked, this, [this]() { deletePredefinedIP(); });
 }
 
-DlgEditInterface::~DlgEditInterface()
+DlgInterface::~DlgInterface()
 {
     delete ui;
 }
 
-void DlgEditInterface::tableSelectionChanged()
+void DlgInterface::tableSelectionChanged()
 {
     QList<QTableWidgetItem*> SelectedItems = ui->TablePredefinedIP->selectedItems();
     bool                     Enabled       = SelectedItems.size() != 0;
@@ -98,9 +98,9 @@ void DlgEditInterface::tableSelectionChanged()
     ui->ButtonDown->setEnabled(Enabled);
 }
 
-void DlgEditInterface::execDlgEditInterface(QNetworkInterface NetworkInterface)
+void DlgInterface::execDlgInterface(QNetworkInterface NetworkInterface)
 {
-    DlgEditInterface* Dlg = new DlgEditInterface(NetworkInterface);
+    DlgInterface* Dlg = new DlgInterface(NetworkInterface);
     if (Dlg->exec() == QDialog::Accepted) {
         //
         // If the dialog is validated:
@@ -130,10 +130,11 @@ void DlgEditInterface::execDlgEditInterface(QNetworkInterface NetworkInterface)
     delete Dlg;
 }
 
-void DlgEditInterface::writeContent(Interface* interface)
+void DlgInterface::writeContent(Interface* interface)
 {
     for (int i = 0; i < ui->TablePredefinedIP->rowCount(); i++) {
-        PredefinedIP ip(ui->TablePredefinedIP->item(i, COLUMN_NAME)->text(),
+        PredefinedIP ip(interface,
+                        ui->TablePredefinedIP->item(i, COLUMN_NAME)->text(),
                         ui->TablePredefinedIP->item(i, COLUMN_IP_ADDRESS)->text(),
                         ui->TablePredefinedIP->item(i, COLUMN_NETWORK_MASK)->text(),
                         ui->TablePredefinedIP->item(i, COLUMN_GATEWAY)->text());
@@ -141,14 +142,14 @@ void DlgEditInterface::writeContent(Interface* interface)
     }
 }
 
-void DlgEditInterface::newPredefinedIP()
+void DlgInterface::newPredefinedIP()
 {
     QString Name;
     QString IP;
     QString NetworkMask;
     QString Gateway;
 
-    if (DlgEditPredefinedIP::newPredefinedIP(this, &Name, &IP, &NetworkMask, &Gateway) == QDialog::Accepted) {
+    if (DlgPredefinedIP::newPredefinedIP(this, &Name, &IP, &NetworkMask, &Gateway) == QDialog::Accepted) {
         int Count = ui->TablePredefinedIP->rowCount();
         ui->TablePredefinedIP->setRowCount(Count + 1);
 
@@ -164,7 +165,7 @@ void DlgEditInterface::newPredefinedIP()
     }
 }
 
-void DlgEditInterface::editPredefinedIP()
+void DlgInterface::editPredefinedIP()
 {
     // The Edit button is enabled only if there are selected items, so SelectedItems is not empty
     QList<QTableWidgetItem*> SelectedItems = ui->TablePredefinedIP->selectedItems();
@@ -175,7 +176,7 @@ void DlgEditInterface::editPredefinedIP()
     QString NetworkMask(ui->TablePredefinedIP->item(Row, COLUMN_NETWORK_MASK)->text());
     QString Gateway(ui->TablePredefinedIP->item(Row, COLUMN_GATEWAY)->text());
 
-    if (DlgEditPredefinedIP::editPredefinedIP(this, &Name, &IP, &NetworkMask, &Gateway) == QDialog::Accepted) {
+    if (DlgPredefinedIP::editPredefinedIP(this, &Name, &IP, &NetworkMask, &Gateway) == QDialog::Accepted) {
         ui->TablePredefinedIP->item(Row, COLUMN_NAME)->setText(Name);
         ui->TablePredefinedIP->item(Row, COLUMN_IP_ADDRESS)->setText(IP);
         ui->TablePredefinedIP->item(Row, COLUMN_NETWORK_MASK)->setText(NetworkMask);
@@ -183,7 +184,7 @@ void DlgEditInterface::editPredefinedIP()
     }
 }
 
-void DlgEditInterface::deletePredefinedIP()
+void DlgInterface::deletePredefinedIP()
 {
     // The Delete button is enabled only if there are selected items, so SelectedItems is not empty
     QList<QTableWidgetItem*> SelectedItems = ui->TablePredefinedIP->selectedItems();

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>DlgEditPredefinedIP</class>
- <widget class="QDialog" name="DlgEditPredefinedIP">
+ <class>DlgPredefinedIP</class>
+ <widget class="QDialog" name="DlgPredefinedIP">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -47,7 +47,7 @@
         </font>
        </property>
        <property name="inputMask">
-        <string>009.009.009.009</string>
+        <string>900.900.900.900</string>
        </property>
       </widget>
      </item>
