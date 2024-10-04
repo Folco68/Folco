@@ -37,6 +37,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         UI/DlgSettings.hpp
         UI/DlgSettings.cpp
         UI/DlgSettings.ui
+        UI/IPspinBox.hpp
+        UI/IPspinBox.cpp
         UI/TrayIcon.hpp
         UI/TrayIcon.cpp
 

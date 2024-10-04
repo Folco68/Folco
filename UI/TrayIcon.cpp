@@ -198,7 +198,7 @@ void TrayIcon::configureInterface(QString name, PredefinedIP* ip)
     QProcess::execute("cmd.exe", Arg);
 }
 
-// QProcess::execute() is synchronous, so no need to listen to the signal QProcess::finished to schedule the three calls
+// QProcess::execute() is synchronous, so no need to listen to QProcess::finished to schedule the three calls
 void TrayIcon::configureInterfaceDHCP(QString name)
 {
     // 1. Delete the IPv4 address of this interface it one is set
@@ -220,7 +220,7 @@ void TrayIcon::configureInterfaceDHCP(QString name)
     ArgAddress << QString("/c netsh interface ipv4 set address \"%1\" dhcp").arg(name);
     QProcess::execute("cmd.exe", ArgAddress);
 
-    // 3. Enable DHCP for the DNS
+    // 3. Enable DHCP for the DNS servers
     // $ netsh interface ipv4 set dns "[interface name]" dhcp
     QList<QString> ArgDNS;
     ArgDNS << QString("/c netsh interface ipv4 set dns \"%1\" dhcp").arg(name);

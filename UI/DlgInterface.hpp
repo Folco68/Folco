@@ -9,6 +9,9 @@ namespace Ui {
     class DlgInterface;
 }
 
+// This dialog uses the list of PredefinedIP of an Interface to fill its table.
+// Only the execDlgInterface really create and delete PredefinedIP
+// All other functions just modify the tables
 class DlgInterface: public QDialog
 {
     Q_OBJECT

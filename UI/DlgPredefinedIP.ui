@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>300</width>
-    <height>158</height>
+    <width>325</width>
+    <height>174</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -21,7 +21,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <layout class="QFormLayout" name="formLayout">
+    <layout class="QGridLayout" name="LayoutIP">
      <item row="0" column="0">
       <widget class="QLabel" name="LabelName">
        <property name="text">
@@ -29,8 +29,18 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="1">
-      <widget class="QLineEdit" name="EditName"/>
+     <item row="0" column="1" colspan="2">
+      <widget class="QLineEdit" name="EditName">
+       <property name="minimumSize">
+        <size>
+         <width>220</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="placeholderText">
+        <string>Custom name, just a reminder for you</string>
+       </property>
+      </widget>
      </item>
      <item row="1" column="0">
       <widget class="QLabel" name="LabelIPaddress">
@@ -40,9 +50,30 @@
       </widget>
      </item>
      <item row="1" column="1">
-      <layout class="QHBoxLayout" name="horizontalLayout">
+      <spacer name="HSpacerIP">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="1" column="2">
+      <layout class="QHBoxLayout" name="HLayoutIP">
+       <property name="spacing">
+        <number>0</number>
+       </property>
        <item>
-        <widget class="QSpinBox" name="spinBox_4">
+        <widget class="IPspinBox" name="SpinBox11">
+         <property name="font">
+          <font>
+           <family>Lucida Console</family>
+          </font>
+         </property>
          <property name="frame">
           <bool>false</bool>
          </property>
@@ -58,7 +89,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="label">
+        <widget class="QLabel" name="LabelDot11">
          <property name="text">
           <string>.</string>
          </property>
@@ -68,7 +99,12 @@
         </widget>
        </item>
        <item>
-        <widget class="QSpinBox" name="spinBox_13">
+        <widget class="IPspinBox" name="SpinBox12">
+         <property name="font">
+          <font>
+           <family>Lucida Console</family>
+          </font>
+         </property>
          <property name="frame">
           <bool>false</bool>
          </property>
@@ -84,7 +120,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="label_2">
+        <widget class="QLabel" name="LabelDot12">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
            <horstretch>0</horstretch>
@@ -100,7 +136,12 @@
         </widget>
        </item>
        <item>
-        <widget class="QSpinBox" name="spinBox_14">
+        <widget class="IPspinBox" name="SpinBox13">
+         <property name="font">
+          <font>
+           <family>Lucida Console</family>
+          </font>
+         </property>
          <property name="frame">
           <bool>false</bool>
          </property>
@@ -116,7 +157,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="label_3">
+        <widget class="QLabel" name="LabelDot13">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
            <horstretch>0</horstretch>
@@ -132,12 +173,17 @@
         </widget>
        </item>
        <item>
-        <widget class="QSpinBox" name="spinBox_3">
+        <widget class="IPspinBox" name="SpinBox14">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="font">
+          <font>
+           <family>Lucida Console</family>
+          </font>
          </property>
          <property name="frame">
           <bool>false</bool>
@@ -163,9 +209,30 @@
       </widget>
      </item>
      <item row="2" column="1">
-      <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <spacer name="HSpacerNetmask">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="2" column="2">
+      <layout class="QHBoxLayout" name="HLayoutNetmask">
+       <property name="spacing">
+        <number>0</number>
+       </property>
        <item>
-        <widget class="QSpinBox" name="spinBox_5">
+        <widget class="IPspinBox" name="SpinBox21">
+         <property name="font">
+          <font>
+           <family>Lucida Console</family>
+          </font>
+         </property>
          <property name="frame">
           <bool>false</bool>
          </property>
@@ -181,7 +248,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="label_4">
+        <widget class="QLabel" name="LabelDot21">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
            <horstretch>0</horstretch>
@@ -197,7 +264,12 @@
         </widget>
        </item>
        <item>
-        <widget class="QSpinBox" name="spinBox_15">
+        <widget class="IPspinBox" name="SpinBox22">
+         <property name="font">
+          <font>
+           <family>Lucida Console</family>
+          </font>
+         </property>
          <property name="frame">
           <bool>false</bool>
          </property>
@@ -213,7 +285,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="label_5">
+        <widget class="QLabel" name="LabelDot22">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
            <horstretch>0</horstretch>
@@ -229,7 +301,12 @@
         </widget>
        </item>
        <item>
-        <widget class="QSpinBox" name="spinBox_16">
+        <widget class="IPspinBox" name="SpinBox23">
+         <property name="font">
+          <font>
+           <family>Lucida Console</family>
+          </font>
+         </property>
          <property name="frame">
           <bool>false</bool>
          </property>
@@ -245,7 +322,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="label_6">
+        <widget class="QLabel" name="LabelDot23">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
            <horstretch>0</horstretch>
@@ -261,7 +338,12 @@
         </widget>
        </item>
        <item>
-        <widget class="QSpinBox" name="spinBox_6">
+        <widget class="IPspinBox" name="SpinBox24">
+         <property name="font">
+          <font>
+           <family>Lucida Console</family>
+          </font>
+         </property>
          <property name="frame">
           <bool>false</bool>
          </property>
@@ -286,9 +368,30 @@
       </widget>
      </item>
      <item row="3" column="1">
-      <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <spacer name="HSpacerGateway">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="3" column="2">
+      <layout class="QHBoxLayout" name="HLayoutGateway">
+       <property name="spacing">
+        <number>0</number>
+       </property>
        <item>
-        <widget class="QSpinBox" name="spinBox_7">
+        <widget class="IPspinBox" name="SpinBox31">
+         <property name="font">
+          <font>
+           <family>Lucida Console</family>
+          </font>
+         </property>
          <property name="frame">
           <bool>false</bool>
          </property>
@@ -304,7 +407,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="label_7">
+        <widget class="QLabel" name="LabelDot31">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
            <horstretch>0</horstretch>
@@ -320,7 +423,12 @@
         </widget>
        </item>
        <item>
-        <widget class="QSpinBox" name="spinBox_17">
+        <widget class="IPspinBox" name="SpinBox32">
+         <property name="font">
+          <font>
+           <family>Lucida Console</family>
+          </font>
+         </property>
          <property name="frame">
           <bool>false</bool>
          </property>
@@ -336,7 +444,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="label_8">
+        <widget class="QLabel" name="LabelDot32">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
            <horstretch>0</horstretch>
@@ -352,7 +460,12 @@
         </widget>
        </item>
        <item>
-        <widget class="QSpinBox" name="spinBox_18">
+        <widget class="IPspinBox" name="SpinBox33">
+         <property name="font">
+          <font>
+           <family>Lucida Console</family>
+          </font>
+         </property>
          <property name="frame">
           <bool>false</bool>
          </property>
@@ -368,7 +481,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="label_9">
+        <widget class="QLabel" name="LabelDot33">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
            <horstretch>0</horstretch>
@@ -384,7 +497,12 @@
         </widget>
        </item>
        <item>
-        <widget class="QSpinBox" name="spinBox_8">
+        <widget class="IPspinBox" name="SpinBox34">
+         <property name="font">
+          <font>
+           <family>Lucida Console</family>
+          </font>
+         </property>
          <property name="frame">
           <bool>false</bool>
          </property>
@@ -404,9 +522,21 @@
     </layout>
    </item>
    <item>
+    <widget class="QLabel" name="LabelTip">
+     <property name="font">
+      <font>
+       <italic>true</italic>
+      </font>
+     </property>
+     <property name="text">
+      <string>Note: IP address is mandatory, other fields are optional</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <layout class="QHBoxLayout" name="HLayoutButtons">
      <item>
-      <spacer name="HLayoutSpacer">
+      <spacer name="HSpacerButtons">
        <property name="orientation">
         <enum>Qt::Orientation::Horizontal</enum>
        </property>
@@ -430,9 +560,6 @@
      </item>
      <item>
       <widget class="QPushButton" name="ButtonOK">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
        <property name="text">
         <string>OK</string>
        </property>
@@ -445,6 +572,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>IPspinBox</class>
+   <extends>QSpinBox</extends>
+   <header>IPspinBox.hpp</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

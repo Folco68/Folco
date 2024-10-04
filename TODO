@@ -16,5 +16,7 @@
 - IP validation: use QSpinBox?
 - BUG context menu opens at the center of the screen if an error message pops at first show
 - code for setting netmask and gateway is disabled
+- DlgInterface: double click an PredefinedIP should edit it
+- IPspinBox::focusInEvent() redefinition does not trigger the selectAll() method. Try by redefining QSpinBox::event(QEvent*) instead of the QAbstractSpinBox event
 
 // Supervisor at startup: https://superuser.com/questions/929225/how-to-run-a-program-as-an-administrator-at-startup-on-windows-10
