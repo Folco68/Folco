@@ -4,8 +4,10 @@
 #include "DlgPredefinedIP.hpp"
 #include "ui_DlgInterface.h"
 #include <QAbstractSocket>
+#include <QFile>
 #include <QHostAddress>
 #include <QList>
+#include <QMessageBox>
 #include <QNetworkAddressEntry>
 #include <QPushButton>
 #include <QTableWidgetItem>
@@ -47,17 +49,17 @@ DlgInterface::DlgInterface(QNetworkInterface NetworkInterface)
     Interface* StoredInterface = InterfaceList::instance()->interface(NetworkInterface.hardwareAddress());
 
     if (StoredInterface != nullptr) {
-        QList<PredefinedIP> IPlist = StoredInterface->predefinedIPlist();
+        QList<PredefinedIP*> IPlist = StoredInterface->predefinedIPlist();
         int                 Count  = IPlist.size();
         ui->TablePredefinedIP->setRowCount(Count);
 
         for (int i = 0; i < Count; i++) {
-            PredefinedIP ip = IPlist.at(i);
+            PredefinedIP* ip = IPlist.at(i);
 
-            QTableWidgetItem* ItemName        = new QTableWidgetItem(ip.name());
-            QTableWidgetItem* ItemIPaddress   = new QTableWidgetItem(ip.ipAddress());
-            QTableWidgetItem* ItemNetworkMask = new QTableWidgetItem(ip.networkMask());
-            QTableWidgetItem* ItemGateway     = new QTableWidgetItem(ip.gateway());
+            QTableWidgetItem* ItemName        = new QTableWidgetItem(ip->name());
+            QTableWidgetItem* ItemIPaddress   = new QTableWidgetItem(ip->ipAddress());
+            QTableWidgetItem* ItemNetworkMask = new QTableWidgetItem(ip->networkMask());
+            QTableWidgetItem* ItemGateway     = new QTableWidgetItem(ip->gateway());
 
             ui->TablePredefinedIP->setItem(i, COLUMN_NAME, ItemName);
             ui->TablePredefinedIP->setItem(i, COLUMN_IP_ADDRESS, ItemIPaddress);
@@ -133,11 +135,11 @@ void DlgInterface::execDlgInterface(QNetworkInterface NetworkInterface)
 void DlgInterface::writeContent(Interface* interface)
 {
     for (int i = 0; i < ui->TablePredefinedIP->rowCount(); i++) {
-        PredefinedIP ip(interface,
-                        ui->TablePredefinedIP->item(i, COLUMN_NAME)->text(),
-                        ui->TablePredefinedIP->item(i, COLUMN_IP_ADDRESS)->text(),
-                        ui->TablePredefinedIP->item(i, COLUMN_NETWORK_MASK)->text(),
-                        ui->TablePredefinedIP->item(i, COLUMN_GATEWAY)->text());
+        PredefinedIP* ip = new PredefinedIP(interface,
+                                            ui->TablePredefinedIP->item(i, COLUMN_NAME)->text(),
+                                            ui->TablePredefinedIP->item(i, COLUMN_IP_ADDRESS)->text(),
+                                            ui->TablePredefinedIP->item(i, COLUMN_NETWORK_MASK)->text(),
+                                            ui->TablePredefinedIP->item(i, COLUMN_GATEWAY)->text());
         interface->addPredefinedIP(ip);
     }
 }

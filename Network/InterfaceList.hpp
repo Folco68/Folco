@@ -3,6 +3,7 @@
 
 #include "Interface.hpp"
 #include "PredefinedIP.hpp"
+#include <QDataStream>
 #include <QList>
 #include <QString>
 
@@ -17,10 +18,15 @@ class InterfaceList
     void       addInterface(Interface* interface);
 
   private:
+    // Singleton stuff
     static InterfaceList* interfacelist;
-    QList<Interface*>     List;
-
     InterfaceList();
+    ~InterfaceList();
+
+    void open();
+    bool save() const;
+
+    QList<Interface*> List;
 };
 
 #endif // INTERFACE_LIST_HPP

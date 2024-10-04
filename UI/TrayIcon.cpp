@@ -9,7 +9,9 @@
 #include <QIcon>
 #include <QList>
 #include <QMenu>
+#include <QNetworkAddressEntry>
 #include <QNetworkInterface>
+#include <QProcess>
 #include <QString>
 
 TrayIcon::TrayIcon()
@@ -27,6 +29,8 @@ TrayIcon::~TrayIcon()
         delete this->ContextMenu;
         this->ContextMenu = nullptr;
     }
+
+    InterfaceList::release();
 }
 
 void TrayIcon::showContextMenu()
@@ -93,6 +97,8 @@ void TrayIcon::showContextMenu()
         // Create the Interface item in the main menu
         QNetworkInterface NetworkInterface       = FilteredNetworkInterfaces.at(i);                   // Current Network Interface
         QAction*          ActionNetworkInterface = new QAction(NetworkInterface.humanReadableName()); // Action (item) of this Network Interface
+
+        // Initialize some other vars
         QString           HardwareAddress        = NetworkInterface.hardwareAddress();                // HW address of this Network Interface
         QString           Name                   = NetworkInterface.humanReadableName();              // Name, used to identify the interface in the netsh commands
 
@@ -109,14 +115,14 @@ void TrayIcon::showContextMenu()
 
         // Create the dynamic part of the menu with the predefined IP
         if (IPcount != 0) {
-            QList<PredefinedIP> PredefinedIPList = StoredInterface->predefinedIPlist();
+            QList<PredefinedIP*> PredefinedIPList = StoredInterface->predefinedIPlist();
             for (int j = 0; j < IPcount; j++) {
-                PredefinedIP IP = PredefinedIPList.at(j);
+                PredefinedIP* IP = PredefinedIPList.at(j);
                 QString      IPstring;
-                if (!IP.name().isEmpty()) {
-                    IPstring = QString("%1: ").arg(IP.name());
+                if (!IP->name().isEmpty()) {
+                    IPstring = QString("%1: ").arg(IP->name());
                 }
-                IPstring.append(IP.ipAddress());
+                IPstring.append(IP->ipAddress());
 
                 QAction* ActionIP = new QAction(IPstring);
                 Submenu->addAction(ActionIP);
@@ -128,6 +134,7 @@ void TrayIcon::showContextMenu()
         QAction* ActionUseDHCP = new QAction("Use DHCP");
         Submenu->addSeparator();
         Submenu->addAction(ActionUseDHCP);
+        // TODO: get ipv4 address if one exists to delete it (if needed: call configureInterfaceDHCP() with a default argument
         connect(ActionUseDHCP, &QAction::triggered, this, [this, Name]() { configureInterfaceDHCP(Name); });
 
         // Add the "Edit predefined IP" item
@@ -174,13 +181,48 @@ void TrayIcon::showContextMenu()
     this->ContextMenu->popup(QCursor::pos());
 }
 
-void TrayIcon::configureInterface(QString name, PredefinedIP ip)
+void TrayIcon::configureInterface(QString name, PredefinedIP* ip)
 {
-    // netsh interface ipv4 set address "[interface name]" dhcp
-    // netsh interface ipv4 set dns "[interface name]" dhcp
+    // netmask and gateway optional, netmask defaults to 255.255.0.0, gateway to nothing
+    // $ netsh interface ipv4 set address "[interface name]" static [IP] [netmask] [gateway]
+    QList<QString> Arg;
+    Arg << QString("/c netsh interface ipv4 set address \"%1\" static %2").arg(name, ip->ipAddress());
+    /*    if (!ip.networkMask().isEmpty()) {
+        Arg << " " << ip.networkMask();
+
+        if (!ip.gateway().isEmpty()) {
+            Arg << " " << ip.gateway();
+        }
+    }
+*/
+    QProcess::execute("cmd.exe", Arg);
 }
 
+// QProcess::execute() is synchronous, so no need to listen to the signal QProcess::finished to schedule the three calls
 void TrayIcon::configureInterfaceDHCP(QString name)
 {
-    // netsh interface ipv4 set address "[interface name]" static [IP] [netmask] [gateway] // gateway and netmask optional, netmask defaults to 255.255.0.0, gateway to nothing
+    // 1. Delete the IPv4 address of this interface it one is set
+    // $ netsh interface ipv4 delete address "[interface name]" addr=[IP]
+    QList<QNetworkAddressEntry> AddressEntries = QNetworkInterface::interfaceFromName(name).addressEntries();
+    for (int i = 0; i < AddressEntries.size(); i++) {
+        QHostAddress HostAddress = AddressEntries.at(i).ip();
+        if (HostAddress.protocol() == QAbstractSocket::IPv4Protocol) {
+            QList<QString> ArgDelete;
+            ArgDelete << QString("/c netsh interface ipv4 delete address \"%1\" addr=%2").arg(name, HostAddress.toString());
+            QProcess::execute("cmd.exe", ArgDelete);
+            break; // TODO: check if an interface could be configured with more than 1 IP
+        }
+    }
+
+    // 2. Enable DHCP for the address/network mask
+    // $ netsh interface ipv4 set address "[interface name]" dhcp
+    QList<QString> ArgAddress;
+    ArgAddress << QString("/c netsh interface ipv4 set address \"%1\" dhcp").arg(name);
+    QProcess::execute("cmd.exe", ArgAddress);
+
+    // 3. Enable DHCP for the DNS
+    // $ netsh interface ipv4 set dns "[interface name]" dhcp
+    QList<QString> ArgDNS;
+    ArgDNS << QString("/c netsh interface ipv4 set dns \"%1\" dhcp").arg(name);
+    QProcess::execute("cmd.exe", ArgDNS);
 }

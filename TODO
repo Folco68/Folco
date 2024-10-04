@@ -3,16 +3,18 @@
 - Remember disconnected devices and allow to edit/forget them (usefull for USB-Eth adapters)
 + offer to give a name to preconfigured IPs. This name could be used in the menu
 - offer to configure the display of the IP in the tray menu: custom name/IP, IP/custom name, ...
-- allow to set an interface to DHCP
-- look at iterators for QList browsing
++ allow to set an interface to DHCP
++ look at iterators for QList browsing
 - DlgPredefinedIP: merge newPredefinedIP() and editPredefinedIP() ??
 + IPv4 display does not work in DlgInterface
 - standardize symbols case
+- add a log, accessible through the context menu
+- backup the data file before saving
+- add help and about with "BeforeRelease" data
+- handle stream errors while saving data file
+- delete InterfaceList/Interface/PredefinedIP
+- IP validation: use QSpinBox?
+- BUG context menu opens at the center of the screen if an error message pops at first show
+- code for setting netmask and gateway is disabled
 
-
-// NETSH
-
-netsh interface ipv4 set address "[interface name]" dhcp
-netsh interface ipv4 set dns "[interface name]" dhcp
-
-netsh interface ipv4 set address name="[interface name]" static IP netmask gateway // gateway and netmask optional, netmask defaults to 255.255.0.0, gateway to nothing
+// Supervisor at startup: https://superuser.com/questions/929225/how-to-run-a-program-as-an-administrator-at-startup-on-windows-10

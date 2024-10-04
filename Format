@@ -1,0 +1,32 @@
+File format. All String are in UTF8
+
+=========
+Version 1
+=========
+
+FILE
+----
+
+String          FOLCO_SIGNATURE             Magic string to authenticate the file
+qint32          Version                     Version of the data file
+qint32          Count                       Number of INTERFACE
+INTERFACE       List                        All the INTERFACE, one by one
+...
+
+
+INTERFACE
+---------
+
+String          Hardware Address            MAC address
+qint32          Count                       Number of PREDEFINED_IP for this interface
+PREDEFINED_IP   List                        All the PREDEFINED_IP, one by one
+...
+
+
+PREDEFINED_IP
+-------------
+
+String          Name                        User defined name. Optional, can be defined for conveniency
+String          IP                          IP address, the only mandatory element
+String          Netmask                     Network mask, optional
+String          Gateway                     Gateway, optional
