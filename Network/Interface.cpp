@@ -24,6 +24,12 @@ Interface::Interface(QDataStream& stream)
     }
 }
 
+Interface::~Interface()
+{
+    for (int i = 0; i < this->PredefinedIPlist.count(); i++) {
+        delete this->PredefinedIPlist.at(i);
+    }
+}
 
 void Interface::addPredefinedIP(PredefinedIP* ip)
 {

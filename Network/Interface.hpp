@@ -11,6 +11,7 @@ class Interface
   public:
     Interface(QString hwaddress);
     Interface(QDataStream& stream);
+    ~Interface();
     void                 addPredefinedIP(PredefinedIP* ip);
     void                 removePredefinedIP(PredefinedIP* ip);
     int                  predefinedIPcount() const;

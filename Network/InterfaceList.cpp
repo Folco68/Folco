@@ -14,6 +14,9 @@ InterfaceList::InterfaceList()
 InterfaceList::~InterfaceList()
 {
     save();
+    for (int i = 0; i < this->List.count(); i++) {
+        delete this->List.at(i);
+    }
 }
 
 InterfaceList* InterfaceList::instance()

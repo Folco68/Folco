@@ -20,7 +20,7 @@ TrayIcon::TrayIcon()
 {
     // Show the context menu regardless of the trigger (default: only the right click displays the menu)
     // The menu is created dynamically every time it is triggerred, to refresh the interface list
-    connect(this, &QSystemTrayIcon::activated, this, [this]() { showContextMenu(); });
+    connect(this, &QSystemTrayIcon::activated, this, [this]() { showContextMenu(QCursor::pos()); });
 }
 
 TrayIcon::~TrayIcon()
@@ -33,7 +33,7 @@ TrayIcon::~TrayIcon()
     InterfaceList::release();
 }
 
-void TrayIcon::showContextMenu()
+void TrayIcon::showContextMenu(QPoint position)
 {
     // Delete the previous menu if one was already created
     if (this->ContextMenu != nullptr) {
@@ -178,7 +178,7 @@ void TrayIcon::showContextMenu()
     setContextMenu(this->ContextMenu);
 
     // Finally, show the context menu at cursor position
-    this->ContextMenu->popup(QCursor::pos());
+    this->ContextMenu->popup(position);
 }
 
 void TrayIcon::configureInterface(QString name, PredefinedIP* ip)

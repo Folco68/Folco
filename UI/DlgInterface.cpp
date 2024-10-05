@@ -81,6 +81,7 @@ DlgInterface::DlgInterface(QNetworkInterface NetworkInterface)
     // Table
     connect(ui->ButtoNewIP, &QPushButton::clicked, this, [this]() { newPredefinedIP(); });
     connect(ui->TablePredefinedIP, &QTableWidget::itemSelectionChanged, this, [this]() { tableSelectionChanged(); });
+    connect(ui->TablePredefinedIP, &QTableWidget::doubleClicked, this, [this]() { editPredefinedIP(); });
     connect(ui->ButtonEditIP, &QPushButton::clicked, this, [this]() { editPredefinedIP(); });
     connect(ui->ButtonDeleteIP, &QPushButton::clicked, this, [this]() { deletePredefinedIP(); });
 }

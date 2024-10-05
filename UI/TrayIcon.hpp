@@ -3,6 +3,7 @@
 
 #include "../Network/PredefinedIP.hpp"
 #include <QMenu>
+#include <QPoint>
 #include <QSystemTrayIcon>
 
 class TrayIcon: public QSystemTrayIcon
@@ -14,7 +15,7 @@ class TrayIcon: public QSystemTrayIcon
     ~TrayIcon();
 
   private:
-    void   showContextMenu();
+    void   showContextMenu(QPoint position);
     QMenu* ContextMenu;
     void   configureInterface(QString name, PredefinedIP* ip);
     void   configureInterfaceDHCP(QString name);
