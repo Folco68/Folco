@@ -18,6 +18,8 @@ class PredefinedIP
     QString    gateway() const;
     bool       operator==(PredefinedIP ip) const;
     void       save(QDataStream& stream);
+    bool       hasNetworkMask() const;
+    bool       hasGateway() const;
 
   private:
     // Keep a track of the interface which own this settings, to find the interface to configure when this Predefined IP is selected in the tray icon context menu

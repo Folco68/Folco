@@ -36,7 +36,6 @@ DlgInterface::DlgInterface(QNetworkInterface NetworkInterface)
         QHostAddress NetworkMask = AddressEntries.at(i).netmask();
         if (IPaddress.protocol() == QAbstractSocket::IPv4Protocol) {
             ui->EditIP->setText(QString("%1 / %2").arg(IPaddress.toString(), NetworkMask.toString()));
-            break;
         }
     }
 

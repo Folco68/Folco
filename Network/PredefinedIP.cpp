@@ -59,3 +59,13 @@ void PredefinedIP::save(QDataStream& stream)
 {
     stream << this->Name.toUtf8() << this->IPaddress.toUtf8() << this->NetworkMask.toUtf8() << this->Gateway.toUtf8();
 }
+
+bool PredefinedIP::hasNetworkMask() const
+{
+    return this->NetworkMask != QString("0.0.0.0");
+}
+
+bool PredefinedIP::hasGateway() const
+{
+    return this->Gateway != QString("0.0.0.0");
+}

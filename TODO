@@ -17,6 +17,8 @@
 + BUG context menu opens at the center of the screen if an error message pops at first show
 - code for setting netmask and gateway is disabled
 + DlgInterface: double click a PredefinedIP should edit it
-- BUG IPspinBox::focusInEvent() redefinition does not trigger the selectAll() method. Try by redefining QSpinBox::event(QEvent*) instead of the QAbstractSpinBox event
+- BUG IPspinBox::focusInEvent() redefinition does not trigger the selectAll() method because it monitors only kbd events.
+  Try by redefining QSpinBox::event(QEvent*) or QWidget::mousePressEvent(QMouseEvent*) instead of the QAbstractSpinBox event => new fail
+- implement up/down in DlgInterface
 
 // Supervisor at startup: https://superuser.com/questions/929225/how-to-run-a-program-as-an-administrator-at-startup-on-windows-10

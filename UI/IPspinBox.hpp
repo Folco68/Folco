@@ -3,6 +3,7 @@
 
 #include <QFocusEvent>
 #include <QKeyEvent>
+#include <QMouseEvent>
 #include <QSpinBox>
 #include <QWidget>
 
@@ -10,8 +11,10 @@ class IPspinBox: public QSpinBox
 {
   public:
     IPspinBox(QWidget* parent);
-    void focusInEvent(QFocusEvent* event) override;
-    void keyReleaseEvent(QKeyEvent* event) override;
+    void focusInEvent(QFocusEvent* event) override;      // Select all when grabbing kbd focus
+    void mouseReleaseEvent(QMouseEvent* event) override; // Select all on click
+    void keyReleaseEvent(QKeyEvent* event) override;     // Netxt byte when dot is hit
+
     void setNextByteBox(IPspinBox* box);
 
   private:

@@ -15,6 +15,12 @@ void IPspinBox::focusInEvent(QFocusEvent* event)
     selectAll();
 }
 
+void IPspinBox::mouseReleaseEvent(QMouseEvent* event)
+{
+    QAbstractSpinBox::mouseReleaseEvent(event);
+    selectAll();
+}
+
 void IPspinBox::keyReleaseEvent(QKeyEvent* event)
 {
     if ((event->text() == QString(".")) && (this->NextByteBox != nullptr)) {

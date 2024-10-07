@@ -126,7 +126,7 @@ void TrayIcon::showContextMenu(QPoint position)
 
                 QAction* ActionIP = new QAction(IPstring);
                 Submenu->addAction(ActionIP);
-                connect(ActionIP, &QAction::triggered, this, [this, Name, IP]() { configureInterface(Name, IP); });
+                connect(ActionIP, &QAction::triggered, this, [this, Name, IP]() { configureInterfacePredefinedIP(Name, IP); });
             }
         }
 
@@ -181,20 +181,19 @@ void TrayIcon::showContextMenu(QPoint position)
     this->ContextMenu->popup(position);
 }
 
-void TrayIcon::configureInterface(QString name, PredefinedIP* ip)
+void TrayIcon::configureInterfacePredefinedIP(QString name, PredefinedIP* ip)
 {
     // netmask and gateway optional, netmask defaults to 255.255.0.0, gateway to nothing
     // $ netsh interface ipv4 set address "[interface name]" static [IP] [netmask] [gateway]
     QList<QString> Arg;
     Arg << QString("/c netsh interface ipv4 set address \"%1\" static %2").arg(name, ip->ipAddress());
-    /*    if (!ip.networkMask().isEmpty()) {
-        Arg << " " << ip.networkMask();
+    if (ip->hasNetworkMask()) {
+        Arg << " " << ip->networkMask();
 
-        if (!ip.gateway().isEmpty()) {
-            Arg << " " << ip.gateway();
+        if (ip->hasGateway()) {
+            Arg << " " << ip->gateway();
         }
     }
-*/
     QProcess::execute("cmd.exe", Arg);
 }
 
@@ -203,14 +202,15 @@ void TrayIcon::configureInterfaceDHCP(QString name)
 {
     // 1. Delete the IPv4 address of this interface it one is set
     // $ netsh interface ipv4 delete address "[interface name]" addr=[IP]
-    QList<QNetworkAddressEntry> AddressEntries = QNetworkInterface::interfaceFromName(name).addressEntries();
+    QNetworkInterface           NetworkInteface = QNetworkInterface::interfaceFromName(name);
+    QList<QNetworkAddressEntry> AddressEntries  = NetworkInteface.addressEntries();
     for (int i = 0; i < AddressEntries.size(); i++) {
         QHostAddress HostAddress = AddressEntries.at(i).ip();
         if (HostAddress.protocol() == QAbstractSocket::IPv4Protocol) {
             QList<QString> ArgDelete;
             ArgDelete << QString("/c netsh interface ipv4 delete address \"%1\" addr=%2").arg(name, HostAddress.toString());
             QProcess::execute("cmd.exe", ArgDelete);
-            break; // TODO: check if an interface could be configured with more than 1 IP
+            // Don't break, because an interface can have multiple IPv4 addresses
         }
     }
 
