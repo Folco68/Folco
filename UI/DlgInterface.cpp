@@ -83,6 +83,8 @@ DlgInterface::DlgInterface(QNetworkInterface NetworkInterface)
     connect(ui->TablePredefinedIP, &QTableWidget::doubleClicked, this, [this]() { editPredefinedIP(); });
     connect(ui->ButtonEditIP, &QPushButton::clicked, this, [this]() { editPredefinedIP(); });
     connect(ui->ButtonDeleteIP, &QPushButton::clicked, this, [this]() { deletePredefinedIP(); });
+    connect(ui->ButtonUp, &QPushButton::clicked, this, [this]() { moveUp(); });
+    connect(ui->ButtonDown, &QPushButton::clicked, this, [this]() { moveDown(); });
 }
 
 DlgInterface::~DlgInterface()
@@ -94,10 +96,13 @@ void DlgInterface::tableSelectionChanged()
 {
     QList<QTableWidgetItem*> SelectedItems = ui->TablePredefinedIP->selectedItems();
     bool                     Enabled       = SelectedItems.size() != 0;
+    int                      Row           = SelectedItems.at(0)->row();
+    bool                     AtTop         = (Row == 0);
+    bool                     AtBottom      = (Row == ui->TablePredefinedIP->rowCount() - 1);
     ui->ButtonEditIP->setEnabled(Enabled);
     ui->ButtonDeleteIP->setEnabled(Enabled);
-    ui->ButtonUp->setEnabled(Enabled);
-    ui->ButtonDown->setEnabled(Enabled);
+    ui->ButtonUp->setEnabled(Enabled && !AtTop);
+    ui->ButtonDown->setEnabled(Enabled && !AtBottom);
 }
 
 void DlgInterface::execDlgInterface(QNetworkInterface NetworkInterface)
@@ -192,4 +197,36 @@ void DlgInterface::deletePredefinedIP()
     QList<QTableWidgetItem*> SelectedItems = ui->TablePredefinedIP->selectedItems();
     int                      Row           = ui->TablePredefinedIP->row(SelectedItems.at(0));
     ui->TablePredefinedIP->removeRow(Row);
+}
+
+void DlgInterface::moveUp()
+{
+    QList<QTableWidgetItem*> SelectedItems = ui->TablePredefinedIP->selectedItems();
+    int                      Row           = ui->TablePredefinedIP->row(SelectedItems.at(0));
+    int                      ColumnCount   = ui->TablePredefinedIP->columnCount();
+
+    for (int i = 0; i < ColumnCount; i++) {
+        QTableWidgetItem* TopItem    = ui->TablePredefinedIP->item(Row - 1, i);
+        QTableWidgetItem* BottomItem = ui->TablePredefinedIP->item(Row, i);
+
+        QString TmpString = BottomItem->text();
+        BottomItem->setText(TopItem->text());
+        TopItem->setText(TmpString);
+    }
+}
+
+void DlgInterface::moveDown()
+{
+    QList<QTableWidgetItem*> SelectedItems = ui->TablePredefinedIP->selectedItems();
+    int                      Row           = ui->TablePredefinedIP->row(SelectedItems.at(0));
+    int                      ColumnCount   = ui->TablePredefinedIP->columnCount();
+
+    for (int i = 0; i < ColumnCount; i++) {
+        QTableWidgetItem* TopItem    = ui->TablePredefinedIP->item(Row, i);
+        QTableWidgetItem* BottomItem = ui->TablePredefinedIP->item(Row + 1, i);
+
+        QString TmpString = BottomItem->text();
+        BottomItem->setText(TopItem->text());
+        TopItem->setText(TmpString);
+    }
 }
