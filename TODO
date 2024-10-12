@@ -9,7 +9,7 @@
 + IPv4 display does not work in DlgInterface
 - standardize symbols case
 - add a log, accessible through the context menu
-- backup the data file before saving
++ backup the data file before saving
 - add help and about with "BeforeRelease" data
 - handle stream errors while saving data file
 + delete InterfaceList/Interface/PredefinedIP

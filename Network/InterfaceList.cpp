@@ -74,7 +74,14 @@ void InterfaceList::addInterface(Interface* interface)
 
 bool InterfaceList::save() const
 {
-    // TODO: backup file
+    // Backup data file
+    // Check existence because it is cleaner, but it is quite useless...
+    if (QFile::exists(FOLCO_BACKUP_FILENAME)) {
+        QFile::remove(FOLCO_BACKUP_FILENAME);
+    }
+    if (QFile::exists(FOLCO_FILENAME)) {
+        QFile::rename(FOLCO_FILENAME, FOLCO_BACKUP_FILENAME);
+    }
 
     // Open file
     QFile File(FOLCO_FILENAME);
