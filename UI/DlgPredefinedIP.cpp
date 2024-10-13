@@ -39,15 +39,33 @@ DlgPredefinedIP::DlgPredefinedIP(QWidget* parent, QString* name, QString* ip, QS
     }
 
     // Allow the '.' key to act like the tab key when typing an ip
+    // Also used when pasting an IP
     ui->SpinBox11->setNextByteBox(ui->SpinBox12);
     ui->SpinBox12->setNextByteBox(ui->SpinBox13);
     ui->SpinBox13->setNextByteBox(ui->SpinBox14);
+
     ui->SpinBox21->setNextByteBox(ui->SpinBox22);
     ui->SpinBox22->setNextByteBox(ui->SpinBox23);
     ui->SpinBox23->setNextByteBox(ui->SpinBox24);
+
     ui->SpinBox31->setNextByteBox(ui->SpinBox32);
     ui->SpinBox32->setNextByteBox(ui->SpinBox33);
     ui->SpinBox33->setNextByteBox(ui->SpinBox34);
+
+    // Set the previous SpinBox for the 3 lower bytes
+    // Used when pasting an IP
+    ui->SpinBox12->setPreviousByteBox(ui->SpinBox11);
+    ui->SpinBox13->setPreviousByteBox(ui->SpinBox12);
+    ui->SpinBox14->setPreviousByteBox(ui->SpinBox13);
+
+    ui->SpinBox22->setPreviousByteBox(ui->SpinBox21);
+    ui->SpinBox23->setPreviousByteBox(ui->SpinBox22);
+    ui->SpinBox24->setPreviousByteBox(ui->SpinBox23);
+
+    ui->SpinBox32->setPreviousByteBox(ui->SpinBox31);
+    ui->SpinBox33->setPreviousByteBox(ui->SpinBox32);
+    ui->SpinBox34->setPreviousByteBox(ui->SpinBox33);
+
 
     // Dialog buttons
     connect(ui->ButtonOK, &QPushButton::clicked, this, [this]() { accept(); });

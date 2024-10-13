@@ -1,6 +1,8 @@
 #ifndef IP_SPIN_BOX_HPP
 #define IP_SPIN_BOX_HPP
 
+#include <QDragEnterEvent>
+#include <QDropEvent>
 #include <QFocusEvent>
 #include <QKeyEvent>
 #include <QMouseEvent>
@@ -16,9 +18,14 @@ class IPspinBox: public QSpinBox
     void keyReleaseEvent(QKeyEvent* event) override;     // Netxt byte when dot is hit
 
     void setNextByteBox(IPspinBox* box);
+    void setPreviousByteBox(IPspinBox* box);
+
+    void dragEnterEvent(QDragEnterEvent* event) override;
+    void dropEvent(QDropEvent* event) override;
 
   private:
     IPspinBox* NextByteBox;
+    IPspinBox* PreviousByteBox;
 };
 
 #endif // IP_SPIN_BOX_HPP

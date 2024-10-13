@@ -183,24 +183,23 @@ void TrayIcon::showContextMenu(QPoint position)
 
 void TrayIcon::configureInterfacePredefinedIP(QString name, PredefinedIP* ip)
 {
-    // netmask and gateway optional, netmask defaults to 255.255.0.0, gateway to nothing
-    // $ netsh interface ipv4 set address "[interface name]" static [IP] [netmask] [gateway]
-    QList<QString> Arg;
-    Arg << QString("/c netsh interface ipv4 set address \"%1\" static %2").arg(name, ip->ipAddress());
-    if (ip->hasNetworkMask()) {
-        Arg << " " << ip->networkMask();
+    // Set the IPv4 address with its mask and gateway
+    // $ netsh interface ipv4 set address "[interface name]" static [IP] [netmask]
+    QList<QString> ArgAddress;
+    ArgAddress << QString("/c netsh interface ipv4 set address \"%1\" static %2").arg(name, ip->ipAddress());
+    QProcess::execute("cmd.exe", ArgAddress);
 
-        if (ip->hasGateway()) {
-            Arg << " " << ip->gateway();
-        }
+    if (ip->hasGateway()) {
+        QStringList ArgGateway;
+        ArgGateway << QString("/c netsh interface ip set address \"%1\" gateway = %2").arg(name, ip->gateway());
+        QProcess::execute("cmd.exe", ArgGateway);
     }
-    QProcess::execute("cmd.exe", Arg);
 }
 
 // QProcess::execute() is synchronous, so no need to listen to QProcess::finished to schedule the three calls
 void TrayIcon::configureInterfaceDHCP(QString name)
 {
-    // 1. Delete the IPv4 address of this interface it one is set
+    // 1. Delete the IPv4 addresses of this interface it some are set
     // $ netsh interface ipv4 delete address "[interface name]" addr=[IP]
     QNetworkInterface           NetworkInteface = QNetworkInterface::interfaceFromName(name);
     QList<QNetworkAddressEntry> AddressEntries  = NetworkInteface.addressEntries();
