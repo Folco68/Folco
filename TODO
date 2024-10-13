@@ -5,13 +5,13 @@
 - offer to configure the display of the IP in the tray menu: custom name/IP, IP/custom name, ...
 + allow to set an interface to DHCP
 + look at iterators for QList browsing
-- DlgPredefinedIP: merge newPredefinedIP() and editPredefinedIP() ??
+o DlgPredefinedIP: merge newPredefinedIP() and editPredefinedIP()
 + IPv4 display does not work in DlgInterface
 - standardize symbols case
 - add a log, accessible through the context menu
 + backup the data file before saving
 - add help and about with "BeforeRelease" data
-- handle stream errors while saving data file
++ handle stream errors while saving data file
 + delete InterfaceList/Interface/PredefinedIP
 + IP validation: use QSpinBox?
 + BUG context menu opens at the center of the screen if an error message pops at first show

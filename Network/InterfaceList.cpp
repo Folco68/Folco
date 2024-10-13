@@ -86,7 +86,7 @@ bool InterfaceList::save() const
     // Open file
     QFile File(FOLCO_FILENAME);
     if (!File.open(QIODeviceBase::WriteOnly)) {
-        QMessageBox::critical(nullptr, QString("%1 error").arg(APPLICATION_NAME), QString("Error while opening the file %1. Data not saved.").arg(FOLCO_FILENAME));
+        QMessageBox::critical(nullptr, QString("%1 error").arg(APPLICATION_NAME), QString("Error while saving the file %1. No data saved.").arg(FOLCO_FILENAME));
         return false;
     }
 
@@ -102,6 +102,12 @@ bool InterfaceList::save() const
     // Save every interface
     for (int i = 0; i < Count; i++) {
         this->List.at(i)->save(Stream);
+    }
+
+    // Check stream status
+    if (Stream.status() != QDataStream::Ok) {
+        QMessageBox::critical(nullptr, QString("%1 error").arg(APPLICATION_NAME), QString("Error while saving the file %1.").arg(FOLCO_FILENAME));
+        return false;
     }
 
     return true;

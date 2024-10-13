@@ -12,7 +12,7 @@ class DlgPredefinedIP: public QDialog
     Q_OBJECT
 
   public:
-    static int newPredefinedIP(QWidget* parent, QString* name, QString* ip, QString* networkmask, QString* gateway);
+    static int newPredefinedIP(QWidget* parent, QString* name = nullptr, QString* ip = nullptr, QString* networkmask = nullptr, QString* gateway = nullptr);
     static int editPredefinedIP(QWidget* parent, QString* name, QString* ip, QString* networkmask, QString* gateway);
 
   private:
