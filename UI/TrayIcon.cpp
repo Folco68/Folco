@@ -43,7 +43,7 @@ void TrayIcon::showContextMenu(QPoint position)
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ///                                                                                                                             ///
-    ///                                   Generate the list of interfaces according to the settings                                 ///
+    ///                           Generate the list of interfaces according to the user-defined settings                            ///
     ///                                                                                                                             ///
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

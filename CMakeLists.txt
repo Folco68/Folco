@@ -37,8 +37,10 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         UI/DlgSettings.hpp
         UI/DlgSettings.cpp
         UI/DlgSettings.ui
-        UI/IPspinBox.hpp
-        UI/IPspinBox.cpp
+        UI/IPlineEdit.hpp
+        UI/IPlineEdit.cpp
+        UI/IPvalidator.hpp
+        UI/IPvalidator.cpp
         UI/TrayIcon.hpp
         UI/TrayIcon.cpp
 
@@ -52,7 +54,12 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
 
         # Ressources
         Ressources/Icons.qrc
+
+        #Docs
         Format
+        LICENSE
+        README.md
+        TODO
 )
 
 # Define target properties for Android with Qt 6 as:

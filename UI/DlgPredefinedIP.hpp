@@ -18,6 +18,7 @@ class DlgPredefinedIP: public QDialog
   private:
     explicit DlgPredefinedIP(QWidget* parent, QString* name = nullptr, QString* ip = nullptr, QString* networkmask = nullptr, QString* gateway = nullptr);
     ~DlgPredefinedIP();
+    void updateButtonOK();
 
     Ui::DlgPredefinedIP* ui;
 };

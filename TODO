@@ -19,6 +19,9 @@ o DlgPredefinedIP: merge newPredefinedIP() and editPredefinedIP()
 + DlgInterface: double click a PredefinedIP should edit it
 - BUG IPspinBox::focusInEvent() redefinition does not trigger the selectAll() method because it monitors only kbd events.
   Try by redefining QSpinBox::event(QEvent*) or QAbstractSpinBox::mousePress/ReleaseEvent(QMouseEvent*) instead of the QAbstractSpinBox event => new fail
+  Try to inherit the QAbstractSpinBox' QLineEdit and replace it in the QSpinBox, redefine the QKeySequence::Paste and the click (focus) events
+  Try to implement a class starting from a raw QLineEdit...
+- IPlineEdit::mouseReleaseEvent: ctry to select only the clicked byte
 + implement up/down in DlgInterface
 - accept pasting of IP address in DlgPredefinedIP
 
