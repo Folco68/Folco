@@ -1,4 +1,5 @@
 #include "IPlineEdit.hpp"
+#include "IPvalidator.hpp"
 #include <QApplication>
 #include <QClipboard>
 #include <QKeySequence>
@@ -9,14 +10,7 @@
 IPlineEdit::IPlineEdit(QWidget* parent)
     : QLineEdit(parent)
 {
-    this->validator = new IPvalidator;
-    setValidator(this->validator);
-}
-
-IPlineEdit::~IPlineEdit()
-{
-    setValidator(nullptr);
-    delete this->validator;
+    setValidator(new IPvalidator(this));
 }
 
 void IPlineEdit::dragEnterEvent(QDragEnterEvent* event)
@@ -33,19 +27,6 @@ void IPlineEdit::dropEvent(QDropEvent* event)
 {
     setText(event->mimeData()->text());
 }
-
-/*
-void IPlineEdit::paste()
-{
-    const QClipboard* Clipboard = QApplication::clipboard();
-    if (Clipboard->mimeData()->hasFormat("text/plain")) {
-        QString IP(Clipboard->mimeData()->text());
-        if (isIPvalid(IP)) {
-            setText(IP);
-        }
-    }
-}
-*/
 
 bool IPlineEdit::isIPvalid(QString ip) const
 {

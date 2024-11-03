@@ -20,6 +20,7 @@ TrayIcon::TrayIcon()
 {
     // Show the context menu regardless of the trigger (default: only the right click displays the menu)
     // The menu is created dynamically every time it is triggerred, to refresh the interface list
+    // Read the cursor position now, in case a dialog box would move it before the menu appears
     connect(this, &QSystemTrayIcon::activated, this, [this]() { showContextMenu(QCursor::pos()); });
 }
 
@@ -62,12 +63,12 @@ void TrayIcon::showContextMenu(QPoint position)
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         // Show only Ethernet and Wi-Fi capable interfaces
-        if (Settings::instance()->showOnlyEthernetWifi() && NetworkInterface.type() != QNetworkInterface::Ethernet && NetworkInterface.type() != QNetworkInterface::Wifi) {
+        if (Settings::instance()->showOnlyEthernetWifi() && (NetworkInterface.type() != QNetworkInterface::Ethernet) && (NetworkInterface.type() != QNetworkInterface::Wifi)) {
             continue;
         }
 
         // Show only active interface
-        if (Settings::instance()->showOnlyUp() && !(NetworkInterface.flags() & QNetworkInterface::IsUp)) {
+        if (Settings::instance()->showOnlyUp() && (!(NetworkInterface.flags() & QNetworkInterface::IsUp))) {
             continue;
         }
 

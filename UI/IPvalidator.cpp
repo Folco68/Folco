@@ -7,9 +7,12 @@ IPvalidator::IPvalidator(QObject* parent)
 {
 }
 
-// Allow empty string, because mask and gateway are not mandatory
+// Allow empty string, because mask and gateway are not mandatory in a PredefinedIP
 QValidator::State IPvalidator::validate(QString& input, int&) const
 {
+    // Counter of valid bytes, which means a non null string with 0 <= byte <= 255
+    int ValidBytes = 0;
+
     // Accept empty string
     if (input.isEmpty()) {
         return QValidator::Acceptable;
@@ -29,6 +32,7 @@ QValidator::State IPvalidator::validate(QString& input, int&) const
             if ((!IsInt) || (Byte < 0) || (Byte > 255)) {
                 return QValidator::Invalid;
             }
+            ValidBytes++;
         }
     }
 
@@ -36,9 +40,6 @@ QValidator::State IPvalidator::validate(QString& input, int&) const
     // The result is acceptable if:
     // - there are 4 bytes
     // - none of them is a null string
-    // As a consequence, if we have less than 4 bytes or if one is null, the result is intermediate
-    if ((Bytes.count() == 4) && !Bytes.at(0).isEmpty() && !Bytes.at(1).isEmpty() && !Bytes.at(2).isEmpty() && !Bytes.at(3).isEmpty()) {
-        return QValidator::Acceptable;
-    }
-    return QValidator::Intermediate;
+    // As a consequence, if we have less than 4 bytes or if one is a null string, the result is intermediate
+    return ValidBytes == 4 ? QValidator::Acceptable : QValidator::Intermediate;
 }
