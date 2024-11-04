@@ -18,62 +18,48 @@
 //                                                                         //
 /////////////////////////////////////////////////////////////////////////////
 
-#include "Settings.hpp"
-#include "Global.hpp"
+#include "Logger.hpp"
+#include <QDate>
+#include <QTime>
 
-Settings* Settings::settings = nullptr;
+Logger* Logger::logger = nullptr;
 
-Settings::Settings()
-    : QSettings(ORGANIZATION_NAME, APPLICATION_NAME)
+Logger* Logger::instance()
 {
-}
-
-Settings::~Settings()
-{
-}
-
-Settings* Settings::instance()
-{
-    if (settings == nullptr) {
-        settings = new Settings();
+    if (logger == nullptr) {
+        logger = new Logger;
     }
-    return settings;
+    return logger;
 }
 
-void Settings::release()
+void Logger::release()
 {
-    if (settings != nullptr) {
-        delete settings;
+    if (logger != nullptr) {
+        delete logger;
+        logger = nullptr;
     }
-    settings = nullptr;
 }
 
-bool Settings::showOnlyEthernetWifi()
+Logger::Logger()
+    : FirstLogEntry(true)
 {
-    return value(KEY_SHOW_ONLY_ETHERNET_WIFI, DEFAULT_SHOW_ONLY_ETHERNET_WIFI).toBool();
+    addLogEntry(QString("Folco starting"));
 }
 
-void Settings::setShowOnlyEthernetWifi(bool enabled)
+QString Logger::log() const
 {
-    setValue(KEY_SHOW_ONLY_ETHERNET_WIFI, enabled);
+    return this->Log;
 }
 
-bool Settings::showOnlyUp()
+void Logger::addLogEntry(QString string)
 {
-    return value(KEY_SHOW_ONLY_UP, DEFAULT_SHOW_ONLY_UP).toBool();
-}
+    if (this->FirstLogEntry) {
+        this->FirstLogEntry = false;
+    }
+    else {
+        this->Log.append("\n");
+    }
 
-void Settings::setShowOnlyUp(bool enabled)
-{
-    setValue(KEY_SHOW_ONLY_UP, enabled);
-}
-
-bool Settings::showOnlyPredefined()
-{
-    return value(KEY_SHOW_ONLY_PREDEFINED, DEFAULT_SHOW_ONLY_PREDEFINED).toBool();
-}
-
-void Settings::setShowOnlyPredefined(bool enabled)
-{
-    setValue(KEY_SHOW_ONLY_PREDEFINED, enabled);
+    this->Log.append(QString("[%1] %2").arg(QTime::currentTime().toString("hh:mm:ss.zzz"), string));
+    emit newLogEntry();
 }

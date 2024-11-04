@@ -24,10 +24,15 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
 
         # Main
         Global.hpp
+        Logger.hpp
+        Logger.cpp
         Settings.hpp
         Settings.cpp
 
         # UI
+        UI/DlgAbout.hpp
+        UI/DlgAbout.cpp
+        UI/DlgAbout.ui
         UI/DlgInterface.hpp
         UI/DlgInterface.cpp
         UI/DlgInterface.ui

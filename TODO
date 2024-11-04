@@ -1,4 +1,5 @@
 - set an application Icon
+- set GPL headers in src
 + DlgEditInterface: validate IP
 - Remember disconnected devices and allow to edit/forget them (usefull for USB-Eth adapters)
 + offer to give a name to preconfigured IPs. This name could be used in the menu
@@ -8,7 +9,7 @@
 o DlgPredefinedIP: merge newPredefinedIP() and editPredefinedIP()
 + IPv4 display does not work in DlgInterface
 - standardize symbols case
-- add a log, accessible through the context menu
+- add a log, accessible through the context menu (help/about dialog)
 + backup the data file before saving
 - add help and about with "BeforeRelease" data
 + handle stream errors while saving data file
@@ -17,13 +18,13 @@ o DlgPredefinedIP: merge newPredefinedIP() and editPredefinedIP()
 + BUG context menu opens at the center of the screen if an error message pops at first show
 - code for setting netmask and gateway is disabled
 + DlgInterface: double click a PredefinedIP should edit it
-- BUG IPspinBox::focusInEvent() redefinition does not trigger the selectAll() method because it monitors only kbd events.
++ BUG IPspinBox::focusInEvent() redefinition does not trigger the selectAll() method because it monitors only kbd events.
   Try by redefining QSpinBox::event(QEvent*) or QAbstractSpinBox::mousePress/ReleaseEvent(QMouseEvent*) instead of the QAbstractSpinBox event => new fail
   Try to inherit the QAbstractSpinBox' QLineEdit and replace it in the QSpinBox, redefine the QKeySequence::Paste and the click (focus) events
   Try to implement a class starting from a raw QLineEdit...
-- IPlineEdit::mouseReleaseEvent: ctry to select only the clicked byte
+o IPlineEdit::mouseReleaseEvent: try to select only the clicked byte
 + implement up/down in DlgInterface
-- accept pasting of IP address in DlgPredefinedIP
++ accept pasting of IP address in DlgPredefinedIP
 
 // Supervisor at startup: https://superuser.com/questions/929225/how-to-run-a-program-as-an-administrator-at-startup-on-windows-10
 

@@ -18,62 +18,31 @@
 //                                                                         //
 /////////////////////////////////////////////////////////////////////////////
 
-#include "Settings.hpp"
-#include "Global.hpp"
+#ifndef LOGGER_HPP
+#define LOGGER_HPP
 
-Settings* Settings::settings = nullptr;
+#include <QObject>
+#include <QString>
 
-Settings::Settings()
-    : QSettings(ORGANIZATION_NAME, APPLICATION_NAME)
+class Logger: public QObject
 {
-}
+    Q_OBJECT
 
-Settings::~Settings()
-{
-}
+  public:
+    static Logger* instance();
+    static void    release();
+    void           addLogEntry(QString string);
+    QString        log() const;
 
-Settings* Settings::instance()
-{
-    if (settings == nullptr) {
-        settings = new Settings();
-    }
-    return settings;
-}
+  signals:
+    void newLogEntry();
 
-void Settings::release()
-{
-    if (settings != nullptr) {
-        delete settings;
-    }
-    settings = nullptr;
-}
+  private:
+    Logger();
+    static Logger* logger;
 
-bool Settings::showOnlyEthernetWifi()
-{
-    return value(KEY_SHOW_ONLY_ETHERNET_WIFI, DEFAULT_SHOW_ONLY_ETHERNET_WIFI).toBool();
-}
+    QString Log;
+    bool    FirstLogEntry;
+};
 
-void Settings::setShowOnlyEthernetWifi(bool enabled)
-{
-    setValue(KEY_SHOW_ONLY_ETHERNET_WIFI, enabled);
-}
-
-bool Settings::showOnlyUp()
-{
-    return value(KEY_SHOW_ONLY_UP, DEFAULT_SHOW_ONLY_UP).toBool();
-}
-
-void Settings::setShowOnlyUp(bool enabled)
-{
-    setValue(KEY_SHOW_ONLY_UP, enabled);
-}
-
-bool Settings::showOnlyPredefined()
-{
-    return value(KEY_SHOW_ONLY_PREDEFINED, DEFAULT_SHOW_ONLY_PREDEFINED).toBool();
-}
-
-void Settings::setShowOnlyPredefined(bool enabled)
-{
-    setValue(KEY_SHOW_ONLY_PREDEFINED, enabled);
-}
+#endif // LOGGER_HPP

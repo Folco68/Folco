@@ -26,7 +26,7 @@ PREDEFINED_IP   List                        All the PREDEFINED_IP, one by one
 PREDEFINED_IP
 -------------
 
-String          Name                        User defined name. Optional, can be defined for conveniency
+String          Name                        User defined name. Can be defined for conveniency
 String          IP                          IP address, the only mandatory element
-String          Netmask                     Network mask, optional
-String          Gateway                     Gateway, optional
+String          Netmask                     Network mask
+String          Gateway                     Gateway
