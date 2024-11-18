@@ -23,6 +23,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ${PROJECT_SOURCES}
 
         # Main
+        BeforeRelease.hpp
         Global.hpp
         Logger.hpp
         Logger.cpp
@@ -30,9 +31,6 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         Settings.cpp
 
         # UI
-        UI/DlgAbout.hpp
-        UI/DlgAbout.cpp
-        UI/DlgAbout.ui
         UI/DlgInterface.hpp
         UI/DlgInterface.cpp
         UI/DlgInterface.ui
@@ -48,6 +46,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         UI/IPvalidator.cpp
         UI/TrayIcon.hpp
         UI/TrayIcon.cpp
+        UI/WindowInfos.hpp
+        UI/WindowInfos.cpp
+        UI/WindowInfos.ui
 
         # Network
         Network/Interface.hpp
@@ -61,10 +62,13 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         Ressources/Icons.qrc
 
         #Docs
-        Format
-        LICENSE
+        Docs.qrc
         README.md
-        TODO
+        Docs/Format
+        Docs/LICENSE
+        Docs/TODO
+        Docs/Changelog
+        Docs/README
 )
 
 # Define target properties for Android with Qt 6 as:

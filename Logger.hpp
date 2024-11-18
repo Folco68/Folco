@@ -35,7 +35,7 @@ class Logger: public QObject
     QString        log() const;
 
   signals:
-    void newLogEntry();
+    void newLogEntry(QString line);
 
   private:
     Logger();

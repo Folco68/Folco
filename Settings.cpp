@@ -20,6 +20,7 @@
 
 #include "Settings.hpp"
 #include "Global.hpp"
+#include "Logger.hpp"
 
 Settings* Settings::settings = nullptr;
 
@@ -56,6 +57,7 @@ bool Settings::showOnlyEthernetWifi()
 void Settings::setShowOnlyEthernetWifi(bool enabled)
 {
     setValue(KEY_SHOW_ONLY_ETHERNET_WIFI, enabled);
+    logSetting(KEY_SHOW_ONLY_ETHERNET_WIFI, enabled);
 }
 
 bool Settings::showOnlyUp()
@@ -66,6 +68,7 @@ bool Settings::showOnlyUp()
 void Settings::setShowOnlyUp(bool enabled)
 {
     setValue(KEY_SHOW_ONLY_UP, enabled);
+    logSetting(KEY_SHOW_ONLY_UP, enabled);
 }
 
 bool Settings::showOnlyPredefined()
@@ -76,4 +79,10 @@ bool Settings::showOnlyPredefined()
 void Settings::setShowOnlyPredefined(bool enabled)
 {
     setValue(KEY_SHOW_ONLY_PREDEFINED, enabled);
+    logSetting(KEY_SHOW_ONLY_PREDEFINED, enabled);
+}
+
+void Settings::logSetting(QString name, bool enabled) const
+{
+    Logger::instance()->addLogEntry(QString("Settings: %1 set to %2").arg(name, enabled ? "true" : "false"));
 }

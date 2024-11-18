@@ -35,10 +35,11 @@ class DlgSettings: public QDialog
     static void execDlgSettings();
 
   private:
+    Ui::DlgSettings*    ui;
+    static DlgSettings* dlgsettings;
     explicit DlgSettings();
     ~DlgSettings();
 
-    Ui::DlgSettings* ui;
 };
 
 #endif // DLGSETTINGS_HPP

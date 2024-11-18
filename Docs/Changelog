@@ -1,0 +1,117 @@
+Folco changelog
+
+2024/09/05
+Initial commit
+
+2024/09/07
+- Initial commit
+- Tray icon active only with base menu
+- Started to write the Configure dialog
+
+2024/09/07
+- DlgConfig: configured ui->TableInterfaces
+- DlgConfig: removed the display of the interface internal type
+- DlgConfig: added IPv4 and up connections filters
+- DlgConfig: added window title
+- DlgConfig: added a splitter in the main view, allowing the complete display of the interfaces
+
+2024/09/07
+- DlgConfig: remove the "Name" column, use only the human friendly name
+- ./Configuration/*: started to implement data loading/save
+
+2024/09/07
+- IFCfg: changed the storage format (use QVector<QString>)
+- IFCfg: write some access functions
+- DlgConfig: updated interfaces filters
+- DlgConfig: updated column index macros
+- DlgConfig: started to manage the Easy  Switch Table
+
+2024/09/07
+- Started to implement the Configuration edition dialog
+- Removed QVector, which is now an alias of QList
+- Added the handling of the Add/Edit/Remove Configuration buttons when the selection change in the Interface table
+
+2024/09/08
+- Changed the name of the data files and the names of the class
+- Revamped the DlgConfig UI, dropped the QTableWidget for the interfaces: too many useless informations. Replaced by a QComboBox
+
+2024/09/09
+- UI: changed once again the design
+- Global settings (implemented with QSetting) will be used to show/hide some interfaces
+- Predefined IP will be set interface per interface, from the tray icon menu
+
+2024/09/14
+- Added a custom name to predefined IP
+- Improved predefined IP comparison
+- Made InterfaceList::hasConfiguration() more accurate: now answer yes if there is at least one predefined IP
+- Drafted the interface edition dialog
+- Added the Settings edition dialog
+- Dynamically display the interface in the context menu, according to the application settings
+
+2024/09/16
+- Partially implemented the DlgEditInterface dialog
+- Implemented the DlgEditPredefinedIP dialog (validation is still rough, to be completed)
+
+2024/09/17
+- Changed the default value for the Setting key DEFAULT_SHOW_ONLY_ETHERNET_WIFI to true, to remove Loopback interface by default
+- TrayIcon: fixed the submenu showing only the first Predefined IP
+- TrayIcon: added the name of the Predefined IP if one exists
+
+2024/09/21
+- performed tests with netsh, skelton of calls written
+- renamed the Dialog files and classes by removing the "Edit" word
+- removed useless methods of PredefinedIP class
+
+2024/09/21
+- finally found how to call netsh to set an ipv4 interface to DHCP
+- updated the call to set the IP by replacing hw address with interface name because:
+1. netsh needs a name
+2. if I use another backend to replace netsh, there is a static method to recover easily the QNetworkInterface starting from the name
+
+2024/10/04
+- added data opening and saving
+- revamped DlgPredefinedIP UI by using QSpinBox instead of QLineEdit + InputMask
+- added netsh call, first test show that it looks to work
+
+2024/10/04
+- set the buddy IPspinBox in DlgPredefinedIP
+- allow the dot char to navigate between IP bytes
+- wrote IPspinBox which inherits QSpinBox to extend some functionnalities
+
+2024/10/05
+- properly delete InterfaceList/Interface/PredefinedIP
+- DlgInterface: edit a PredefinedIP by doubleclicking it
+- always show the context menu close to the tray icon, even in case of file opening error
+
+2024/10/07
+- try to select the content of a IPspinBox when activated by a mouse event
+- delete all the IPv4 of an interface when setting one to DHCP
+- DlgInterface: display the last IPv4 address available
+
+2024/10/12
+- DlgInterface: added moveUp/moveDown() methods
+- added AddTop/AddBottom boolean in tableSelectionChanged()
+
+2024/10/12
+- added datafile backup
+
+2024/10/13
+- secure DlgPredefinedIP(QWidget* parent) with default args set at nullptr to avoid random pointer dereferencing
+- display a message in case of failure of saving InterfaceList file
+
+2024/10/13
+- started to implement drag&drop + pasting IP functionnality
+- still fail at using netsh as a backend...
+
+2024/11/02
+- Don't use anymore QSpinBox to enter IP (it's a mess to intercept events)
+- Instead use a QLineEdit + custom validator based on QValidator
+
+2024/11/03
+- Don't delete manually custom validator (thanks to Qt parentality)
+- Make IPvalidator::validate more elegant
+
+2024/11/04
+- Created the DlgAbout class & UI
+- Created the Logger class
+- GPLed the code

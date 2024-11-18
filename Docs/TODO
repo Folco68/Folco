@@ -1,5 +1,5 @@
 - set an application Icon
-- set GPL headers in src
++ set GPL headers in src
 + DlgEditInterface: validate IP
 - Remember disconnected devices and allow to edit/forget them (usefull for USB-Eth adapters)
 + offer to give a name to preconfigured IPs. This name could be used in the menu
@@ -11,7 +11,8 @@ o DlgPredefinedIP: merge newPredefinedIP() and editPredefinedIP()
 - standardize symbols case
 - add a log, accessible through the context menu (help/about dialog)
 + backup the data file before saving
-- add help and about with "BeforeRelease" data
++ add help and about with "BeforeRelease" data
+- add Installations instructions in the About dialog
 + handle stream errors while saving data file
 + delete InterfaceList/Interface/PredefinedIP
 + IP validation: use QSpinBox?
@@ -25,6 +26,7 @@ o DlgPredefinedIP: merge newPredefinedIP() and editPredefinedIP()
 o IPlineEdit::mouseReleaseEvent: try to select only the clicked byte
 + implement up/down in DlgInterface
 + accept pasting of IP address in DlgPredefinedIP
++ make About and Settings windows unique (with a static address containing the address of the widget)
 
 // Supervisor at startup: https://superuser.com/questions/929225/how-to-run-a-program-as-an-administrator-at-startup-on-windows-10
 

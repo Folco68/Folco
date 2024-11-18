@@ -18,17 +18,27 @@
 //                                                                         //
 /////////////////////////////////////////////////////////////////////////////
 
-#include "DlgAbout.hpp"
-#include "ui_DlgAbout.h"
+#ifndef WINDOW_INFOS_HPP
+#define WINDOW_INFOS_HPP
 
-DlgAbout::DlgAbout(QWidget* parent)
-    : QDialog(parent)
-    , ui(new Ui::DlgAbout)
-{
-    ui->setupUi(this);
+#include <QWidget>
+
+namespace Ui {
+    class WindowInfos;
 }
 
-DlgAbout::~DlgAbout()
+class WindowInfos: public QWidget
 {
-    delete ui;
-}
+    Q_OBJECT
+
+  public:
+    static void showWindowInfos();
+
+  private:
+    Ui::WindowInfos*    ui;
+    static WindowInfos* windowinfos;
+    WindowInfos();
+    ~WindowInfos();
+};
+
+#endif // WINDOW_INFOS_HPP

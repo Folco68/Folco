@@ -24,6 +24,7 @@
 #include "../Settings.hpp"
 #include "DlgInterface.hpp"
 #include "DlgSettings.hpp"
+#include "WindowInfos.hpp"
 #include <QAction>
 #include <QCoreApplication>
 #include <QCursor>
@@ -43,6 +44,8 @@ TrayIcon::TrayIcon()
     // The menu is created dynamically every time it is triggerred, to refresh the interface list
     // Read the cursor position now, in case a dialog box would move it before the menu appears
     connect(this, &QSystemTrayIcon::activated, this, [this]() { showContextMenu(QCursor::pos()); });
+
+    Logger::instance()->addLogEntry("Folco started...");
 }
 
 TrayIcon::~TrayIcon()
@@ -142,13 +145,7 @@ void TrayIcon::showContextMenu(QPoint position)
             QList<PredefinedIP*> PredefinedIPList = StoredInterface->predefinedIPlist();
             for (int j = 0; j < IPcount; j++) {
                 PredefinedIP* IP = PredefinedIPList.at(j);
-                QString      IPstring;
-                if (!IP->name().isEmpty()) {
-                    IPstring = QString("%1: ").arg(IP->name());
-                }
-                IPstring.append(IP->ipAddress());
-
-                QAction* ActionIP = new QAction(IPstring);
+                QAction*      ActionIP = new QAction(QString("%1: %2").arg(IP->name(), IP->ipAddress()));
                 Submenu->addAction(ActionIP);
                 connect(ActionIP, &QAction::triggered, this, [this, Name, IP]() { configureInterfacePredefinedIP(Name, IP); });
             }
@@ -192,7 +189,7 @@ void TrayIcon::showContextMenu(QPoint position)
 
     // Connect the actions
     connect(ActionSettings, &QAction::triggered, []() { DlgSettings::execDlgSettings(); });
-    //    connect(ActionAbout, &QAction::triggered, []() { DlgAbout::execDlgAbout(); });
+    connect(ActionAbout, &QAction::triggered, []() { WindowInfos::showWindowInfos(); });
     connect(ActionExit, &QAction::triggered, []() { QCoreApplication::exit(0); });
 
     // Add the context menu to the tray icon

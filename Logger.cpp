@@ -43,7 +43,6 @@ void Logger::release()
 Logger::Logger()
     : FirstLogEntry(true)
 {
-    addLogEntry(QString("Folco starting"));
 }
 
 QString Logger::log() const
@@ -60,6 +59,7 @@ void Logger::addLogEntry(QString string)
         this->Log.append("\n");
     }
 
-    this->Log.append(QString("[%1] %2").arg(QTime::currentTime().toString("hh:mm:ss.zzz"), string));
-    emit newLogEntry();
+    QString NewLine = QString("[%1] %2").arg(QTime::currentTime().toString("hh:mm:ss.zzz"), string);
+    this->Log.append(NewLine);
+    emit newLogEntry(NewLine);
 }
