@@ -76,6 +76,7 @@ void TrayIcon::showContextMenu(QPoint position)
 
     QList<QNetworkInterface> AllInterfaces = QNetworkInterface::allInterfaces();
     QList<QNetworkInterface> FilteredNetworkInterfaces;
+    Logger::instance()->addLogEntry(QString("Found %1 system interfaces").arg(AllInterfaces.count()));
 
     for (int i = 0; i < AllInterfaces.size(); i++) {
 
@@ -105,7 +106,10 @@ void TrayIcon::showContextMenu(QPoint position)
 
         // This interface matches all criteria and will be part of the menu
         FilteredNetworkInterfaces << NetworkInterface;
+        Logger::instance()->addLogEntry(QString("Adding interface %1, %2").arg(NetworkInterface.humanReadableName(), NetworkInterface.hardwareAddress()));
     }
+
+    Logger::instance()->addLogEntry(QString("%1 interfaces have been filtered").arg(AllInterfaces.count() - FilteredNetworkInterfaces.count()));
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ///                                                                                                                     ///

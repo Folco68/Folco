@@ -115,3 +115,18 @@ Initial commit
 - Created the DlgAbout class & UI
 - Created the Logger class
 - GPLed the code
+
+2024/11/18
+- Added "BeforeRelease.hpp" to update some strings and vars every release
+- Put all the doc files in a separate duirectory
+- Added a logger which can be accessed in the WindowInfos Dialog
+- Made the Settings Dialog unique
+- Settings log current settings on validation
+
+2024/11/21
+- Moved Docs.qrc to the Docs folder
+- Set a program icon (.exe)
+- Set a program icon (windows)
+- Set a name for every window
+- Add some logs
+- Cleaned the final comment in IPvalidator.cpp

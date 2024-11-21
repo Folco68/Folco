@@ -9,14 +9,14 @@ About
 -----
 
 Author:                           Martial Demolins
-Mail:                             martial.demolins@gmail.com, martial.demolins@tetrapak.com
-Position:                         REPLACE_POSITION_STR
+Mail:                             PLACEHOLDER_EMAIL_PERSONAL, PLACEHOLDER_EMAIL_PROFESSIONAL
+Position:                         PLACEHOLDER_POSITION_STR
 
 License:                          GPL v3. You can find it at https://www.gnu.org/licenses/gpl-3.0.en.html
-Copyright:                        REPLACE_COPYRIGHT_STR
-Version:                          REPLACE_APPLICATION_VERSION_STR
+Copyright:                        PLACEHOLDER_COPYRIGHT_STR
+Version:                          PLACEHOLDER_APPLICATION_VERSION_STR
 Language:                         C++
-Framework:                        Qt REPLACE_QT_VERSION_STR
+Framework:                        Qt PLACEHOLDER_QT_VERSION_STR
 Source and binary repository:     https://github.com/Folco68/Folco
 Changelog:                        https://github.com/Folco68/Folco/commits?author=Folco68
 

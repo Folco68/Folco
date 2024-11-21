@@ -20,6 +20,7 @@
 
 #include "WindowInfos.hpp"
 #include "../BeforeRelease.hpp"
+#include "../Global.hpp"
 #include "../Logger.hpp"
 #include "ui_WindowInfos.h"
 #include <QFile>
@@ -34,29 +35,31 @@ WindowInfos::WindowInfos()
     // Setup UI
     windowinfos = this;
     ui->setupUi(this);
-    //    setWindowModality(Qt::NonModal);
+    setWindowTitle(QString("%1 - Informations").arg(APPLICATION_NAME));
 
     // Readme
-    QFile FileReadme(":/Docs/Docs/README");
+    QFile FileReadme(":/Docs/README");
     if (FileReadme.open(QIODeviceBase::ReadOnly)) {
         QTextStream StreamReadme(&FileReadme);
         QString     Readme = StreamReadme.readAll();
-        Readme.replace("REPLACE_POSITION_STR", POSITION_STR);
-        Readme.replace("REPLACE_COPYRIGHT_STR", COPYRIGHT_STR);
-        Readme.replace("REPLACE_APPLICATION_VERSION_STR", APPLICATION_VERSION_STR);
-        Readme.replace("REPLACE_QT_VERSION_STR", QT_VERSION_STR);
+        Readme.replace("PLACEHOLDER_POSITION_STR", POSITION_STR);
+        Readme.replace("PLACEHOLDER_COPYRIGHT_STR", COPYRIGHT_STR);
+        Readme.replace("PLACEHOLDER_APPLICATION_VERSION_STR", APPLICATION_VERSION_STR);
+        Readme.replace("PLACEHOLDER_QT_VERSION_STR", QT_VERSION_STR);
+        Readme.replace("PLACEHOLDER_EMAIL_PERSONAL", EMAIL_PERSONAL);
+        Readme.replace("PLACEHOLDER_EMAIL_PROFESSIONAL", EMAIL_PROFESSIONAL);
         ui->TextEditReadme->setPlainText(Readme);
     }
 
     // Changelog
-    QFile FileChangelog(":/Docs/Docs/Changelog");
+    QFile FileChangelog(":/Docs/Changelog");
     if (FileChangelog.open(QIODeviceBase::ReadOnly)) {
         QTextStream StreamChangelog(&FileChangelog);
         ui->TextEditChangelog->setPlainText(StreamChangelog.readAll());
     }
 
     // License
-    QFile FileLicense(":/Docs/Docs/LICENSE");
+    QFile FileLicense(":/Docs/LICENSE");
     if (FileLicense.open(QIODeviceBase::ReadOnly)) {
         QTextStream StreamLicense(&FileLicense);
         ui->TextEditLicense->setPlainText(StreamLicense.readAll());

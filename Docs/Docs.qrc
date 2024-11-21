@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/Docs">
+        <file>Changelog</file>
+        <file>Format</file>
+        <file>LICENSE</file>
+        <file>README</file>
+        <file>TODO</file>
+    </qresource>
+</RCC>

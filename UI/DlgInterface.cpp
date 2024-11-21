@@ -19,6 +19,8 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "DlgInterface.hpp"
+#include "../Global.hpp"
+#include "../Logger.hpp"
 #include "../Network/InterfaceList.hpp"
 #include "../Network/PredefinedIP.hpp"
 #include "DlgPredefinedIP.hpp"
@@ -31,6 +33,7 @@
 #include <QNetworkAddressEntry>
 #include <QPushButton>
 #include <QTableWidgetItem>
+#include <QWindow>
 
 // This dialog deals only with QString for editing a PredefinedIP, so that the Interface is not modified if the dialog is cancelled
 
@@ -38,6 +41,7 @@ DlgInterface::DlgInterface(QNetworkInterface NetworkInterface)
     : ui(new Ui::DlgInterface)
 {
     ui->setupUi(this);
+    setWindowTitle(QString("%1 - Network Interface Configuration").arg(APPLICATION_NAME));
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ///                                                                                                                     ///
@@ -159,6 +163,8 @@ void DlgInterface::execDlgInterface(QNetworkInterface NetworkInterface)
 
 void DlgInterface::writeContent(Interface* interface)
 {
+    Logger::instance()->addLogEntry(QString("Setting Predefined IP for Interface %1").arg(interface->hardwareAddress()));
+
     for (int i = 0; i < ui->TablePredefinedIP->rowCount(); i++) {
         PredefinedIP* ip = new PredefinedIP(interface,
                                             ui->TablePredefinedIP->item(i, COLUMN_NAME)->text(),
@@ -166,6 +172,7 @@ void DlgInterface::writeContent(Interface* interface)
                                             ui->TablePredefinedIP->item(i, COLUMN_NETWORK_MASK)->text(),
                                             ui->TablePredefinedIP->item(i, COLUMN_GATEWAY)->text());
         interface->addPredefinedIP(ip);
+        Logger::instance()->addLogEntry(QString("Name: %1. IP: %2. Mask: %3. Gateway: %4").arg(ip->name(), ip->ipAddress(), ip->networkMask(), ip->gateway()));
     }
 }
 

@@ -19,6 +19,8 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "DlgPredefinedIP.hpp"
+#include "../Global.hpp"
+#include "../Logger.hpp"
 #include "ui_DlgPredefinedIP.h"
 #include <QPalette>
 #include <QStringList>
@@ -29,6 +31,7 @@ DlgPredefinedIP::DlgPredefinedIP(QWidget* parent, QString* name, QString* ip, QS
     , ui(new Ui::DlgPredefinedIP)
 {
     ui->setupUi(this);
+    setWindowTitle(QString("%1 - Edit Predefined IP").arg(APPLICATION_NAME));
 
     // Fill the UI if arguments were provided
     if (name != nullptr) {
@@ -81,6 +84,7 @@ int DlgPredefinedIP::newPredefinedIP(QWidget* parent, QString* name, QString* ip
         *ip          = Dlg->ui->EditIP->text();
         *networkmask = Dlg->ui->EditMask->text();
         *gateway     = Dlg->ui->EditGateway->text();
+        Logger::instance()->addLogEntry(QString("Predefined IP validated. Name: %1. IP: %2. Mask: %3. Gateway: %4").arg(*name, *ip, *networkmask, *gateway));
     }
 
     delete Dlg;
@@ -100,6 +104,7 @@ int DlgPredefinedIP::editPredefinedIP(QWidget* parent, QString* name, QString* i
         *ip          = Dlg->ui->EditIP->text();
         *networkmask = Dlg->ui->EditMask->text();
         *gateway     = Dlg->ui->EditGateway->text();
+        Logger::instance()->addLogEntry(QString("Predefined IP validated. Name: %1. IP: %2. Mask: %3. Gateway: %4").arg(*name, *ip, *networkmask, *gateway));
     }
 
     delete Dlg;

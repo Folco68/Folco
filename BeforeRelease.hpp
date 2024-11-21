@@ -28,7 +28,9 @@
 // Update TODO if necessary
 //
 #define APPLICATION_VERSION_STR "1.0.0"
-#define POSITION_STR            "Service Engineer (S2), Market France/BeNeLux"
-#define COPYRIGHT_STR           "(c)2024 Martial Demolins"
+#define POSITION_STR            "Service Engineer (S2), Market France/BeNeLux, Tetra Pak"
+#define COPYRIGHT_STR           "(c)2024-2025 Martial Demolins"
+#define EMAIL_PROFESSIONAL      "martial.demolins@tetrapak.com"
+#define EMAIL_PERSONAL          "martial.demolins@gmail.com"
 
 #endif // BEFORERELEASE_HPP

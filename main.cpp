@@ -20,11 +20,13 @@
 
 #include "UI/TrayIcon.hpp"
 #include <QApplication>
+#include <QGuiApplication>
 
 int main(int argc, char* argv[])
 {
-    // Create and set up the application0
+    // Create and set up the application
     QApplication Application(argc, argv);
+    Application.setWindowIcon(QIcon(":/Icons/IconBase.ico"));
 
     // We don't want the application to exit when a window is closed
     Application.setQuitOnLastWindowClosed(false);

@@ -23,7 +23,7 @@
 #include <QString>
 
 IPvalidator::IPvalidator(QObject* parent)
-    : QValidator {parent}
+    : QValidator(parent)
 {
 }
 
@@ -57,9 +57,6 @@ QValidator::State IPvalidator::validate(QString& input, int&) const
     }
 
     // All bytes are valid or null string.
-    // The result is acceptable if:
-    // - there are 4 bytes
-    // - none of them is a null string
-    // As a consequence, if we have less than 4 bytes or if one is a null string, the result is intermediate
+    // 4 bytes means that none of them is a null string => the result is acceptable
     return ValidBytes == 4 ? QValidator::Acceptable : QValidator::Intermediate;
 }

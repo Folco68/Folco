@@ -58,12 +58,14 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         Network/PredefinedIP.hpp
         Network/PredefinedIP.cpp
 
-        # Ressources
-        Ressources/Icons.qrc
+        # Resources
+        Resources/Icons.qrc
+        Resources/Icons.rc
+        Resources/IconBase.png
+        Resources/IconBase.ico
 
         #Docs
-        Docs.qrc
-        README.md
+        Docs/Docs.qrc
         Docs/Format
         Docs/LICENSE
         Docs/TODO
