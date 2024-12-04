@@ -84,6 +84,9 @@
         <property name="readOnly">
          <bool>true</bool>
         </property>
+        <property name="placeholderText">
+         <string>Disconnected</string>
+        </property>
        </widget>
       </item>
      </layout>

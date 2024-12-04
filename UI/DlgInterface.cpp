@@ -1,22 +1,22 @@
-/////////////////////////////////////////////////////////////////////////////
-//                                                                         //
-// Folco - Program allowing to quickly change an IPv4 on an interface      //
-// Copyright (C) 2024 Martial Demolins                                     //
-//                                                                         //
-// This program is free software: you can redistribute it and/or modify    //
-// it under the terms of the GNU General Public License as published by    //
-// the Free Software Foundation, either version 3 of the License, or       //
-// (at your option) any later version.                                     //
-//                                                                         //
-// This program is distributed in the hope that it will be useful,         //
-// but WITHOUT ANY WARRANTY; without even the implied warranty of          //
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           //
-// GNU General Public License for more details.                            //
-//                                                                         //
-// You should have received a copy of the GNU General Public License       //
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.  //
-//                                                                         //
-/////////////////////////////////////////////////////////////////////////////
+/*******************************************************************************
+ *                                                                             *
+ * Folco - Program allowing to quickly change the IPv4 address of an interface *
+ *                     Copyright (C) 2024 Martial Demolins                     *
+ *                                                                             *
+ *    This program is free software: you can redistribute it and/or modify     *
+ *    it under the terms of the GNU General Public License as published by     *
+ *      the Free Software Foundation, either version 3 of the License, or      *
+ *                      at your option) any later version                      *
+ *                                                                             *
+ *       This program is distributed in the hope that it will be useful        *
+ *       but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ *                 GNU General Public License for more details                 *
+ *                                                                             *
+ *      You should have received a copy of the GNU General Public License      *
+ *     along with this program.  If not, see <https://www.gnu.org/licenses     *
+ *                                                                             *
+ ******************************************************************************/
 
 #include "DlgInterface.hpp"
 #include "../Global.hpp"
@@ -40,14 +40,7 @@
 DlgInterface::DlgInterface(QNetworkInterface NetworkInterface)
     : ui(new Ui::DlgInterface)
 {
-    ui->setupUi(this);
-    setWindowTitle(QString("%1 - Network Interface Configuration").arg(APPLICATION_NAME));
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ///                                                                                                                     ///
-    ///                                                      Fill the header                                                ///
-    ///                                                                                                                     ///
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    commonInitialization(InterfaceList::instance()->interface(NetworkInterface.hardwareAddress()));
 
     // Fill the Interface properties field
     ui->EditName->setText(NetworkInterface.humanReadableName());
@@ -62,18 +55,24 @@ DlgInterface::DlgInterface(QNetworkInterface NetworkInterface)
             ui->EditIP->setText(QString("%1 / %2").arg(IPaddress.toString(), NetworkMask.toString()));
         }
     }
+}
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ///                                                                                                                     ///
-    ///                                                      Fill the IP table                                              ///
-    ///                                                                                                                     ///
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+DlgInterface::DlgInterface(Interface* interface)
+    : ui(new Ui::DlgInterface)
+{
+    commonInitialization(interface);
+    ui->EditName->setText(interface->humanReadableName());
+    ui->EditHWaddress->setText(interface->hardwareAddress());
+}
 
-    Interface* StoredInterface = InterfaceList::instance()->interface(NetworkInterface.hardwareAddress());
+void DlgInterface::commonInitialization(Interface* interface)
+{
+    ui->setupUi(this);
+    setWindowTitle(QString("%1 - Network Interface Configuration").arg(APPLICATION_NAME));
 
-    if (StoredInterface != nullptr) {
-        QList<PredefinedIP*> IPlist = StoredInterface->predefinedIPlist();
-        int                 Count  = IPlist.size();
+    if (interface != nullptr) {
+        QList<PredefinedIP*> IPlist = interface->predefinedIPlist();
+        int                  Count  = IPlist.size();
         ui->TablePredefinedIP->setRowCount(Count);
 
         for (int i = 0; i < Count; i++) {
@@ -90,12 +89,6 @@ DlgInterface::DlgInterface(QNetworkInterface NetworkInterface)
             ui->TablePredefinedIP->setItem(i, COLUMN_GATEWAY, ItemGateway);
         }
     }
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ///                                                                                                                     ///
-    ///                                                         Connections                                                 ///
-    ///                                                                                                                     ///
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Dialog
     connect(ui->ButtonOK, &QPushButton::clicked, this, [this]() { accept(); });
@@ -147,7 +140,7 @@ void DlgInterface::execDlgInterface(QNetworkInterface NetworkInterface)
 
         if (StoredInterface == nullptr) {
             if (Dlg->ui->TablePredefinedIP->rowCount() != 0) {
-                StoredInterface = new Interface(NetworkInterface.hardwareAddress());
+                StoredInterface = new Interface(NetworkInterface.hardwareAddress(), NetworkInterface.humanReadableName());
                 Dlg->writeContent(StoredInterface);
                 InterfaceList::instance()->addInterface(StoredInterface);
             }
@@ -160,6 +153,18 @@ void DlgInterface::execDlgInterface(QNetworkInterface NetworkInterface)
     }
     delete Dlg;
 }
+
+void DlgInterface::execDlgInterface(Interface* interface)
+{
+    DlgInterface* Dlg = new DlgInterface(interface);
+    // We are sure that the interface exists
+    if (Dlg->exec() == QDialog::Accepted) {
+        interface->clearContent();
+        Dlg->writeContent(interface);
+    }
+    delete Dlg;
+}
+
 
 void DlgInterface::writeContent(Interface* interface)
 {

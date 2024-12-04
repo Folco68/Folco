@@ -1,23 +1,22 @@
-- set an application Icon
++ set an application Icon
 + set GPL headers in src
 + DlgEditInterface: validate IP
-- Remember disconnected devices and allow to edit/forget them (usefull for USB-Eth adapters)
++ Remember disconnected devices and allow to edit/forget them (usefull for USB-Eth adapters)
 + offer to give a name to preconfigured IPs. This name could be used in the menu
-- offer to configure the display of the IP in the tray menu: custom name/IP, IP/custom name, ...
+o offer to configure the display of the IP in the tray menu: custom name/IP, IP/custom name, ...
 + allow to set an interface to DHCP
 + look at iterators for QList browsing
 o DlgPredefinedIP: merge newPredefinedIP() and editPredefinedIP()
 + IPv4 display does not work in DlgInterface
-- standardize symbols case
-- add a log, accessible through the context menu (help/about dialog)
++ standardize symbols case
++ add a log, accessible through the context menu (help/about dialog)
 + backup the data file before saving
 + add help and about with "BeforeRelease" data
-- add Installations instructions in the About dialog
 + handle stream errors while saving data file
 + delete InterfaceList/Interface/PredefinedIP
 + IP validation: use QSpinBox?
 + BUG context menu opens at the center of the screen if an error message pops at first show
-- code for setting netmask and gateway is disabled
++ code for setting netmask and gateway is disabled
 + DlgInterface: double click a PredefinedIP should edit it
 + BUG IPspinBox::focusInEvent() redefinition does not trigger the selectAll() method because it monitors only kbd events.
   Try by redefining QSpinBox::event(QEvent*) or QAbstractSpinBox::mousePress/ReleaseEvent(QMouseEvent*) instead of the QAbstractSpinBox event => new fail
@@ -27,6 +26,8 @@ o IPlineEdit::mouseReleaseEvent: try to select only the clicked byte
 + implement up/down in DlgInterface
 + accept pasting of IP address in DlgPredefinedIP
 + make About and Settings windows unique (with a static address containing the address of the widget)
+- add Installations instructions in the About dialog
+- offer to delete an Interface
 
 // Supervisor at startup: https://superuser.com/questions/929225/how-to-run-a-program-as-an-administrator-at-startup-on-windows-10
 

@@ -1,22 +1,22 @@
-/////////////////////////////////////////////////////////////////////////////
-//                                                                         //
-// Folco - Program allowing to quickly change an IPv4 on an interface      //
-// Copyright (C) 2024 Martial Demolins                                     //
-//                                                                         //
-// This program is free software: you can redistribute it and/or modify    //
-// it under the terms of the GNU General Public License as published by    //
-// the Free Software Foundation, either version 3 of the License, or       //
-// (at your option) any later version.                                     //
-//                                                                         //
-// This program is distributed in the hope that it will be useful,         //
-// but WITHOUT ANY WARRANTY; without even the implied warranty of          //
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           //
-// GNU General Public License for more details.                            //
-//                                                                         //
-// You should have received a copy of the GNU General Public License       //
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.  //
-//                                                                         //
-/////////////////////////////////////////////////////////////////////////////
+/*******************************************************************************
+ *                                                                             *
+ * Folco - Program allowing to quickly change the IPv4 address of an interface *
+ *                     Copyright (C) 2024 Martial Demolins                     *
+ *                                                                             *
+ *    This program is free software: you can redistribute it and/or modify     *
+ *    it under the terms of the GNU General Public License as published by     *
+ *      the Free Software Foundation, either version 3 of the License, or      *
+ *                      at your option) any later version                      *
+ *                                                                             *
+ *       This program is distributed in the hope that it will be useful        *
+ *       but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ *                 GNU General Public License for more details                 *
+ *                                                                             *
+ *      You should have received a copy of the GNU General Public License      *
+ *     along with this program.  If not, see <https://www.gnu.org/licenses     *
+ *                                                                             *
+ ******************************************************************************/
 
 #include "TrayIcon.hpp"
 #include "../Logger.hpp"
@@ -40,12 +40,12 @@ TrayIcon::TrayIcon()
     : QSystemTrayIcon {QIcon(":/Icons/IconBase.png")}
     , ContextMenu(nullptr)
 {
+    Logger::instance()->addLogEntry("Folco started...");
+
     // Show the context menu regardless of the trigger (default: only the right click displays the menu)
     // The menu is created dynamically every time it is triggerred, to refresh the interface list
     // Read the cursor position now, in case a dialog box would move it before the menu appears
     connect(this, &QSystemTrayIcon::activated, this, [this]() { showContextMenu(QCursor::pos()); });
-
-    Logger::instance()->addLogEntry("Folco started...");
 }
 
 TrayIcon::~TrayIcon()
@@ -130,8 +130,8 @@ void TrayIcon::showContextMenu(QPoint position)
         QAction*          ActionNetworkInterface = new QAction(NetworkInterface.humanReadableName()); // Action (item) of this Network Interface
 
         // Initialize some other vars
-        QString           HardwareAddress        = NetworkInterface.hardwareAddress();                // HW address of this Network Interface
-        QString           Name                   = NetworkInterface.humanReadableName();              // Name, used to identify the interface in the netsh commands
+        QString HardwareAddress = NetworkInterface.hardwareAddress();   // HW address of this Network Interface
+        QString Name            = NetworkInterface.humanReadableName(); // Name, used to identify the interface in the netsh commands
 
         // There is no stored Interface if there is not at least one predefined IP <===== TODO: this should be false now
         // So, set the IP count to 0 by default, and update it only if there is really predefined IP
@@ -159,7 +159,7 @@ void TrayIcon::showContextMenu(QPoint position)
         QAction* ActionUseDHCP = new QAction("Use DHCP");
         Submenu->addSeparator();
         Submenu->addAction(ActionUseDHCP);
-        // TODO: get ipv4 address if one exists to delete it (if needed: call configureInterfaceDHCP() with a default argument
+        // TODO: get ipv4 address if one exists to delete it (if needed: call configureInterfaceDHCP() with a default argument)x
         connect(ActionUseDHCP, &QAction::triggered, this, [this, Name]() { configureInterfaceDHCP(Name); });
 
         // Add the "Edit predefined IP" item
@@ -171,6 +171,50 @@ void TrayIcon::showContextMenu(QPoint position)
         // Fill the main context menu
         this->ContextMenu->addAction(ActionNetworkInterface);
         ActionNetworkInterface->setMenu(Submenu);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///                                                                                                                     ///
+    ///          Create the second dynamic part of the menu, which contains the known interfaces which are not connected    ///
+    ///                                                                                                                     ///
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    QList<Interface*> InterfaceList(InterfaceList::instance()->interfaceList());
+    QList<QString>    HardwareAddresses;
+    bool              DisconnectedInterfaces = false;
+
+    // Generate the list of filtered hw addresses. Does not take filters in account
+    // to avoid displaying PredefinedIP of masked hardaware interface
+    for (int i = 0; i < AllInterfaces.size(); i++) {
+        HardwareAddresses.append(AllInterfaces.at(i).hardwareAddress());
+    }
+
+    // Check if at least one Interface exists, but its hw device is disconnected
+    for (int i = 0; i < InterfaceList.size(); i++) {
+        if (!HardwareAddresses.contains(InterfaceList.at(i)->hardwareAddress())) {
+            DisconnectedInterfaces = true;
+            break;
+        }
+    }
+
+    if (DisconnectedInterfaces) {
+        // Generate the menu header
+        QAction* Title = new QAction("*** Disconnected interfaces ***");
+        Title->setDisabled(true);
+        this->ContextMenu->addSeparator();
+        this->ContextMenu->addAction(Title);
+
+        for (int i = 0; i < InterfaceList.size(); i++) {
+            if (!HardwareAddresses.contains(InterfaceList.at(i)->hardwareAddress())) {
+                QAction* ActionNetworkInterface = new QAction(InterfaceList.at(i)->humanReadableName());
+                this->ContextMenu->addAction(ActionNetworkInterface);
+                QMenu*   Submenu                = new QMenu;
+                QAction* ActionEditPredefinedIP = new QAction("Edit predefined IP");
+                Submenu->addAction(ActionEditPredefinedIP);
+                ActionNetworkInterface->setMenu(Submenu);
+                connect(ActionEditPredefinedIP, &QAction::triggered, this, [InterfaceList, i]() { DlgInterface::execDlgInterface(InterfaceList.at(i)); });
+            }
+        }
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

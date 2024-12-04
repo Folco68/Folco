@@ -1,4 +1,5 @@
-File format. All String are in UTF8
+File format. All String are QByteArray UTF-8
+
 
 =========
 Version 1
@@ -18,6 +19,7 @@ INTERFACE
 ---------
 
 String          Hardware Address            MAC address
+String          Name                        Human readable name
 qint32          Count                       Number of PREDEFINED_IP for this interface
 PREDEFINED_IP   List                        All the PREDEFINED_IP, one by one
 ...
@@ -26,7 +28,7 @@ PREDEFINED_IP   List                        All the PREDEFINED_IP, one by one
 PREDEFINED_IP
 -------------
 
-String          Name                        User defined name. Can be defined for conveniency
+String          Name                        User defined name. Can be defined for conveniency. Can be a null string
 String          IP                          IP address, the only mandatory element
-String          Netmask                     Network mask
-String          Gateway                     Gateway
+String          Netmask                     Network mask. Can be a null string
+String          Gateway                     Gateway. Can be a null string
