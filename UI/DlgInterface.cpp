@@ -70,8 +70,9 @@ void DlgInterface::commonInitialization(Interface* interface)
     ui->setupUi(this);
     setWindowTitle(QString("%1 - Network Interface Configuration").arg(APPLICATION_NAME));
     ui->ButtonDeleteInterface->setStyleSheet("Background: yellow");
+    ui->ButtonDeleteInterface->setVisible(interface != nullptr);
 
-
+    // Interface is null if no PredefinedIP has been defined for this device yet
     if (interface != nullptr) {
         QList<PredefinedIP*> IPlist = interface->predefinedIPlist();
         int                  Count  = IPlist.size();
@@ -95,7 +96,7 @@ void DlgInterface::commonInitialization(Interface* interface)
     // Dialog
     connect(ui->ButtonOK, &QPushButton::clicked, this, [this]() { accept(); });
     connect(ui->ButtonCancel, &QPushButton::clicked, this, [this]() { reject(); });
-    connect(ui->ButtonDeleteInterface, &QPushButton::clicked, this, [this, interface]() { deleteInterface(interface); });
+    connect(ui->ButtonDeleteInterface, &QPushButton::clicked, this, [this, interface]() { deleteInterface(interface); }); // Button not visible if interface is null
 
     // Table
     connect(ui->ButtoNewIP, &QPushButton::clicked, this, [this]() { newPredefinedIP(); });
