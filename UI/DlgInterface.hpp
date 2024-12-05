@@ -51,6 +51,7 @@ class DlgInterface: public QDialog
     void deletePredefinedIP();
     void moveUp();
     void moveDown();
+    void deleteInterface(Interface* interface);
 
     void writeContent(Interface* interface);
 

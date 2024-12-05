@@ -92,9 +92,13 @@ void InterfaceList::addInterface(Interface* interface)
     this->List.append(interface);
 }
 
-void InterfaceList::removeInterface(Interface* interface)
+void InterfaceList::deleteInterface(Interface* interface)
 {
-    this->List.removeOne(interface);
+    qsizetype Index = this->List.indexOf(interface);
+    // Should never return -1. Just a safety check
+    if (Index != -1) {
+        delete this->List.takeAt(Index);
+    }
 }
 
 QList<Interface*> InterfaceList::interfaceList() const

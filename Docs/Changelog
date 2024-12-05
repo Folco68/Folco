@@ -134,3 +134,8 @@ Initial commit
 2024/12/04
 - Added the human readable name in the Interface class
 - Added the ability to see and configure Interfaces of disconnected devices
+
+2024/12/05
+- Implemented InterfaceList::deleteInterface()
+- An interface can be now deleted from the DlgInterface dialog
+- Defined version to 0.9.0 (unrelated to a Git tag though)

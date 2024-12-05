@@ -36,7 +36,7 @@ class InterfaceList
     Interface*        interface(QString hwaddress) const;
     bool              hasPredefinedIP(QString hwaddress) const;
     void              addInterface(Interface* interface);
-    void              removeInterface(Interface* interface);
+    void              deleteInterface(Interface* interface);
     QList<Interface*> interfaceList() const;
 
   private:

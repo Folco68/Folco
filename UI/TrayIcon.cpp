@@ -109,7 +109,7 @@ void TrayIcon::showContextMenu(QPoint position)
         Logger::instance()->addLogEntry(QString("Adding interface %1, %2").arg(NetworkInterface.humanReadableName(), NetworkInterface.hardwareAddress()));
     }
 
-    Logger::instance()->addLogEntry(QString("%1 interfaces have been filtered").arg(AllInterfaces.count() - FilteredNetworkInterfaces.count()));
+    Logger::instance()->addLogEntry(QString("%1 interface(s) have been filtered").arg(AllInterfaces.count() - FilteredNetworkInterfaces.count()));
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ///                                                                                                                     ///
