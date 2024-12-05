@@ -69,7 +69,6 @@ void DlgInterface::commonInitialization(Interface* interface)
 {
     ui->setupUi(this);
     setWindowTitle(QString("%1 - Network Interface Configuration").arg(APPLICATION_NAME));
-    ui->ButtonDeleteInterface->setStyleSheet("Background: yellow");
     ui->ButtonDeleteInterface->setVisible(interface != nullptr);
 
     // Interface is null if no PredefinedIP has been defined for this device yet
@@ -168,7 +167,6 @@ void DlgInterface::execDlgInterface(Interface* interface)
     }
     delete Dlg;
 }
-
 
 void DlgInterface::writeContent(Interface* interface)
 {
@@ -269,8 +267,10 @@ void DlgInterface::moveDown()
 
 void DlgInterface::deleteInterface(Interface* interface)
 {
-    if (QMessageBox::question(this, QString("%1 - Delete interface").arg(APPLICATION_NAME), "Are you sure that you want to delete the settings of this interface?")) {
+    if (QMessageBox::question(this, QString("%1 - Delete interface").arg(APPLICATION_NAME), "Are you sure that you want to delete the settings of this interface?")
+        == QMessageBox::Yes) {
         reject();
         InterfaceList::instance()->deleteInterface(interface);
+        Logger::instance()->addLogEntry(QString("Deleting interface %1").arg(interface->humanReadableName()));
     }
 }

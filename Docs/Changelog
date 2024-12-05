@@ -139,3 +139,6 @@ Initial commit
 - Implemented InterfaceList::deleteInterface()
 - An interface can be now deleted from the DlgInterface dialog
 - Defined version to 0.9.0 (unrelated to a Git tag though)
+
+2024/12/05
+- Removed the "Delete Interface" button in the DlgInterface dialog if there is no configured interface

@@ -84,7 +84,7 @@ int DlgPredefinedIP::newPredefinedIP(QWidget* parent, QString* name, QString* ip
         *ip          = Dlg->ui->EditIP->text();
         *networkmask = Dlg->ui->EditMask->text();
         *gateway     = Dlg->ui->EditGateway->text();
-        Logger::instance()->addLogEntry(QString("Predefined IP validated. Name: %1. IP: %2. Mask: %3. Gateway: %4").arg(*name, *ip, *networkmask, *gateway));
+        Logger::instance()->addLogEntry(QString("Predefined IP created. Name: %1. IP: %2. Mask: %3. Gateway: %4").arg(*name, *ip, *networkmask, *gateway));
     }
 
     delete Dlg;
@@ -100,11 +100,12 @@ int DlgPredefinedIP::editPredefinedIP(QWidget* parent, QString* name, QString* i
     RetVal = Dlg->exec();
 
     if (RetVal == QDialog::Accepted) {
+        Logger::instance()->addLogEntry(QString("Modifying Predifined IP: Name: %1. IP: %2. Mask: %3. Gateway: %4").arg(*name, *ip, *networkmask, *gateway));
         *name        = Dlg->ui->EditName->text();
         *ip          = Dlg->ui->EditIP->text();
         *networkmask = Dlg->ui->EditMask->text();
         *gateway     = Dlg->ui->EditGateway->text();
-        Logger::instance()->addLogEntry(QString("Predefined IP validated. Name: %1. IP: %2. Mask: %3. Gateway: %4").arg(*name, *ip, *networkmask, *gateway));
+        Logger::instance()->addLogEntry(QString("Predifined IP modified. Name: %1. IP: %2. Mask: %3. Gateway: %4").arg(*name, *ip, *networkmask, *gateway));
     }
 
     delete Dlg;
