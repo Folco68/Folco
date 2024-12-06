@@ -26,8 +26,8 @@ o IPlineEdit::mouseReleaseEvent: try to select only the clicked byte
 + implement up/down in DlgInterface
 + accept pasting of IP address in DlgPredefinedIP
 + make About and Settings windows unique (with a static address containing the address of the widget)
++ offer to delete an Interface
 - add Installations instructions in the About dialog
-- offer to delete an Interface
 
 // Supervisor at startup: https://superuser.com/questions/929225/how-to-run-a-program-as-an-administrator-at-startup-on-windows-10
 

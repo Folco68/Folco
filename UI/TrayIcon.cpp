@@ -252,14 +252,8 @@ void TrayIcon::configureInterfacePredefinedIP(QString name, PredefinedIP* ip)
     // Set the IPv4 address with its mask and gateway
     // $ netsh interface ipv4 set address "[interface name]" static [IP] [netmask]
     QList<QString> ArgAddress;
-    ArgAddress << QString("/c netsh interface ipv4 set address \"%1\" static %2").arg(name, ip->ipAddress());
+    ArgAddress << QString("/c netsh interface ipv4 set address \"%1\" static %2 %3 %4").arg(name, ip->ipAddress(), ip->networkMask(), ip->gateway());
     QProcess::execute("cmd.exe", ArgAddress);
-
-    if (ip->hasGateway()) {
-        QStringList ArgGateway;
-        ArgGateway << QString("/c netsh interface ip set address \"%1\" gateway = %2").arg(name, ip->gateway());
-        QProcess::execute("cmd.exe", ArgGateway);
-    }
 }
 
 // QProcess::execute() is synchronous, so no need to listen to QProcess::finished to schedule the three calls

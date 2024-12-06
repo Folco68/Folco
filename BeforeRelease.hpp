@@ -23,7 +23,10 @@
 
 //
 // Some strings that need an update before a commit or a release
+//
+// Just before committing:
 // Update Changelog.txt with the git changelog
+// Update the version in this file
 // Update TODO if necessary
 //
 #define APPLICATION_VERSION_STR "0.9.1"

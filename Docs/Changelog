@@ -142,3 +142,8 @@ Initial commit
 
 2024/12/05
 - Removed the "Delete Interface" button in the DlgInterface dialog if there is no configured interface
+
+2024/12/05
+- Removed color of the "Delete Interface Configuration" button
+- Fixed the "Delete Interface Configuration" QMessageBox not checking correctly the dialog result
+- Added a log in the PredefinedIP Dialog
