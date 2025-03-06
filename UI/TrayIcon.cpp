@@ -254,11 +254,14 @@ void TrayIcon::configureInterfacePredefinedIP(QString name, PredefinedIP* ip)
     QList<QString> ArgAddress;
     ArgAddress << QString("/c netsh interface ipv4 set address \"%1\" static %2 %3 %4").arg(name, ip->ipAddress(), ip->networkMask(), ip->gateway());
     QProcess::execute("cmd.exe", ArgAddress);
+    Logger::instance()->addLogEntry(tr("Setting predefined IP: %1").arg(ArgAddress.at(0)));
 }
 
 // QProcess::execute() is synchronous, so no need to listen to QProcess::finished to schedule the three calls
 void TrayIcon::configureInterfaceDHCP(QString name)
 {
+    Logger::instance()->addLogEntry(tr("Configuring %1 for DHCP").arg(name));
+
     // 1. Delete the IPv4 addresses of this interface it some are set
     // $ netsh interface ipv4 delete address "[interface name]" addr=[IP]
     QNetworkInterface           NetworkInteface = QNetworkInterface::interfaceFromName(name);
@@ -270,6 +273,8 @@ void TrayIcon::configureInterfaceDHCP(QString name)
             ArgDelete << QString("/c netsh interface ipv4 delete address \"%1\" addr=%2").arg(name, HostAddress.toString());
             QProcess::execute("cmd.exe", ArgDelete);
             // Don't break, because an interface can have multiple IPv4 addresses
+
+            Logger::instance()->addLogEntry(tr("Deleting IP: %1").arg(ArgDelete.at(0)));
         }
     }
 
@@ -278,10 +283,12 @@ void TrayIcon::configureInterfaceDHCP(QString name)
     QList<QString> ArgAddress;
     ArgAddress << QString("/c netsh interface ipv4 set address \"%1\" dhcp").arg(name);
     QProcess::execute("cmd.exe", ArgAddress);
+    Logger::instance()->addLogEntry(tr("Enabling DHCP for the Eth address: %1").arg(ArgAddress.at(0)));
 
     // 3. Enable DHCP for the DNS servers
     // $ netsh interface ipv4 set dns "[interface name]" dhcp
     QList<QString> ArgDNS;
     ArgDNS << QString("/c netsh interface ipv4 set dns \"%1\" dhcp").arg(name);
     QProcess::execute("cmd.exe", ArgDNS);
+    Logger::instance()->addLogEntry(tr("Enabling DHCP for the DNS servers: %1").arg(ArgAddress.at(0)));
 }

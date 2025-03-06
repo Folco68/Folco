@@ -147,3 +147,6 @@ Initial commit
 - Removed color of the "Delete Interface Configuration" button
 - Fixed the "Delete Interface Configuration" QMessageBox not checking correctly the dialog result
 - Added a log in the PredefinedIP Dialog
+
+2025/03/06
+- Added logging when changing an interface configuration
