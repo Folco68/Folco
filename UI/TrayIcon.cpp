@@ -109,7 +109,8 @@ void TrayIcon::showContextMenu(QPoint position)
         Logger::instance()->addLogEntry(QString("Adding interface %1, %2").arg(NetworkInterface.humanReadableName(), NetworkInterface.hardwareAddress()));
     }
 
-    Logger::instance()->addLogEntry(QString("%1 interface(s) have been filtered").arg(AllInterfaces.count() - FilteredNetworkInterfaces.count()));
+    QString Plural = (AllInterfaces.count() - FilteredNetworkInterfaces.count() > 1) ? "s" : "";
+    Logger::instance()->addLogEntry(QString("%1 interface%2 filtered").arg(AllInterfaces.count() - FilteredNetworkInterfaces.count()).arg(Plural));
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ///                                                                                                                     ///
@@ -148,7 +149,7 @@ void TrayIcon::showContextMenu(QPoint position)
         if (IPcount != 0) {
             QList<PredefinedIP*> PredefinedIPList = StoredInterface->predefinedIPlist();
             for (int j = 0; j < IPcount; j++) {
-                PredefinedIP* IP = PredefinedIPList.at(j);
+                PredefinedIP* IP       = PredefinedIPList.at(j);
                 QAction*      ActionIP = new QAction(QString("%1: %2").arg(IP->name(), IP->ipAddress()));
                 Submenu->addAction(ActionIP);
                 connect(ActionIP, &QAction::triggered, this, [this, Name, IP]() { configureInterfacePredefinedIP(Name, IP); });
