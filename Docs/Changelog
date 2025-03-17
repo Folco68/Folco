@@ -118,7 +118,7 @@ Initial commit
 
 2024/11/18
 - Added "BeforeRelease.hpp" to update some strings and vars every release
-- Put all the doc files in a separate duirectory
+- Put all the doc files in a separate directory
 - Added a logger which can be accessed in the WindowInfos Dialog
 - Made the Settings Dialog unique
 - Settings log current settings on validation
@@ -150,3 +150,6 @@ Initial commit
 
 2025/03/06
 - Added logging when changing an interface configuration
+
+2025/03/17
+- Simplified the "Interface filtered" log message
