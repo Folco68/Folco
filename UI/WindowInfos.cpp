@@ -73,7 +73,7 @@ WindowInfos::WindowInfos()
 
     // Connections
     connect(ui->ButtonClose, &QPushButton::clicked, this, [this]() { close(); });
-    connect(Logger::instance(), &Logger::newLogEntry, this, [this](QString line) { ui->TextEditLog->appendPlainText(line); });
+    connect(Logger::instance(), &Logger::newLogEntry, this, [this](QString entry) { ui->TextEditLog->appendPlainText(entry); });
 }
 
 WindowInfos::~WindowInfos()

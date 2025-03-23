@@ -27,20 +27,6 @@ o IPlineEdit::mouseReleaseEvent: try to select only the clicked byte
 + accept pasting of IP address in DlgPredefinedIP
 + make About and Settings windows unique (with a static address containing the address of the widget)
 + offer to delete an Interface
-- add Installations instructions in the About dialog
-
-// Supervisor at startup: https://superuser.com/questions/929225/how-to-run-a-program-as-an-administrator-at-startup-on-windows-10
-
-// NetSH
-need to play around with netsh because it is not steady yet.
-https://mangohost.net/blog/how-to-disable-dhcp-and-use-a-static-ip/
-https://visibleprocrastinations.wordpress.com/2007/04/20/using-netsh-to-change-between-dhcp-and-static-ips/
-https://blog.shiraj.com/2012/10/netsh-command-to-change-from-static-ip-address-to-dhcp/
-https://www.malekal.com/commande-netsh-windows-exemples-utilisation/
-
-netsh interface ipv4 set address "Local Area Connection" static 192.168.1.100 255.255.255.0 192.168.1.1
-netsh interface ip set address “Local Area Connection” static 192.168.0.50 255.255.255.0
-netsh interface ip set address “Local Area Connection” gasteway = 192.168.0.1 gwmetric = 1
-netsh interface ip show config
-netsh interface ip set address "Local Area Connection" dhcp
-netsh interface ip set dns "Local Area Connection" static 192.168.0.200
+o add Installations instructions in the About->Help dialog
+- offer to merge connections, usefull when migrating a PC
+- one technical dialog for Settings/Merge/Log

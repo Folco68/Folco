@@ -153,3 +153,7 @@ Initial commit
 
 2025/03/17
 - Simplified the "Interface filtered" log message
+
+2025/03/23
+- Renamed some vars
+- Removed tab Help in WindowInfo dialog

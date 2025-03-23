@@ -38,11 +38,6 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="Help">
-      <attribute name="title">
-       <string>Help</string>
-      </attribute>
-     </widget>
      <widget class="QWidget" name="Changelog">
       <attribute name="title">
        <string>Changelog</string>

@@ -176,7 +176,7 @@ void InterfaceList::open()
 
     // Check version
     Stream >> Version;
-    if ((Stream.status() != QDataStream::Ok) || (Version > LAST_SUPPORTED_VERSION)) {
+    if ((Stream.status() != QDataStream::Ok) || (Version > HIGHER_SUPPORTED_VERSION)) {
         QMessageBox::critical(nullptr,
                               QString("%1 error").arg(APPLICATION_NAME),
                               QString("Error while opening the file %1. The data file is too recent, please upgrade your software.").arg(FOLCO_FILENAME));

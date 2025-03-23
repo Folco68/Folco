@@ -31,11 +31,11 @@ class Logger: public QObject
   public:
     static Logger* instance();
     static void    release();
-    void           addLogEntry(QString string);
+    void           addLogEntry(QString entry);
     QString        log() const;
 
   signals:
-    void newLogEntry(QString line);
+    void newLogEntry(QString entry);
 
   private:
     Logger();

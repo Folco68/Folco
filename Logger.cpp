@@ -50,7 +50,7 @@ QString Logger::log() const
     return this->Log;
 }
 
-void Logger::addLogEntry(QString string)
+void Logger::addLogEntry(QString entry)
 {
     if (this->FirstLogEntry) {
         this->FirstLogEntry = false;
@@ -59,7 +59,7 @@ void Logger::addLogEntry(QString string)
         this->Log.append("\n");
     }
 
-    QString NewLine = QString("[%1] %2").arg(QTime::currentTime().toString("hh:mm:ss.zzz"), string);
+    QString NewLine = QString("[%1] %2").arg(QTime::currentTime().toString("hh:mm:ss.zzz"), entry);
     this->Log.append(NewLine);
     emit newLogEntry(NewLine);
 }
