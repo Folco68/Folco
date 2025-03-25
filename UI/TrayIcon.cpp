@@ -19,12 +19,6 @@
  ******************************************************************************/
 
 #include "TrayIcon.hpp"
-#include "../Logger.hpp"
-#include "../Network/InterfaceList.hpp"
-#include "../Settings.hpp"
-#include "DlgInterface.hpp"
-#include "DlgSettings.hpp"
-#include "WindowInfos.hpp"
 #include <QAction>
 #include <QCoreApplication>
 #include <QCursor>
@@ -35,6 +29,13 @@
 #include <QNetworkInterface>
 #include <QProcess>
 #include <QString>
+#include "../Logger.hpp"
+#include "../Network/InterfaceList.hpp"
+#include "../Settings.hpp"
+#include "DlgInterface.hpp"
+#include "DlgSettings.hpp"
+#include "WindowInfos.hpp"
+#include "WindowLog.hpp"
 
 TrayIcon::TrayIcon()
     : QSystemTrayIcon {QIcon(":/Icons/IconBase.png")}
@@ -225,19 +226,37 @@ void TrayIcon::showContextMenu(QPoint position)
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Create the actions
-    QAction* ActionSettings = new QAction("Settings");
-    QAction* ActionAbout    = new QAction("About");
-    QAction* ActionExit     = new QAction("Exit");
+    QAction* ActionTools = new QAction("Tools");
+    QAction* ActionAbout = new QAction("About");
+    QAction* ActionExit  = new QAction("Exit");
 
     // Fill the menu
     this->ContextMenu->addSeparator();
-    this->ContextMenu->addAction(ActionSettings);
+    this->ContextMenu->addAction(ActionTools);
     this->ContextMenu->addAction(ActionAbout);
     this->ContextMenu->addSeparator();
     this->ContextMenu->addAction(ActionExit);
 
+    // Tools menu
+    QAction* ActionSettings = new QAction("Settings");
+    QAction* ActionLog      = new QAction("Log");
+    QAction* ActionMerge;
+    if (DisconnectedInterfaces) {
+        ActionMerge = new QAction("Merge connections");
+    }
+
+    QMenu* ToolMenu = new QMenu;
+    ToolMenu->addAction(ActionSettings);
+    ToolMenu->addAction(ActionLog);
+    if (DisconnectedInterfaces) {
+        ToolMenu->addAction(ActionMerge);
+    }
+    ActionTools->setMenu(ToolMenu);
+
     // Connect the actions
     connect(ActionSettings, &QAction::triggered, []() { DlgSettings::execDlgSettings(); });
+    //    connect(ActionMerge, &QAction::triggered, []() { DlgMerge::execDlgMerge(); });
+    connect(ActionLog, &QAction::triggered, []() { WindowLog::showWindowLog(); });
     connect(ActionAbout, &QAction::triggered, []() { WindowInfos::showWindowInfos(); });
     connect(ActionExit, &QAction::triggered, []() { QCoreApplication::exit(0); });
 

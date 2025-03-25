@@ -157,3 +157,9 @@ Initial commit
 2025/03/23
 - Renamed some vars
 - Removed tab Help in WindowInfo dialog
+
+2025/03/25
+- Attemtped a configuration to prompt for admin rights at startup. Failed ATM
+- Removed the Settings item in the main menu
+- Removed the log tab in the Informations dialog
+- Added a Tools item which contains Settings, Log, and a new Merge Connections tool, useful when migrating to another computer

@@ -34,6 +34,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         UI/DlgInterface.hpp
         UI/DlgInterface.cpp
         UI/DlgInterface.ui
+        UI/DlgMergeConnections.hpp
+        UI/DlgMergeConnections.cpp
+        UI/DlgMergeConnections.ui
         UI/DlgPredefinedIP.hpp
         UI/DlgPredefinedIP.cpp
         UI/DlgPredefinedIP.ui
@@ -49,6 +52,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         UI/WindowInfos.hpp
         UI/WindowInfos.cpp
         UI/WindowInfos.ui
+        UI/WindowLog.hpp
+        UI/WindowLog.cpp
+        UI/WindowLog.ui
 
         # Network
         Network/Interface.hpp
@@ -63,6 +69,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         Resources/Icons.rc
         Resources/IconBase.png
         Resources/IconBase.ico
+#        Resources/Folco.exe.manifest
+#        Resources/Folco.rc
 
         #Docs
         Docs/Docs.qrc
@@ -72,7 +80,6 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         Docs/Changelog
         Docs/README
 )
-
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET Folco APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
 #                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
@@ -107,6 +114,8 @@ set_target_properties(Folco PROPERTIES
     MACOSX_BUNDLE TRUE
     WIN32_EXECUTABLE TRUE
 )
+#set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS_DEBUG "/MANIFESTUAC:level=requireAdministrator")
+#set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS_RELEASE "/MANIFESTUAC:level=requireAdministrator")
 
 include(GNUInstallDirs)
 install(TARGETS Folco

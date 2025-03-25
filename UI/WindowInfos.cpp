@@ -32,6 +32,9 @@ WindowInfos::WindowInfos()
     : QWidget(nullptr, Qt::Window)
     , ui(new Ui::WindowInfos)
 {
+    // Non-modal window, delete it on close
+    setAttribute(Qt::WA_DeleteOnClose);
+
     // Setup UI
     windowinfos = this;
     ui->setupUi(this);
@@ -65,21 +68,19 @@ WindowInfos::WindowInfos()
         ui->TextEditLicense->setPlainText(StreamLicense.readAll());
     }
 
-    // Log
-    ui->TextEditLog->setPlainText(Logger::instance()->log());
-
     // Always display the first index
     ui->Tabs->setCurrentIndex(0);
 
     // Connections
-    connect(ui->ButtonClose, &QPushButton::clicked, this, [this]() { close(); });
-    connect(Logger::instance(), &Logger::newLogEntry, this, [this](QString entry) { ui->TextEditLog->appendPlainText(entry); });
+    connect(ui->ButtonClose, &QPushButton::clicked, this, [this]() {
+        close();
+    });
 }
 
 WindowInfos::~WindowInfos()
 {
-    windowinfos = nullptr;
     delete ui;
+    windowinfos = nullptr;
 }
 
 void WindowInfos::showWindowInfos()
