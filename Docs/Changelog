@@ -163,3 +163,7 @@ Initial commit
 - Removed the Settings item in the main menu
 - Removed the log tab in the Informations dialog
 - Added a Tools item which contains Settings, Log, and a new Merge Connections tool, useful when migrating to another computer
+
+2024/04/14
+- Fixed a crash when attempting to delete the last PDI of an interface
+- Used QDialog instead of QWindows in all cases

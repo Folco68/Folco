@@ -32,10 +32,10 @@
 #include "../Logger.hpp"
 #include "../Network/InterfaceList.hpp"
 #include "../Settings.hpp"
+#include "DlgHelp.hpp"
 #include "DlgInterface.hpp"
+#include "DlgLog.hpp"
 #include "DlgSettings.hpp"
-#include "WindowInfos.hpp"
-#include "WindowLog.hpp"
 
 TrayIcon::TrayIcon()
     : QSystemTrayIcon {QIcon(":/Icons/IconBase.png")}
@@ -256,8 +256,8 @@ void TrayIcon::showContextMenu(QPoint position)
     // Connect the actions
     connect(ActionSettings, &QAction::triggered, []() { DlgSettings::execDlgSettings(); });
     //    connect(ActionMerge, &QAction::triggered, []() { DlgMerge::execDlgMerge(); });
-    connect(ActionLog, &QAction::triggered, []() { WindowLog::showWindowLog(); });
-    connect(ActionAbout, &QAction::triggered, []() { WindowInfos::showWindowInfos(); });
+    connect(ActionLog, &QAction::triggered, []() { DlgLog::showDlgLog(); });
+    connect(ActionAbout, &QAction::triggered, []() { DlgHelp::showDlgHelp(); });
     connect(ActionExit, &QAction::triggered, []() { QCoreApplication::exit(0); });
 
     // Add the context menu to the tray icon

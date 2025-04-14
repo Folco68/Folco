@@ -18,27 +18,24 @@
  *                                                                             *
  ******************************************************************************/
 
-#include "WindowInfos.hpp"
+#include "DlgHelp.hpp"
+#include <QFile>
+#include <QPushButton>
+#include <QTextStream>
 #include "../BeforeRelease.hpp"
 #include "../Global.hpp"
-#include "../Logger.hpp"
-#include "ui_WindowInfos.h"
-#include <QFile>
-#include <QTextStream>
+#include "ui_DlgHelp.h"
 
-WindowInfos* WindowInfos::windowinfos = nullptr;
+DlgHelp* DlgHelp::dlghelp = nullptr;
 
-WindowInfos::WindowInfos()
-    : QWidget(nullptr, Qt::Window)
-    , ui(new Ui::WindowInfos)
+DlgHelp::DlgHelp()
+    : QDialog(nullptr)
+    , ui(new Ui::DlgHelp)
 {
-    // Non-modal window, delete it on close
-    setAttribute(Qt::WA_DeleteOnClose);
-
     // Setup UI
-    windowinfos = this;
     ui->setupUi(this);
-    setWindowTitle(QString("%1 - Informations").arg(APPLICATION_NAME));
+    setWindowTitle(QString("%1 - Informations").arg(APPLICATION_NAME)); //
+    setAttribute(Qt::WA_DeleteOnClose);                                 // Non modal
 
     // Readme
     QFile FileReadme(":/Docs/README");
@@ -72,26 +69,23 @@ WindowInfos::WindowInfos()
     ui->Tabs->setCurrentIndex(0);
 
     // Connections
-    connect(ui->ButtonClose, &QPushButton::clicked, this, [this]() {
-        close();
-    });
+    connect(ui->ButtonClose, &QPushButton::clicked, this, [this]() { accept(); });
 }
 
-WindowInfos::~WindowInfos()
+DlgHelp::~DlgHelp()
 {
     delete ui;
-    windowinfos = nullptr;
+    dlghelp = nullptr;
 }
 
-void WindowInfos::showWindowInfos()
+void DlgHelp::showDlgHelp()
 {
-    if (windowinfos == nullptr) {
-        windowinfos = new WindowInfos;
-        windowinfos->show();
-    }
-    else {
-        windowinfos->show();
-        windowinfos->setVisible(true);
-        windowinfos->activateWindow();
+    if (dlghelp == nullptr) {
+        dlghelp = new DlgHelp;
+        dlghelp->show();
+    } else {
+        dlghelp->show();
+        dlghelp->setVisible(true);
+        dlghelp->activateWindow();
     }
 }

@@ -18,27 +18,27 @@
  *                                                                             *
  ******************************************************************************/
 
-#ifndef WINDOW_INFOS_HPP
-#define WINDOW_INFOS_HPP
+#ifndef DLG_HELP_HPP
+#define DLG_HELP_HPP
 
-#include <QWidget>
+#include <QDialog>
 
 namespace Ui {
-    class WindowInfos;
+class DlgHelp;
 }
 
-class WindowInfos: public QWidget
+class DlgHelp : public QDialog
 {
     Q_OBJECT
 
   public:
-    static void showWindowInfos();
+      static void showDlgHelp();
 
   private:
-    Ui::WindowInfos*    ui;
-    static WindowInfos* windowinfos;
-    WindowInfos();
-    ~WindowInfos();
+      Ui::DlgHelp* ui;
+      static DlgHelp* dlghelp;
+      DlgHelp();
+      ~DlgHelp();
 };
 
-#endif // WINDOW_INFOS_HPP
+#endif // DLG_HELP_HPP

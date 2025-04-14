@@ -115,10 +115,17 @@ DlgInterface::~DlgInterface()
 void DlgInterface::tableSelectionChanged()
 {
     QList<QTableWidgetItem*> SelectedItems = ui->TablePredefinedIP->selectedItems();
-    bool                     Enabled       = SelectedItems.size() != 0;
-    int                      Row           = SelectedItems.at(0)->row();
-    bool                     AtTop         = (Row == 0);
-    bool                     AtBottom      = (Row == ui->TablePredefinedIP->rowCount() - 1);
+    bool Enabled                           = false;
+    bool AtTop                             = false;
+    bool AtBottom                          = false;
+
+    if (SelectedItems.size() != 0) {
+        Enabled  = true;
+        int Row  = SelectedItems.at(0)->row();
+        AtTop    = (Row == 0);
+        AtBottom = (Row == ui->TablePredefinedIP->rowCount() - 1);
+    }
+
     ui->ButtonEditIP->setEnabled(Enabled);
     ui->ButtonDeleteIP->setEnabled(Enabled);
     ui->ButtonUp->setEnabled(Enabled && !AtTop);

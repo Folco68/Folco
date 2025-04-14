@@ -31,9 +31,15 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         Settings.cpp
 
         # UI
+        UI/DlgHelp.hpp
+        UI/DlgHelp.cpp
+        UI/DlgHelp.ui
         UI/DlgInterface.hpp
         UI/DlgInterface.cpp
         UI/DlgInterface.ui
+        UI/DlgLog.hpp
+        UI/DlgLog.cpp
+        UI/DlgLog.ui
         UI/DlgMergeConnections.hpp
         UI/DlgMergeConnections.cpp
         UI/DlgMergeConnections.ui
@@ -49,12 +55,6 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         UI/IPvalidator.cpp
         UI/TrayIcon.hpp
         UI/TrayIcon.cpp
-        UI/WindowInfos.hpp
-        UI/WindowInfos.cpp
-        UI/WindowInfos.ui
-        UI/WindowLog.hpp
-        UI/WindowLog.cpp
-        UI/WindowLog.ui
 
         # Network
         Network/Interface.hpp

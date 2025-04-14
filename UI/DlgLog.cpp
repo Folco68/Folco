@@ -1,18 +1,20 @@
-#include "WindowLog.hpp"
+#include "DlgLog.hpp"
+#include <QPushButton>
 #include <QScrollBar>
+#include "../Global.hpp"
 #include "../Logger.hpp"
-#include "ui_WindowLog.h"
+#include "ui_DlgLog.h"
 
-WindowLog *WindowLog::windowlog;
+DlgLog *DlgLog::dlglog;
 
-WindowLog::WindowLog()
-    : QWidget(nullptr, Qt::Window)
-    , ui(new Ui::WindowLog)
+DlgLog::DlgLog()
+    : QDialog(nullptr)
+    , ui(new Ui::DlgLog)
 {
-    // Non-modal window, delete it on close
-    setAttribute(Qt::WA_DeleteOnClose);
-
+    // Setup UI
     ui->setupUi(this);
+    setWindowTitle(QString("%1 - Log").arg(APPLICATION_NAME)); //
+    setAttribute(Qt::WA_DeleteOnClose);                        // Non modal
 
     // Display log and scroll to the end
     ui->TextEditLog->setPlainText(Logger::instance()->log());
@@ -26,25 +28,25 @@ WindowLog::WindowLog()
     });
 }
 
-WindowLog::~WindowLog()
+DlgLog::~DlgLog()
 {
     delete ui;
-    windowlog = nullptr;
+    dlglog = nullptr;
 }
 
-void WindowLog::showWindowLog()
+void DlgLog::showDlgLog()
 {
-    if (windowlog == nullptr) {
-        windowlog = new WindowLog;
-        windowlog->show();
+    if (dlglog == nullptr) {
+        dlglog = new DlgLog;
+        dlglog->show();
     } else {
-        windowlog->show();
-        windowlog->setVisible(true);
-        windowlog->activateWindow();
+        dlglog->show();
+        dlglog->setVisible(true);
+        dlglog->activateWindow();
     }
 }
 
-void WindowLog::scrollToTheEnd()
+void DlgLog::scrollToTheEnd()
 {
     ui->TextEditLog->verticalScrollBar()->setValue(ui->TextEditLog->verticalScrollBar()->maximum());
 };
