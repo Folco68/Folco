@@ -207,9 +207,9 @@
    <item>
     <layout class="QHBoxLayout" name="HLayoutButtons">
      <item>
-      <widget class="QPushButton" name="ButtonDeleteInterface">
+      <widget class="QPushButton" name="ButtonForgetInterface">
        <property name="text">
-        <string>Delete interface configuration</string>
+        <string>Forget interface configuration</string>
        </property>
       </widget>
      </item>

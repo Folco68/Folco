@@ -1,22 +1,22 @@
-/*******************************************************************************
- *                                                                             *
- * Folco - Program allowing to quickly change the IPv4 address of an interface *
- *                     Copyright (C) 2024 Martial Demolins                     *
- *                                                                             *
- *    This program is free software: you can redistribute it and/or modify     *
- *    it under the terms of the GNU General Public License as published by     *
- *      the Free Software Foundation, either version 3 of the License, or      *
- *                      at your option) any later version                      *
- *                                                                             *
- *       This program is distributed in the hope that it will be useful        *
- *       but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- *        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
- *                 GNU General Public License for more details                 *
- *                                                                             *
- *      You should have received a copy of the GNU General Public License      *
- *     along with this program.  If not, see <https://www.gnu.org/licenses     *
- *                                                                             *
- ******************************************************************************/
+/**************************************************************************************** 
+ *                                                                                      * 
+ *     Folco - Program allowing to quickly change the IPv4 address of an interface      * 
+ *                       Copyright (C) 2024-2025 Martial Demolins                       * 
+ *                                                                                      * 
+ *         This program is free software: you can redistribute it and/or modify         * 
+ *         it under the terms of the GNU General Public License as published by         * 
+ *          the Free Software Foundation, either version 3 of the License, or           * 
+ *                          (at your option) any later version                          * 
+ *                                                                                      * 
+ *            This program is distributed in the hope that it will be useful            * 
+ *            but WITHOUT ANY WARRANTY; without even the implied warranty of            * 
+ *            MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             * 
+ *                     GNU General Public License for more details                      * 
+ *                                                                                      * 
+ *          You should have received a copy of the GNU General Public License           * 
+ *         along with this program.  If not, see <https://www.gnu.org/licenses>         * 
+ *                                                                                      * 
+ ****************************************************************************************/
 
 #include "DlgInterface.hpp"
 #include "../Global.hpp"
@@ -39,6 +39,7 @@
 
 DlgInterface::DlgInterface(QNetworkInterface NetworkInterface)
     : ui(new Ui::DlgInterface)
+    , Dialog(this)
 {
     commonInitialization(InterfaceList::instance()->interface(NetworkInterface.hardwareAddress()));
 
@@ -59,6 +60,7 @@ DlgInterface::DlgInterface(QNetworkInterface NetworkInterface)
 
 DlgInterface::DlgInterface(Interface* interface)
     : ui(new Ui::DlgInterface)
+    , Dialog(this)
 {
     commonInitialization(interface);
     ui->EditName->setText(interface->humanReadableName());
@@ -69,7 +71,7 @@ void DlgInterface::commonInitialization(Interface* interface)
 {
     ui->setupUi(this);
     setWindowTitle(QString("%1 - Network Interface Configuration").arg(APPLICATION_NAME));
-    ui->ButtonDeleteInterface->setVisible(interface != nullptr);
+    ui->ButtonForgetInterface->setVisible(interface != nullptr);
 
     // Interface is null if no PredefinedIP has been defined for this device yet
     if (interface != nullptr) {
@@ -95,7 +97,9 @@ void DlgInterface::commonInitialization(Interface* interface)
     // Dialog
     connect(ui->ButtonOK, &QPushButton::clicked, this, [this]() { accept(); });
     connect(ui->ButtonCancel, &QPushButton::clicked, this, [this]() { reject(); });
-    connect(ui->ButtonDeleteInterface, &QPushButton::clicked, this, [this, interface]() { deleteInterface(interface); }); // Button not visible if interface is null
+    connect(ui->ButtonForgetInterface, &QPushButton::clicked, this, [this, interface]() {
+        forgetInterface(interface);
+    }); // Button not visible if interface is null
 
     // Table
     connect(ui->ButtoNewIP, &QPushButton::clicked, this, [this]() { newPredefinedIP(); });
@@ -115,10 +119,13 @@ DlgInterface::~DlgInterface()
 void DlgInterface::tableSelectionChanged()
 {
     QList<QTableWidgetItem*> SelectedItems = ui->TablePredefinedIP->selectedItems();
+
+    // Defaut: no selection, buttons are disabled
     bool Enabled                           = false;
     bool AtTop                             = false;
     bool AtBottom                          = false;
 
+    // Enable some of them if there is a valid selection
     if (SelectedItems.size() != 0) {
         Enabled  = true;
         int Row  = SelectedItems.at(0)->row();
@@ -126,6 +133,7 @@ void DlgInterface::tableSelectionChanged()
         AtBottom = (Row == ui->TablePredefinedIP->rowCount() - 1);
     }
 
+    // Set buttons
     ui->ButtonEditIP->setEnabled(Enabled);
     ui->ButtonDeleteIP->setEnabled(Enabled);
     ui->ButtonUp->setEnabled(Enabled && !AtTop);
@@ -272,12 +280,14 @@ void DlgInterface::moveDown()
     }
 }
 
-void DlgInterface::deleteInterface(Interface* interface)
+void DlgInterface::forgetInterface(Interface* interface)
 {
-    if (QMessageBox::question(this, QString("%1 - Delete interface").arg(APPLICATION_NAME), "Are you sure that you want to delete the settings of this interface?")
+    if (QMessageBox::question(this,
+                              QString("%1 - Forget interface").arg(APPLICATION_NAME),
+                              "Are you sure that you want to forget the settings of this interface?")
         == QMessageBox::Yes) {
         reject();
         InterfaceList::instance()->deleteInterface(interface);
-        Logger::instance()->addLogEntry(QString("Deleting interface %1").arg(interface->humanReadableName()));
+        Logger::instance()->addLogEntry(QString("Forgetting interface %1").arg(interface->humanReadableName()));
     }
 }

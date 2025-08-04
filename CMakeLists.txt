@@ -63,6 +63,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         Network/InterfaceList.cpp
         Network/PredefinedIP.hpp
         Network/PredefinedIP.cpp
+        Network/SystemInterfaces.hpp
+        Network/SystemInterfaces.cpp
 
         # Resources
         Resources/Icons.qrc
@@ -79,6 +81,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         Docs/TODO
         Docs/Changelog
         Docs/README
+        UI/Dialog.hpp UI/Dialog.cpp
 )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET Folco APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

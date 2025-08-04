@@ -1,22 +1,22 @@
-/*******************************************************************************
- *                                                                             *
- * Folco - Program allowing to quickly change the IPv4 address of an interface *
- *                     Copyright (C) 2024 Martial Demolins                     *
- *                                                                             *
- *    This program is free software: you can redistribute it and/or modify     *
- *    it under the terms of the GNU General Public License as published by     *
- *      the Free Software Foundation, either version 3 of the License, or      *
- *                      at your option) any later version                      *
- *                                                                             *
- *       This program is distributed in the hope that it will be useful        *
- *       but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- *        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
- *                 GNU General Public License for more details                 *
- *                                                                             *
- *      You should have received a copy of the GNU General Public License      *
- *     along with this program.  If not, see <https://www.gnu.org/licenses     *
- *                                                                             *
- ******************************************************************************/
+/**************************************************************************************** 
+ *                                                                                      * 
+ *     Folco - Program allowing to quickly change the IPv4 address of an interface      * 
+ *                       Copyright (C) 2024-2025 Martial Demolins                       * 
+ *                                                                                      * 
+ *         This program is free software: you can redistribute it and/or modify         * 
+ *         it under the terms of the GNU General Public License as published by         * 
+ *          the Free Software Foundation, either version 3 of the License, or           * 
+ *                          (at your option) any later version                          * 
+ *                                                                                      * 
+ *            This program is distributed in the hope that it will be useful            * 
+ *            but WITHOUT ANY WARRANTY; without even the implied warranty of            * 
+ *            MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             * 
+ *                     GNU General Public License for more details                      * 
+ *                                                                                      * 
+ *          You should have received a copy of the GNU General Public License           * 
+ *         along with this program.  If not, see <https://www.gnu.org/licenses>         * 
+ *                                                                                      * 
+ ****************************************************************************************/
 
 #include "TrayIcon.hpp"
 #include <QAction>
@@ -29,9 +29,12 @@
 #include <QNetworkInterface>
 #include <QProcess>
 #include <QString>
+#include "../Global.hpp"
 #include "../Logger.hpp"
 #include "../Network/InterfaceList.hpp"
+#include "../Network/SystemInterfaces.hpp"
 #include "../Settings.hpp"
+#include "Dialog.hpp"
 #include "DlgHelp.hpp"
 #include "DlgInterface.hpp"
 #include "DlgLog.hpp"
@@ -42,11 +45,17 @@ TrayIcon::TrayIcon()
     , ContextMenu(nullptr)
 {
     Logger::instance()->addLogEntry("Folco started...");
+    setToolTip(APPLICATION_NAME " - " APPLICATION_DESCRIPTION);
 
-    // Show the context menu regardless of the trigger (default: only the right click displays the menu)
     // The menu is created dynamically every time it is triggerred, to refresh the interface list
-    // Read the cursor position now, in case a dialog box would move it before the menu appears
-    connect(this, &QSystemTrayIcon::activated, this, [this]() { showContextMenu(QCursor::pos()); });
+    connect(this,
+            &QSystemTrayIcon::activated, // Show the context menu regardless of the trigger (default: only the right click displays the menu)
+            this,
+            [this]() {
+                if (!Dialog::display()) {            // If a window is already displayed, bring it to the foreground instead of showing the menu
+                    showContextMenu(QCursor::pos()); // Read the cursor position now, to prevent a dialog box from moving the menu before it pops up
+                };
+            });
 }
 
 TrayIcon::~TrayIcon()
@@ -75,43 +84,7 @@ void TrayIcon::showContextMenu(QPoint position)
     ///                                                                                                                             ///
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    QList<QNetworkInterface> AllInterfaces = QNetworkInterface::allInterfaces();
-    QList<QNetworkInterface> FilteredNetworkInterfaces;
-    Logger::instance()->addLogEntry(QString("Found %1 system interfaces").arg(AllInterfaces.count()));
-
-    for (int i = 0; i < AllInterfaces.size(); i++) {
-
-        // Current interface
-        QNetworkInterface NetworkInterface = AllInterfaces.at(i);
-
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        ///                                                                                                                     ///
-        ///                               Loop if the current interface matches the filter criteria                             ///
-        ///                                                                                                                     ///
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        // Show only Ethernet and Wi-Fi capable interfaces
-        if (Settings::instance()->showOnlyEthernetWifi() && (NetworkInterface.type() != QNetworkInterface::Ethernet) && (NetworkInterface.type() != QNetworkInterface::Wifi)) {
-            continue;
-        }
-
-        // Show only active interface
-        if (Settings::instance()->showOnlyUp() && (!(NetworkInterface.flags() & QNetworkInterface::IsUp))) {
-            continue;
-        }
-
-        // Show only interface with predefined IP
-        if (Settings::instance()->showOnlyPredefined() && !InterfaceList::instance()->hasPredefinedIP(NetworkInterface.hardwareAddress())) {
-            continue;
-        }
-
-        // This interface matches all criteria and will be part of the menu
-        FilteredNetworkInterfaces << NetworkInterface;
-        Logger::instance()->addLogEntry(QString("Adding interface %1, %2").arg(NetworkInterface.humanReadableName(), NetworkInterface.hardwareAddress()));
-    }
-
-    QString Plural = (AllInterfaces.count() - FilteredNetworkInterfaces.count() > 1) ? "s" : "";
-    Logger::instance()->addLogEntry(QString("%1 interface%2 filtered").arg(AllInterfaces.count() - FilteredNetworkInterfaces.count()).arg(Plural));
+    QList<QNetworkInterface> FilteredInterfaces = SystemInterfaces::filteredInterfaces();
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ///                                                                                                                     ///
@@ -126,10 +99,10 @@ void TrayIcon::showContextMenu(QPoint position)
     Title->setDisabled(true);
     this->ContextMenu->addAction(Title);
 
-    for (int i = 0; i < FilteredNetworkInterfaces.size(); i++) {
+    for (int i = 0; i < FilteredInterfaces.size(); i++) {
         // Create the Interface item in the main menu
-        QNetworkInterface NetworkInterface       = FilteredNetworkInterfaces.at(i);                   // Current Network Interface
-        QAction*          ActionNetworkInterface = new QAction(NetworkInterface.humanReadableName()); // Action (item) of this Network Interface
+        QNetworkInterface NetworkInterface = FilteredInterfaces.at(i);                          // Current Network Interface
+        QAction* ActionNetworkInterface    = new QAction(NetworkInterface.humanReadableName()); // Action (item) of this Network Interface
 
         // Initialize some other vars
         QString HardwareAddress = NetworkInterface.hardwareAddress();   // HW address of this Network Interface
@@ -177,10 +150,11 @@ void TrayIcon::showContextMenu(QPoint position)
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ///                                                                                                                     ///
-    ///          Create the second dynamic part of the menu, which contains the known interfaces which are not connected    ///
+    ///          Create the second dynamic part of the menu, which contains the known but unconnected interfaces            ///
     ///                                                                                                                     ///
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    QList<QNetworkInterface> AllInterfaces = QNetworkInterface::allInterfaces();
     QList<Interface*> InterfaceList(InterfaceList::instance()->interfaceList());
     QList<QString>    HardwareAddresses;
     bool              DisconnectedInterfaces = false;
