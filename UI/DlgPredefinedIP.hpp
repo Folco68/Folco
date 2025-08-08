@@ -28,6 +28,14 @@ namespace Ui {
     class DlgPredefinedIP;
 }
 
+/********************************************************************************************************************** 
+ *                                                                                                                    * 
+ *                                                  DlgPredefinedIP                                                   * 
+ *                                                                                                                    * 
+ *                                    This class allows to edit a pre-defined IP.                                     * 
+ *                                                                                                                    * 
+ **********************************************************************************************************************/
+
 class DlgPredefinedIP : public QDialog, public Dialog
 {
     Q_OBJECT

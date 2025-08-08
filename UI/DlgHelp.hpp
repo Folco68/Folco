@@ -28,6 +28,14 @@ namespace Ui {
 class DlgHelp;
 }
 
+/********************************************************************************************************************** 
+ *                                                                                                                    * 
+ *                                                      DlgHelp                                                       * 
+ *                                                                                                                    * 
+ *                            This class holds the dialog of Readme / Changelog / License.                            * 
+ *                                                                                                                    * 
+ **********************************************************************************************************************/
+
 class DlgHelp : public QDialog, public Dialog
 {
     Q_OBJECT

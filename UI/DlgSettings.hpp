@@ -28,6 +28,14 @@ namespace Ui {
     class DlgSettings;
 }
 
+/********************************************************************************************************************** 
+ *                                                                                                                    * 
+ *                                                    DlgSettings                                                     * 
+ *                                                                                                                    * 
+ *                               This class allows to change application-wide settings.                               * 
+ *                                                                                                                    * 
+ **********************************************************************************************************************/
+
 class DlgSettings : public QDialog, public Dialog
 {
     Q_OBJECT

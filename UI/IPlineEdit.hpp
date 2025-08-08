@@ -27,7 +27,15 @@
 #include <QString>
 #include <QWidget>
 
-class IPlineEdit: public QLineEdit
+/********************************************************************************************************************** 
+ *                                                                                                                    * 
+ *                                                     IPlineEdit                                                     * 
+ *                                                                                                                    * 
+ *                          This class extends QLineEdit by checking the validity of an IP.                           * 
+ *                                                                                                                    * 
+ **********************************************************************************************************************/
+
+class IPlineEdit : public QLineEdit
 {
   public:
     IPlineEdit(QWidget* parent);

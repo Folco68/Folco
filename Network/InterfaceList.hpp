@@ -27,6 +27,14 @@
 #include <QList>
 #include <QString>
 
+/********************************************************************************************************************** 
+ *                                                                                                                    * 
+ *                                                   InterfaceList                                                    * 
+ *                                                                                                                    * 
+ *                This class contains a list of all the interfaces showed when opening the tray menu.                 * 
+ *                                                                                                                    * 
+ **********************************************************************************************************************/
+
 class InterfaceList
 {
   public:

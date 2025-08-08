@@ -262,6 +262,9 @@ void DlgInterface::moveUp()
         BottomItem->setText(TopItem->text());
         TopItem->setText(TmpString);
     }
+
+    // Make the moved line the current one
+    // ui->TablePredefinedIP->selectRow(Row - 1);
 }
 
 void DlgInterface::moveDown()
@@ -278,6 +281,9 @@ void DlgInterface::moveDown()
         BottomItem->setText(TopItem->text());
         TopItem->setText(TmpString);
     }
+
+    // Make the moved line the current one
+    // ui->TablePredefinedIP->selectRow(Row + 1);
 }
 
 void DlgInterface::forgetInterface(Interface* interface)

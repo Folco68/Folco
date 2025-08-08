@@ -28,6 +28,14 @@ namespace Ui {
 class DlgMergeConnections;
 }
 
+/********************************************************************************************************************** 
+ *                                                                                                                    * 
+ *                                                DlgMergeConnections                                                 * 
+ *                                                                                                                    * 
+ *  This class allows to merge connections, in other words to give the configuration of an interface to another one.  * 
+ *                                                                                                                    * 
+ **********************************************************************************************************************/
+
 class DlgMergeConnections : public QDialog, public Dialog
 {
     Q_OBJECT
