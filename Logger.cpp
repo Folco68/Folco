@@ -20,6 +20,7 @@
 
 #include "Logger.hpp"
 #include <QDate>
+#include <QProcess>
 #include <QTime>
 
 Logger* Logger::logger = nullptr;
@@ -43,6 +44,10 @@ void Logger::release()
 Logger::Logger()
     : FirstLogEntry(true)
 {
+    QList List(QProcess::systemEnvironment().toList());
+    while (!List.isEmpty()) {
+        addLogEntry(List.takeFirst());
+    }
 }
 
 QString Logger::log() const

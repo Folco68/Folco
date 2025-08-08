@@ -32,4 +32,5 @@ o add Installations instructions in the About->Help dialog
 - one technical dialog for Settings/Merge/Log
 o remove static vars in Dlg class, see DlgHelp
 - add a name to Interface, to identify them easierly, especially when disconnected
-- moving up and down IP in DlgInterface does not select the right item after move
++ moving up and down IP in DlgInterface does not select the right item after move
+- use W11 L&F
