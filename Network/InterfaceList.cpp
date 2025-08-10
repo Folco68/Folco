@@ -193,7 +193,7 @@ void InterfaceList::open()
     // Create the interface and add them to the list
     // The Interface objects check the stream status while extracting themselves from the stream
     for (int i = 0; i < Count; i++) {
-        Interface* Interface = new class Interface(Stream);
+        Interface* Interface = new class Interface(Stream, Version);
         this->List.append(Interface);
     }
 }

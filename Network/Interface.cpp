@@ -21,29 +21,52 @@
 #include "Interface.hpp"
 #include <QByteArray>
 
-Interface::Interface(QString hwaddress, QString name)
+Interface::Interface(QString hwaddress, QString customname, QString name)
     : HardwareAddress(hwaddress)
+    , CustomName(customname)
     , HumanReadableName(name)
 {
 }
 
-Interface::Interface(QDataStream& stream)
+Interface::Interface(QDataStream& stream, qint32 version)
 {
-    // Read HW address and name
-    QByteArray HardwareAddress;
-    QByteArray HumanReadableName;
-    stream >> HardwareAddress >> HumanReadableName;
-    this->HardwareAddress = QString::fromUtf8(HardwareAddress);
-    this->HumanReadableName = QString::fromUtf8(HumanReadableName);
+    if (version == 1) {
+        // Read HW address and name
+        QByteArray HardwareAddress;
+        QByteArray HumanReadableName;
+        stream >> HardwareAddress >> HumanReadableName;
+        this->HardwareAddress   = QString::fromUtf8(HardwareAddress);
+        this->HumanReadableName = QString::fromUtf8(HumanReadableName);
 
-    // Read the number of predefined IP
-    qint32 Count;
-    stream >> Count;
+        // Read the number of predefined IP
+        qint32 Count;
+        stream >> Count;
 
-    // Read the predefined IP
-    for (int i = 0; i < Count; i++) {
-        PredefinedIP* IP = new PredefinedIP(this, stream);
-        this->PredefinedIPlist.append(IP);
+        // Read the predefined IP
+        for (int i = 0; i < Count; i++) {
+            PredefinedIP* IP = new PredefinedIP(this, stream);
+            this->PredefinedIPlist.append(IP);
+        }
+
+    } else if (version == 2) {
+        // Read HW address and name
+        QByteArray HardwareAddress;
+        QByteArray CustomName;
+        QByteArray HumanReadableName;
+        stream >> HardwareAddress >> CustomName >> HumanReadableName;
+        this->HardwareAddress   = QString::fromUtf8(HardwareAddress);
+        this->CustomName        = QString::fromUtf8(CustomName);
+        this->HumanReadableName = QString::fromUtf8(HumanReadableName);
+
+        // Read the number of predefined IP
+        qint32 Count;
+        stream >> Count;
+
+        // Read the predefined IP
+        for (int i = 0; i < Count; i++) {
+            PredefinedIP* IP = new PredefinedIP(this, stream);
+            this->PredefinedIPlist.append(IP);
+        }
     }
 }
 
@@ -92,7 +115,7 @@ void Interface::clearContent()
 
 void Interface::save(QDataStream& stream)
 {
-    stream << this->HardwareAddress.toUtf8() << this->HumanReadableName.toUtf8();
+    stream << this->HardwareAddress.toUtf8() << this->CustomName.toUtf8() << this->HumanReadableName.toUtf8();
     qint32 Count = this->predefinedIPcount();
     stream << Count;
     for (int i = 0; i < Count; i++) {
@@ -108,4 +131,14 @@ QString Interface::humanReadableName() const
 void Interface::setHumanReadableName(QString name)
 {
     this->HumanReadableName = name;
+}
+
+QString Interface::customName() const
+{
+    return this->CustomName;
+}
+
+void Interface::setCustomName(QString name)
+{
+    this->CustomName = name;
 }

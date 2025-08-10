@@ -94,7 +94,7 @@ void TrayIcon::showContextMenu(QPoint position)
 
     this->ContextMenu = new QMenu;
 
-    // Section title. Can't use QMenu::addSection because Windows 10 don't display it
+    // Section title. Can't use QMenu::addSection because Windows 10/11 don't display it
     QAction* Title = new QAction("*** Host interfaces ***");
     Title->setDisabled(true);
     this->ContextMenu->addAction(Title);
@@ -114,6 +114,11 @@ void TrayIcon::showContextMenu(QPoint position)
         int        IPcount         = 0;                                                     // Count of predefined IP for this Stored Interface
         if (StoredInterface != nullptr) {
             IPcount = StoredInterface->predefinedIPcount();
+
+            // Add the custom name if one exists
+            if (!StoredInterface->customName().isEmpty()) {
+                ActionNetworkInterface->setText(QString("%1 (%2)").arg(ActionNetworkInterface->text(), StoredInterface->customName()));
+            }
         }
 
         // Create the sub-menu containing the predefined IP and the "Edit predefined IP" item
@@ -189,6 +194,11 @@ void TrayIcon::showContextMenu(QPoint position)
                 Submenu->addAction(ActionEditPredefinedIP);
                 ActionNetworkInterface->setMenu(Submenu);
                 connect(ActionEditPredefinedIP, &QAction::triggered, this, [InterfaceList, i]() { DlgInterface::execDlgInterface(InterfaceList.at(i)); });
+
+                // Add custom name if one is set
+                if (!InterfaceList.at(i)->customName().isEmpty()) {
+                    ActionNetworkInterface->setText(QString("%1 (%2)").arg(ActionNetworkInterface->text(), InterfaceList.at(i)->customName()));
+                }
             }
         }
     }

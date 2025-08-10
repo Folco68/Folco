@@ -64,6 +64,7 @@ DlgInterface::DlgInterface(Interface* interface)
 {
     commonInitialization(interface);
     ui->EditName->setText(interface->humanReadableName());
+    ui->EditCustomName->setText(interface->customName());
     ui->EditHWaddress->setText(interface->hardwareAddress());
 }
 
@@ -75,6 +76,7 @@ void DlgInterface::commonInitialization(Interface* interface)
 
     // Interface is null if no PredefinedIP has been defined for this device yet
     if (interface != nullptr) {
+        ui->EditCustomName->setText(interface->customName());
         QList<PredefinedIP*> IPlist = interface->predefinedIPlist();
         int                  Count  = IPlist.size();
         ui->TablePredefinedIP->setRowCount(Count);
@@ -158,9 +160,8 @@ void DlgInterface::execDlgInterface(QNetworkInterface NetworkInterface)
 
         if (StoredInterface == nullptr) {
             if (Dlg->ui->TablePredefinedIP->rowCount() != 0) {
-                StoredInterface = new Interface(NetworkInterface.hardwareAddress(), NetworkInterface.humanReadableName());
+                StoredInterface = new Interface(NetworkInterface.hardwareAddress(), Dlg->ui->EditCustomName->text(), NetworkInterface.humanReadableName());
                 Dlg->writeContent(StoredInterface);
-                InterfaceList::instance()->addInterface(StoredInterface);
             }
             // Nothing to do if we valitade an interface which does not exist yet and which has no content to store into
         }
@@ -179,6 +180,7 @@ void DlgInterface::execDlgInterface(Interface* interface)
     if (Dlg->exec() == QDialog::Accepted) {
         interface->clearContent();
         Dlg->writeContent(interface);
+        interface->setCustomName(Dlg->ui->EditCustomName->text());
     }
     delete Dlg;
 }
@@ -186,7 +188,7 @@ void DlgInterface::execDlgInterface(Interface* interface)
 void DlgInterface::writeContent(Interface* interface)
 {
     Logger::instance()->addLogEntry(QString("Setting Predefined IP for Interface %1").arg(interface->hardwareAddress()));
-
+    interface->setCustomName(ui->EditCustomName->text());
     for (int i = 0; i < ui->TablePredefinedIP->rowCount(); i++) {
         PredefinedIP* ip = new PredefinedIP(interface,
                                             ui->TablePredefinedIP->item(i, COLUMN_NAME)->text(),

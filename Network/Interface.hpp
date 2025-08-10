@@ -37,8 +37,8 @@
 class Interface
 {
   public:
-    Interface(QString hwaddress, QString name);
-    Interface(QDataStream& stream);
+    Interface(QString hwaddress, QString customname, QString name);
+    Interface(QDataStream& stream, qint32 version);
     ~Interface();
     void                 addPredefinedIP(PredefinedIP* ip);
     void                 removePredefinedIP(PredefinedIP* ip);
@@ -47,14 +47,17 @@ class Interface
     QList<PredefinedIP*> predefinedIPlist() const;
     void                 clearContent();
     void                 save(QDataStream& stream);
-    QString              humanReadableName() const;
-    void                 setHumanReadableName(QString name);
+    QString humanReadableName() const;
+    void setHumanReadableName(QString name);
+    QString customName() const;
+    void setCustomName(QString name);
 
   private:
-    QString              HardwareAddress;
-    QString              HumanReadableName; // This name can be changed by the user in the OS UI.
-                                            // It is only used to display the Interface related PredefinedIP
-                                            // when its hardware device is disconnected
+    QString HardwareAddress;   // WW UID, the only identifier used in the application
+    QString CustomName;        // Not mandatory, not OS-related. The scope is this application, as a reminder
+    QString HumanReadableName; // This name can be changed by the user in the OS UI.
+                               // It is only used to display the Interface related PredefinedIP
+                               // when its hardware device is disconnected
     QList<PredefinedIP*> PredefinedIPlist;
 };
 

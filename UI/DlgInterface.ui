@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>600</width>
-    <height>398</height>
+    <height>420</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -46,7 +46,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
+      <item row="2" column="0">
        <widget class="QLabel" name="LabelHWaddress">
         <property name="text">
          <string>MAC address:</string>
@@ -56,7 +56,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
+      <item row="2" column="1">
        <widget class="QLineEdit" name="EditHWaddress">
         <property name="enabled">
          <bool>true</bool>
@@ -66,7 +66,7 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
+      <item row="3" column="0">
        <widget class="QLabel" name="LabelIP">
         <property name="text">
          <string>Current IP:</string>
@@ -76,7 +76,7 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="1">
+      <item row="3" column="1">
        <widget class="QLineEdit" name="EditIP">
         <property name="enabled">
          <bool>true</bool>
@@ -86,6 +86,20 @@
         </property>
         <property name="placeholderText">
          <string>Disconnected</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="LabelCustomName">
+        <property name="text">
+         <string>Custom name:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="EditCustomName">
+        <property name="placeholderText">
+         <string>Custom name you can set to improve readability</string>
         </property>
        </widget>
       </item>

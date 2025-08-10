@@ -29,7 +29,7 @@
 #define FOLCO_FILENAME           "Folco.pdi"
 #define FOLCO_BACKUP_FILENAME    "Folco.bak"
 #define FOLCO_SIGNATURE          "FOLCO_BY_MARTIAL_DEMOLINS"
-#define DATA_VERSION             1
-#define HIGHER_SUPPORTED_VERSION 1
+#define DATA_VERSION             2
+#define HIGHER_SUPPORTED_VERSION 2
 
 #endif // GLOBAL_HPP
