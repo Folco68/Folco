@@ -19,12 +19,12 @@
  ****************************************************************************************/
 
 #include "DlgHelp.hpp"
-#include <QFile>
-#include <QPushButton>
-#include <QTextStream>
 #include "../BeforeRelease.hpp"
 #include "../Global.hpp"
 #include "ui_DlgHelp.h"
+#include <QFile>
+#include <QPushButton>
+#include <QTextStream>
 
 DlgHelp::DlgHelp()
     : QDialog(nullptr)

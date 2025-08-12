@@ -21,8 +21,8 @@
 #ifndef DLGMERGECONNECTIONS_HPP
 #define DLGMERGECONNECTIONS_HPP
 
-#include <QDialog>
 #include "Dialog.hpp"
+#include <QDialog>
 
 namespace Ui {
 class DlgMergeConnections;
@@ -36,16 +36,18 @@ class DlgMergeConnections;
  *                                                                                                                    * 
  **********************************************************************************************************************/
 
-class DlgMergeConnections : public QDialog, public Dialog
+class DlgMergeConnections
+    : public QDialog
+    , public Dialog
 {
     Q_OBJECT
 
-public:
-    explicit DlgMergeConnections(QWidget *parent = nullptr);
+  public:
+    explicit DlgMergeConnections(QWidget* parent = nullptr);
     ~DlgMergeConnections();
 
-private:
-    Ui::DlgMergeConnections *ui;
+  private:
+    Ui::DlgMergeConnections* ui;
 };
 
 #endif // DLGMERGECONNECTIONS_HPP

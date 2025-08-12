@@ -120,7 +120,8 @@ bool InterfaceList::save() const
     // Open file
     QFile File(FOLCO_FILENAME);
     if (!File.open(QIODeviceBase::WriteOnly)) {
-        QMessageBox::critical(nullptr, QString("%1 error").arg(APPLICATION_NAME), QString("Error while saving the file %1. No data saved.").arg(FOLCO_FILENAME));
+        QMessageBox::critical(
+            nullptr, QString("%1 error").arg(APPLICATION_NAME), QString("Error while saving the file %1. No data saved.").arg(FOLCO_FILENAME));
         return false;
     }
 
@@ -157,7 +158,8 @@ void InterfaceList::open()
     // Try to open the file
     QFile File(FOLCO_FILENAME);
     if (!File.open(QIODeviceBase::ReadOnly)) {
-        QMessageBox::critical(nullptr, QString("%1 error").arg(APPLICATION_NAME), QString("Error while opening the file %1. No data read.").arg(FOLCO_FILENAME));
+        QMessageBox::critical(
+            nullptr, QString("%1 error").arg(APPLICATION_NAME), QString("Error while opening the file %1. No data read.").arg(FOLCO_FILENAME));
         return;
     }
 
@@ -170,7 +172,8 @@ void InterfaceList::open()
     // Check signature
     Stream >> Signature;
     if ((Stream.status() != QDataStream::Ok) || (QString::fromUtf8(Signature) != FOLCO_SIGNATURE)) {
-        QMessageBox::critical(nullptr, QString("%1 error").arg(APPLICATION_NAME), QString("Error while opening the file %1. Wrong signature.").arg(FOLCO_FILENAME));
+        QMessageBox::critical(
+            nullptr, QString("%1 error").arg(APPLICATION_NAME), QString("Error while opening the file %1. Wrong signature.").arg(FOLCO_FILENAME));
         return;
     }
 
@@ -186,7 +189,8 @@ void InterfaceList::open()
     // Read number of saved Interfaces
     Stream >> Count;
     if (Stream.status() != QDataStream::Ok) {
-        QMessageBox::critical(nullptr, QString("%1 error").arg(APPLICATION_NAME), QString("Error while opening the file %1. Invalid IP count.").arg(FOLCO_FILENAME));
+        QMessageBox::critical(
+            nullptr, QString("%1 error").arg(APPLICATION_NAME), QString("Error while opening the file %1. Invalid IP count.").arg(FOLCO_FILENAME));
         return;
     }
 

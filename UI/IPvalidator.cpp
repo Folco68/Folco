@@ -24,7 +24,8 @@
 
 IPvalidator::IPvalidator(QObject* parent)
     : QValidator(parent)
-{}
+{
+}
 
 // Allow empty string, because mask and gateway are not mandatory in a PredefinedIP
 QValidator::State IPvalidator::validate(QString& input, int&) const

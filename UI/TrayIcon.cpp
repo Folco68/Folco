@@ -19,16 +19,6 @@
  ****************************************************************************************/
 
 #include "TrayIcon.hpp"
-#include <QAction>
-#include <QCoreApplication>
-#include <QCursor>
-#include <QIcon>
-#include <QList>
-#include <QMenu>
-#include <QNetworkAddressEntry>
-#include <QNetworkInterface>
-#include <QProcess>
-#include <QString>
 #include "../Global.hpp"
 #include "../Logger.hpp"
 #include "../Network/InterfaceList.hpp"
@@ -39,9 +29,19 @@
 #include "DlgInterface.hpp"
 #include "DlgLog.hpp"
 #include "DlgSettings.hpp"
+#include <QAction>
+#include <QCoreApplication>
+#include <QCursor>
+#include <QIcon>
+#include <QList>
+#include <QMenu>
+#include <QNetworkAddressEntry>
+#include <QNetworkInterface>
+#include <QProcess>
+#include <QString>
 
 TrayIcon::TrayIcon()
-    : QSystemTrayIcon {QIcon(":/Icons/IconBase.png")}
+    : QSystemTrayIcon{QIcon(":/Icons/IconBase.png")}
     , ContextMenu(nullptr)
 {
     Logger::instance()->addLogEntry("Folco started...");
@@ -101,8 +101,8 @@ void TrayIcon::showContextMenu(QPoint position)
 
     for (int i = 0; i < FilteredInterfaces.size(); i++) {
         // Create the Interface item in the main menu
-        QNetworkInterface NetworkInterface = FilteredInterfaces.at(i);                          // Current Network Interface
-        QAction* ActionNetworkInterface    = new QAction(NetworkInterface.humanReadableName()); // Action (item) of this Network Interface
+        QNetworkInterface NetworkInterface       = FilteredInterfaces.at(i);                          // Current Network Interface
+        QAction*          ActionNetworkInterface = new QAction(NetworkInterface.humanReadableName()); // Action (item) of this Network Interface
 
         // Initialize some other vars
         QString HardwareAddress = NetworkInterface.hardwareAddress();   // HW address of this Network Interface
@@ -160,9 +160,9 @@ void TrayIcon::showContextMenu(QPoint position)
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     QList<QNetworkInterface> AllInterfaces = QNetworkInterface::allInterfaces();
-    QList<Interface*> InterfaceList(InterfaceList::instance()->interfaceList());
-    QList<QString>    HardwareAddresses;
-    bool              DisconnectedInterfaces = false;
+    QList<Interface*>        InterfaceList(InterfaceList::instance()->interfaceList());
+    QList<QString>           HardwareAddresses;
+    bool                     DisconnectedInterfaces = false;
 
     // Generate the list of filtered hw addresses. Does not take filters in account
     // to avoid displaying PredefinedIP of masked hardaware interface

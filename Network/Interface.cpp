@@ -47,8 +47,8 @@ Interface::Interface(QDataStream& stream, qint32 version)
             PredefinedIP* IP = new PredefinedIP(this, stream);
             this->PredefinedIPlist.append(IP);
         }
-
-    } else if (version == 2) {
+    }
+    else if (version == 2) {
         // Read HW address and name
         QByteArray HardwareAddress;
         QByteArray CustomName;

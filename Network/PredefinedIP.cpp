@@ -72,7 +72,8 @@ QString PredefinedIP::gateway() const
 
 bool PredefinedIP::operator==(PredefinedIP ip) const
 {
-    return (this->Parent == ip.Parent) && (this->Name == ip.Name) && (this->IPaddress == ip.IPaddress) && (this->NetworkMask == ip.NetworkMask) && (this->Gateway == ip.Gateway);
+    return (this->Parent == ip.Parent) && (this->Name == ip.Name) && (this->IPaddress == ip.IPaddress) && (this->NetworkMask == ip.NetworkMask)
+        && (this->Gateway == ip.Gateway);
 }
 
 void PredefinedIP::save(QDataStream& stream)

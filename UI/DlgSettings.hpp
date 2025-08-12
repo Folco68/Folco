@@ -21,11 +21,11 @@
 #ifndef DLGSETTINGS_HPP
 #define DLGSETTINGS_HPP
 
-#include <QDialog>
 #include "Dialog.hpp"
+#include <QDialog>
 
 namespace Ui {
-    class DlgSettings;
+class DlgSettings;
 }
 
 /********************************************************************************************************************** 
@@ -36,7 +36,9 @@ namespace Ui {
  *                                                                                                                    * 
  **********************************************************************************************************************/
 
-class DlgSettings : public QDialog, public Dialog
+class DlgSettings
+    : public QDialog
+    , public Dialog
 {
     Q_OBJECT
 
@@ -48,7 +50,6 @@ class DlgSettings : public QDialog, public Dialog
     static DlgSettings* dlgsettings;
     explicit DlgSettings();
     ~DlgSettings();
-
 };
 
 #endif // DLGSETTINGS_HPP

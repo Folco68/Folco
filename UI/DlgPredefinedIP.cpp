@@ -69,7 +69,8 @@ DlgPredefinedIP::~DlgPredefinedIP()
 
 void DlgPredefinedIP::updateButtonOK()
 {
-    ui->ButtonOK->setEnabled((ui->EditIP->hasAcceptableInput() && !ui->EditIP->text().isEmpty()) && ui->EditMask->hasAcceptableInput() && ui->EditGateway->hasAcceptableInput());
+    ui->ButtonOK->setEnabled((ui->EditIP->hasAcceptableInput() && !ui->EditIP->text().isEmpty()) && ui->EditMask->hasAcceptableInput()
+                             && ui->EditGateway->hasAcceptableInput());
 }
 
 int DlgPredefinedIP::newPredefinedIP(QWidget* parent, QString* name, QString* ip, QString* networkmask, QString* gateway)

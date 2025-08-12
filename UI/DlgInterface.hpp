@@ -21,13 +21,13 @@
 #ifndef DLG_INTERFACE_HPP
 #define DLG_INTERFACE_HPP
 
-#include <QDialog>
-#include <QNetworkInterface>
 #include "../Network/Interface.hpp"
 #include "Dialog.hpp"
+#include <QDialog>
+#include <QNetworkInterface>
 
 namespace Ui {
-    class DlgInterface;
+class DlgInterface;
 }
 
 /********************************************************************************************************************** 
@@ -38,10 +38,11 @@ namespace Ui {
  *                          Only the execDlgInterface really create and delete PredefinedIP.                          * 
  *                                    All other functions just modify the tables.                                     * 
  *                                                                                                                    * 
- *                                                                                                                    * 
  **********************************************************************************************************************/
 
-class DlgInterface : public QDialog, public Dialog
+class DlgInterface
+    : public QDialog
+    , public Dialog
 {
     Q_OBJECT
 

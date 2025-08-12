@@ -22,8 +22,8 @@
 #define GLOBAL_HPP
 
 // QCoreApplication settings (for QSettings) + app name
-#define ORGANIZATION_NAME "FolcoSoft"
-#define APPLICATION_NAME  "Folco"
+#define ORGANIZATION_NAME       "FolcoSoft"
+#define APPLICATION_NAME        "Folco"
 #define APPLICATION_DESCRIPTION "Fast IP changer"
 
 #define FOLCO_FILENAME           "Folco.pdi"

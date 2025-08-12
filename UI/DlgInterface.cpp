@@ -99,9 +99,8 @@ void DlgInterface::commonInitialization(Interface* interface)
     // Dialog
     connect(ui->ButtonOK, &QPushButton::clicked, this, [this]() { accept(); });
     connect(ui->ButtonCancel, &QPushButton::clicked, this, [this]() { reject(); });
-    connect(ui->ButtonForgetInterface, &QPushButton::clicked, this, [this, interface]() {
-        forgetInterface(interface);
-    }); // Button not visible if interface is null
+    connect(
+        ui->ButtonForgetInterface, &QPushButton::clicked, this, [this, interface]() { forgetInterface(interface); }); // Button not visible if interface is null
 
     // Table
     connect(ui->ButtoNewIP, &QPushButton::clicked, this, [this]() { newPredefinedIP(); });
@@ -123,9 +122,9 @@ void DlgInterface::tableSelectionChanged()
     QList<QTableWidgetItem*> SelectedItems = ui->TablePredefinedIP->selectedItems();
 
     // Defaut: no selection, buttons are disabled
-    bool Enabled                           = false;
-    bool AtTop                             = false;
-    bool AtBottom                          = false;
+    bool Enabled  = false;
+    bool AtTop    = false;
+    bool AtBottom = false;
 
     // Enable some of them if there is a valid selection
     if (SelectedItems.size() != 0) {
@@ -292,9 +291,8 @@ void DlgInterface::moveDown()
 
 void DlgInterface::forgetInterface(Interface* interface)
 {
-    if (QMessageBox::question(this,
-                              QString("%1 - Forget interface").arg(APPLICATION_NAME),
-                              "Are you sure that you want to forget the settings of this interface?")
+    if (QMessageBox::question(
+            this, QString("%1 - Forget interface").arg(APPLICATION_NAME), "Are you sure that you want to forget the settings of this interface?")
         == QMessageBox::Yes) {
         reject();
         InterfaceList::instance()->deleteInterface(interface);

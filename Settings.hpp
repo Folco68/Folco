@@ -60,5 +60,4 @@ class Settings: public QSettings
 #define KEY_SHOW_ONLY_PREDEFINED     "ShowOnlyPredefined"
 #define DEFAULT_SHOW_ONLY_PREDEFINED false
 
-
 #endif // SETTINGS_HPP

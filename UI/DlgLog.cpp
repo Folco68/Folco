@@ -19,13 +19,13 @@
  ****************************************************************************************/
 
 #include "DlgLog.hpp"
-#include <QPushButton>
-#include <QScrollBar>
 #include "../Global.hpp"
 #include "../Logger.hpp"
 #include "ui_DlgLog.h"
+#include <QPushButton>
+#include <QScrollBar>
 
-DlgLog *DlgLog::dlglog;
+DlgLog* DlgLog::dlglog;
 
 DlgLog::DlgLog()
     : QDialog(nullptr)
@@ -60,7 +60,8 @@ void DlgLog::showDlgLog()
     if (dlglog == nullptr) {
         dlglog = new DlgLog;
         dlglog->show();
-    } else {
+    }
+    else {
         dlglog->show();
         dlglog->setVisible(true);
         dlglog->activateWindow();

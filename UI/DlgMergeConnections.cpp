@@ -21,7 +21,7 @@
 #include "DlgMergeConnections.hpp"
 #include "ui_DlgMergeConnections.h"
 
-DlgMergeConnections::DlgMergeConnections(QWidget *parent)
+DlgMergeConnections::DlgMergeConnections(QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::DlgMergeConnections)
     , Dialog(this)

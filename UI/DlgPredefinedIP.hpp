@@ -21,11 +21,11 @@
 #ifndef DLG_PREDEFINED_IP_HPP
 #define DLG_PREDEFINED_IP_HPP
 
-#include <QDialog>
 #include "Dialog.hpp"
+#include <QDialog>
 
 namespace Ui {
-    class DlgPredefinedIP;
+class DlgPredefinedIP;
 }
 
 /********************************************************************************************************************** 
@@ -36,7 +36,9 @@ namespace Ui {
  *                                                                                                                    * 
  **********************************************************************************************************************/
 
-class DlgPredefinedIP : public QDialog, public Dialog
+class DlgPredefinedIP
+    : public QDialog
+    , public Dialog
 {
     Q_OBJECT
 

@@ -21,8 +21,8 @@
 #ifndef DLG_LOG_HPP
 #define DLG_LOG_HPP
 
-#include <QDialog>
 #include "Dialog.hpp"
+#include <QDialog>
 
 namespace Ui {
 class DlgLog;
@@ -36,21 +36,23 @@ class DlgLog;
  *                                                                                                                    * 
  **********************************************************************************************************************/
 
-class DlgLog : public QDialog, public Dialog
+class DlgLog
+    : public QDialog
+    , public Dialog
 {
     Q_OBJECT
 
-public:
+  public:
     static void showDlgLog();
 
-private:
-    static DlgLog *dlglog;
+  private:
+    static DlgLog* dlglog;
     DlgLog();
     ~DlgLog();
     void scrollToTheEnd();
 
-private:
-    Ui::DlgLog *ui;
+  private:
+    Ui::DlgLog* ui;
 };
 
 #endif // DLG_LOG_HPP

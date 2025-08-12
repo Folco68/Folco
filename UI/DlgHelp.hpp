@@ -21,8 +21,8 @@
 #ifndef DLG_HELP_HPP
 #define DLG_HELP_HPP
 
-#include <QDialog>
 #include "Dialog.hpp"
+#include <QDialog>
 
 namespace Ui {
 class DlgHelp;
@@ -36,7 +36,9 @@ class DlgHelp;
  *                                                                                                                    * 
  **********************************************************************************************************************/
 
-class DlgHelp : public QDialog, public Dialog
+class DlgHelp
+    : public QDialog
+    , public Dialog
 {
     Q_OBJECT
 

@@ -39,7 +39,7 @@ class InterfaceList
 {
   public:
     static InterfaceList* instance();
-    static void       release();
+    static void           release();
 
     Interface*        interface(QString hwaddress) const;
     bool              hasPredefinedIP(QString hwaddress) const;

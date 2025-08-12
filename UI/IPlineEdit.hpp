@@ -35,7 +35,7 @@
  *                                                                                                                    * 
  **********************************************************************************************************************/
 
-class IPlineEdit : public QLineEdit
+class IPlineEdit: public QLineEdit
 {
   public:
     IPlineEdit(QWidget* parent);
