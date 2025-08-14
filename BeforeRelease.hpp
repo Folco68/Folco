@@ -29,7 +29,7 @@
 // Update the version in this file
 // Update TODO if necessary
 //
-#define APPLICATION_VERSION_STR "0.9.6"
+#define APPLICATION_VERSION_STR "0.9.7"
 #define POSITION_STR            "Service Engineer (S2), Market France/BeNeLux, Tetra Pak"
 #define COPYRIGHT_STR           "(c)2024-2025 Martial Demolins"
 #define EMAIL_PROFESSIONAL      "martial.demolins@tetrapak.com"

@@ -25,4 +25,6 @@ Changelog:                        https://github.com/Folco68/Folco/commits?autho
 Purpose
 -------
 
-This program is intended to change easily the IPv4 address of an interface, without requiring full administrator rights
+This program is intended to change easily the IPv4 address of any ethernet interface.
+To launch it, right click its icon and click "Run as administrator".
+The program lives as an icon in the system tray.

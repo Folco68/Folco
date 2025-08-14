@@ -31,6 +31,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         Settings.cpp
 
         # UI
+        UI/Dialog.hpp
+        UI/Dialog.cpp
         UI/DlgHelp.hpp
         UI/DlgHelp.cpp
         UI/DlgHelp.ui
@@ -81,7 +83,6 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         Docs/TODO
         Docs/Changelog
         Docs/README
-        UI/Dialog.hpp UI/Dialog.cpp
 )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET Folco APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

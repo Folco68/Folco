@@ -265,7 +265,6 @@ void DlgInterface::moveUp()
     }
 
     // Make the moved line the current one
-    // The setCurrentItem() ensures that the line is correctly colored by the WM
     ui->TablePredefinedIP->selectRow(Row - 1);
 }
 
@@ -285,7 +284,6 @@ void DlgInterface::moveDown()
     }
 
     // Make the moved line the current one
-    // The setCurrentItem() ensures that the line is correctly colored by the WM
     ui->TablePredefinedIP->selectRow(Row + 1);
 }
 

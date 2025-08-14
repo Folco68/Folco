@@ -159,11 +159,32 @@ Initial commit
 - Removed tab Help in WindowInfo dialog
 
 2025/03/25
-- Attemtped a configuration to prompt for admin rights at startup. Failed ATM
+- Attempted a configuration to prompt for admin rights at startup. Failed ATM
 - Removed the Settings item in the main menu
 - Removed the log tab in the Informations dialog
 - Added a Tools item which contains Settings, Log, and a new Merge Connections tool, useful when migrating to another computer
 
-2024/04/14
+2025/04/14
 - Fixed a crash when attempting to delete the last PDI of an interface
 - Used QDialog instead of QWindows in all cases
+
+2025/08/04
+- Updated GPL notices (I don't remember why)
+- Replace "Delete interface" with "Forget interface"
+- Don't allow to re-open the menu if a dialog is opened (class Dialog)
+
+2025/08/08
+- Added a short description in classes headers
+
+2025/08/08
+- Using MoveUp/MoveDown in DlgInterface selects the moved interface after the operation
+
+2025/08/10
+- Remove unnecessary setCurrentItem(), just use the correct plugin to get "almost" native look & feel
+
+2025/08/10
+- Added the ability to define a custom name for an interface
+- Bumped internal version of data file to 2
+
+2025/08/12
+- Use a new clang-format configuration
