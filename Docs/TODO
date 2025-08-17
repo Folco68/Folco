@@ -32,7 +32,13 @@ o add Installations instructions in the About->Help dialog
 + moving up and down IP in DlgInterface does not select the right item after move
 + use W11 L&F
 + add a name to Interface, to identify them easierly, especially when disconnected
++ no more icon in the top left corner of the windows
++ remove show()/setVisible()/activateWindows() in Dlg*::showDlg() methods (thanks to class Dialog)
 - offer to merge connections, usefull when migrating a PC or changing an adapter
 - one technical dialog for Settings/Merge/Log
 - data v1 makes that an Interafce is user-customized only if it has at least 1 pre-defined IP. With v2, it should support 0 PDI and a custom name
-- no more icon in the top left corner of the windows
+  -> revamp the way the menu are generated when popping up?
+  -> two lists: HW interfaces enumerated by the system, and the InterfaceList
+    -> create an empty list of Pairs: pick an HW address, and try to find a corresponding Interface
+    -> remaining HW address are added and can be configured
+    -> remaining Interfaces are Disconnected Interfaces

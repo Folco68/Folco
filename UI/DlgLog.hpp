@@ -46,7 +46,6 @@ class DlgLog
     static void showDlgLog();
 
   private:
-    static DlgLog* dlglog;
     DlgLog();
     ~DlgLog();
     void scrollToTheEnd();

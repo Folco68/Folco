@@ -25,8 +25,6 @@
 #include <QPushButton>
 #include <QScrollBar>
 
-DlgLog* DlgLog::dlglog;
-
 DlgLog::DlgLog()
     : QDialog(nullptr)
     , ui(new Ui::DlgLog)
@@ -52,20 +50,13 @@ DlgLog::DlgLog()
 DlgLog::~DlgLog()
 {
     delete ui;
-    dlglog = nullptr;
 }
 
 void DlgLog::showDlgLog()
 {
-    if (dlglog == nullptr) {
-        dlglog = new DlgLog;
-        dlglog->show();
-    }
-    else {
-        dlglog->show();
-        dlglog->setVisible(true);
-        dlglog->activateWindow();
-    }
+    DlgLog* Dlg = new DlgLog;
+    Dlg->exec();
+    delete Dlg;
 }
 
 void DlgLog::scrollToTheEnd()

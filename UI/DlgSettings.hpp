@@ -47,7 +47,6 @@ class DlgSettings
 
   private:
     Ui::DlgSettings*    ui;
-    static DlgSettings* dlgsettings;
     explicit DlgSettings();
     ~DlgSettings();
 };

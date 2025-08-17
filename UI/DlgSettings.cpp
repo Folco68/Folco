@@ -23,14 +23,11 @@
 #include "../Settings.hpp"
 #include "ui_DlgSettings.h"
 
-DlgSettings* DlgSettings::dlgsettings = nullptr;
-
 DlgSettings::DlgSettings()
     : ui(new Ui::DlgSettings)
     , Dialog(this)
 {
     // Setup UI
-    dlgsettings = this;
     ui->setupUi(this);
     setWindowModality(Qt::NonModal);
     setWindowTitle(QString("%1 - Settings").arg(APPLICATION_NAME));
@@ -48,26 +45,18 @@ DlgSettings::DlgSettings()
 
 DlgSettings::~DlgSettings()
 {
-    dlgsettings = nullptr;
     delete ui;
 }
 
 void DlgSettings::execDlgSettings()
 {
 
-    if (dlgsettings == nullptr) {
-        dlgsettings = new DlgSettings();
-        if (dlgsettings->exec() == QDialog::Accepted) {
-            Settings::instance()->setShowOnlyEthernetWifi(dlgsettings->ui->CheckShowOnlyEthernetWiFi->isChecked());
-            Settings::instance()->setShowOnlyUp(dlgsettings->ui->CheckShowOnlyUp->isChecked());
-            Settings::instance()->setShowOnlyPredefined(dlgsettings->ui->CheckShowOnlyPredefined->isChecked());
-            Settings::instance()->sync();
-        }
-        delete dlgsettings;
+    DlgSettings* Dlg = new DlgSettings();
+    if (Dlg->exec() == QDialog::Accepted) {
+        Settings::instance()->setShowOnlyEthernetWifi(Dlg->ui->CheckShowOnlyEthernetWiFi->isChecked());
+        Settings::instance()->setShowOnlyUp(Dlg->ui->CheckShowOnlyUp->isChecked());
+        Settings::instance()->setShowOnlyPredefined(Dlg->ui->CheckShowOnlyPredefined->isChecked());
+        Settings::instance()->sync();
     }
-    else {
-        dlgsettings->show();
-        dlgsettings->setVisible(true);
-        dlgsettings->activateWindow();
-    }
+    delete Dlg;
 }
