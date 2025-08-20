@@ -43,7 +43,7 @@ class DlgHelp
     Q_OBJECT
 
   public:
-    static void showDlgHelp();
+    static void execDlgHelp();
 
   private:
     Ui::DlgHelp* ui;

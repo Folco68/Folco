@@ -21,7 +21,7 @@
 #ifndef DLG_INTERFACE_HPP
 #define DLG_INTERFACE_HPP
 
-#include "../Network/Interface.hpp"
+#include "../Network/Configuration.hpp"
 #include "Dialog.hpp"
 #include <QDialog>
 #include <QNetworkInterface>
@@ -48,22 +48,21 @@ class DlgInterface
 
   public:
     static void execDlgInterface(QNetworkInterface NetworkInterface);
-    static void execDlgInterface(Interface* Interface);
+    static void execDlgInterface(Configuration* configuration);
     ~DlgInterface();
 
   private:
-    explicit DlgInterface(QNetworkInterface NetworkInterface);
-    explicit DlgInterface(Interface* interface);
-    void commonInitialization(Interface* interface); // Don't use a delegate constructor because the class inherits QDialog, which can't be built twice
+    explicit DlgInterface(QNetworkInterface NetworkInterface); // For Network Interfaces
+    explicit DlgInterface(Configuration* configuration);       // For Configuration with disconnected Network Interfaces
+    void commonInitialization(Configuration* configuration); // Don't use a delegate constructor because the class inherits QDialog, which can't be built twice
     void tableSelectionChanged();
     void newPredefinedIP();
     void editPredefinedIP();
     void deletePredefinedIP();
     void moveUp();
     void moveDown();
-    void forgetInterface(Interface* interface);
-
-    void writeContent(Interface* interface);
+    void forgetConfiguration(Configuration* configuration);
+    void writeContent(Configuration* configuration);
 
     Ui::DlgInterface* ui;
 };

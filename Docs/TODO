@@ -42,3 +42,4 @@ o add Installations instructions in the About->Help dialog
     -> create an empty list of Pairs: pick an HW address, and try to find a corresponding Interface
     -> remaining HW address are added and can be configured
     -> remaining Interfaces are Disconnected Interfaces
+- PredefinedIP embed the human readable name of their Interface, to display it when it's disconnected. Upate it from time to time

@@ -18,10 +18,9 @@
  *                                                                                      * 
  ****************************************************************************************/
 
-#ifndef INTERFACE_LIST_HPP
-#define INTERFACE_LIST_HPP
+#ifndef CONFIGURATION_HPP
+#define CONFIGURATION_HPP
 
-#include "Interface.hpp"
 #include "PredefinedIP.hpp"
 #include <QDataStream>
 #include <QList>
@@ -29,34 +28,37 @@
 
 /********************************************************************************************************************** 
  *                                                                                                                    * 
- *                                                   InterfaceList                                                    * 
+ *                                                   Configuration                                                    * 
  *                                                                                                                    * 
- *                This class contains a list of all the interfaces showed when opening the tray menu.                 * 
+ *                         This class holds the predefined IPs linked to a hardware interface                         * 
  *                                                                                                                    * 
  **********************************************************************************************************************/
 
-class InterfaceList
+class Configuration
 {
   public:
-    static InterfaceList* instance();
-    static void           release();
-
-    Interface*        interface(QString hwaddress) const;
-    bool              hasPredefinedIP(QString hwaddress) const;
-    void              addInterface(Interface* interface);
-    void              deleteInterface(Interface* interface);
-    QList<Interface*> interfaceList() const;
+    Configuration(QString hwaddress, QString customname, QString name);
+    Configuration(QDataStream& stream, qint32 version);
+    ~Configuration();
+    void                 addPredefinedIP(PredefinedIP* ip);
+    void                 removePredefinedIP(PredefinedIP* ip);
+    int                  predefinedIPcount() const;
+    bool                 hasPredefinedIP() const;
+    QString              hardwareAddress() const;
+    QList<PredefinedIP*> predefinedIPlist() const;
+    void                 clearContent();
+    void                 save(QDataStream& stream);
+    QString              humanReadableName() const;          // Name given par the OS (Ethernet, Ethernet2, Ethernet3, VMWare Network Adapter, ...)
+    void                 setHumanReadableName(QString name); //
+    QString              customName() const;                 // More suitable name (Office Workstation, USB Adapter, ...)
+    void                 setCustomName(QString name);
 
   private:
-    // Singleton stuff
-    static InterfaceList* interfacelist;
-    InterfaceList();
-    ~InterfaceList();
-
-    void open();
-    bool save() const;
-
-    QList<Interface*> List;
+    QString              HardwareAddress;   // MAC address
+    QString              CustomName;        // Not mandatory, not OS-related. The scope is this application, as a reminder
+    QString              HumanReadableName; // This name can be changed by the user in the OS UI.
+                                            // It is only used to display the Configuration related PredefinedIP when its hardware device is disconnected
+    QList<PredefinedIP*> PredefinedIPlist;
 };
 
-#endif // INTERFACE_LIST_HPP
+#endif // CONFIGURATION_HPP

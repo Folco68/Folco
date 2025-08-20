@@ -29,7 +29,6 @@ DlgSettings::DlgSettings()
 {
     // Setup UI
     ui->setupUi(this);
-    setWindowModality(Qt::NonModal);
     setWindowTitle(QString("%1 - Settings").arg(APPLICATION_NAME));
     adjustSize();
 

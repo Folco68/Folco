@@ -39,9 +39,6 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         UI/DlgInterface.hpp
         UI/DlgInterface.cpp
         UI/DlgInterface.ui
-        UI/DlgLog.hpp
-        UI/DlgLog.cpp
-        UI/DlgLog.ui
         UI/DlgMergeConnections.hpp
         UI/DlgMergeConnections.cpp
         UI/DlgMergeConnections.ui
@@ -59,14 +56,12 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         UI/TrayIcon.cpp
 
         # Network
-        Network/Interface.hpp
-        Network/Interface.cpp
-        Network/InterfaceList.hpp
-        Network/InterfaceList.cpp
+        Network/Configuration.hpp
+        Network/Configuration.cpp
+        Network/ConfigurationList.hpp
+        Network/ConfigurationList.cpp
         Network/PredefinedIP.hpp
         Network/PredefinedIP.cpp
-        Network/SystemInterfaces.hpp
-        Network/SystemInterfaces.cpp
 
         # Resources
         Resources/Icons.qrc

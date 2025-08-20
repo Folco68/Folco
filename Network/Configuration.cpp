@@ -18,17 +18,17 @@
  *                                                                                      * 
  ****************************************************************************************/
 
-#include "Interface.hpp"
+#include "Configuration.hpp"
 #include <QByteArray>
 
-Interface::Interface(QString hwaddress, QString customname, QString name)
+Configuration::Configuration(QString hwaddress, QString customname, QString name)
     : HardwareAddress(hwaddress)
     , CustomName(customname)
     , HumanReadableName(name)
 {
 }
 
-Interface::Interface(QDataStream& stream, qint32 version)
+Configuration::Configuration(QDataStream& stream, qint32 version)
 {
     if (version == 1) {
         // Read HW address and name
@@ -70,19 +70,19 @@ Interface::Interface(QDataStream& stream, qint32 version)
     }
 }
 
-Interface::~Interface()
+Configuration::~Configuration()
 {
     for (int i = 0; i < this->PredefinedIPlist.count(); i++) {
         delete this->PredefinedIPlist.at(i);
     }
 }
 
-void Interface::addPredefinedIP(PredefinedIP* ip)
+void Configuration::addPredefinedIP(PredefinedIP* ip)
 {
     this->PredefinedIPlist << ip;
 }
 
-void Interface::removePredefinedIP(PredefinedIP* ip)
+void Configuration::removePredefinedIP(PredefinedIP* ip)
 {
     for (int i = 0; i < this->PredefinedIPlist.size(); i++) {
         if (*(this->predefinedIPlist().at(i)) == *ip) {
@@ -93,27 +93,32 @@ void Interface::removePredefinedIP(PredefinedIP* ip)
     }
 }
 
-int Interface::predefinedIPcount() const
+int Configuration::predefinedIPcount() const
 {
     return this->PredefinedIPlist.count();
 }
 
-QString Interface::hardwareAddress() const
+bool Configuration::hasPredefinedIP() const
+{
+    return !this->PredefinedIPlist.isEmpty();
+}
+
+QString Configuration::hardwareAddress() const
 {
     return this->HardwareAddress;
 }
 
-QList<PredefinedIP*> Interface::predefinedIPlist() const
+QList<PredefinedIP*> Configuration::predefinedIPlist() const
 {
     return this->PredefinedIPlist;
 }
 
-void Interface::clearContent()
+void Configuration::clearContent()
 {
     this->PredefinedIPlist.clear();
 }
 
-void Interface::save(QDataStream& stream)
+void Configuration::save(QDataStream& stream)
 {
     stream << this->HardwareAddress.toUtf8() << this->CustomName.toUtf8() << this->HumanReadableName.toUtf8();
     qint32 Count = this->predefinedIPcount();
@@ -123,22 +128,22 @@ void Interface::save(QDataStream& stream)
     }
 }
 
-QString Interface::humanReadableName() const
+QString Configuration::humanReadableName() const
 {
     return this->HumanReadableName;
 }
 
-void Interface::setHumanReadableName(QString name)
+void Configuration::setHumanReadableName(QString name)
 {
     this->HumanReadableName = name;
 }
 
-QString Interface::customName() const
+QString Configuration::customName() const
 {
     return this->CustomName;
 }
 
-void Interface::setCustomName(QString name)
+void Configuration::setCustomName(QString name)
 {
     this->CustomName = name;
 }

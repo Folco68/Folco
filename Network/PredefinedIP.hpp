@@ -24,30 +24,30 @@
 #include <QDataStream>
 #include <QString>
 
-class Interface;
+class Configuration;
 
 class PredefinedIP
 {
   public:
-    PredefinedIP(Interface* parent, QString Name, QString ip, QString mask, QString gateway);
-    PredefinedIP(Interface* parent, QDataStream& stream);
-    Interface* parent() const;
-    QString    name() const;
-    QString    ipAddress() const;
-    QString    networkMask() const;
-    QString    gateway() const;
-    bool       operator==(PredefinedIP ip) const;
-    void       save(QDataStream& stream);
-    bool       hasNetworkMask() const;
-    bool       hasGateway() const;
+    PredefinedIP(Configuration* parent, QString Name, QString ip, QString mask, QString gateway);
+    PredefinedIP(Configuration* parent, QDataStream& stream);
+    Configuration* parent() const;
+    QString        name() const;
+    QString        ipAddress() const;
+    QString        networkMask() const;
+    QString        gateway() const;
+    bool           operator==(PredefinedIP ip) const;
+    void           save(QDataStream& stream);
+    bool           hasNetworkMask() const;
+    bool           hasGateway() const;
 
   private:
-    // Keep a track of the interface which own this settings, to find the interface to configure when this Predefined IP is selected in the tray icon context menu
-    Interface* Parent;
-    QString    Name;
-    QString    IPaddress;
-    QString    NetworkMask;
-    QString    Gateway;
+    // Keep a track of the Configuration which owns this settings, to find the Configuration to configure when this Predefined IP is selected in the tray icon context menu
+    Configuration* Parent;
+    QString        Name;
+    QString        IPaddress;
+    QString        NetworkMask;
+    QString        Gateway;
 };
 
 #endif // PREDEFINED_IP_HPP

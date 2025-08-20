@@ -21,7 +21,7 @@
 #include "PredefinedIP.hpp"
 #include <QByteArray>
 
-PredefinedIP::PredefinedIP(Interface* parent, QString Name, QString ip, QString mask, QString gateway)
+PredefinedIP::PredefinedIP(Configuration* parent, QString Name, QString ip, QString mask, QString gateway)
     : Parent(parent)
     , Name(Name)
     , IPaddress(ip)
@@ -30,7 +30,7 @@ PredefinedIP::PredefinedIP(Interface* parent, QString Name, QString ip, QString 
 {
 }
 
-PredefinedIP::PredefinedIP(Interface* parent, QDataStream& stream)
+PredefinedIP::PredefinedIP(Configuration* parent, QDataStream& stream)
     : Parent(parent)
 {
     QByteArray Name;
@@ -45,7 +45,7 @@ PredefinedIP::PredefinedIP(Interface* parent, QDataStream& stream)
     this->Gateway     = QString::fromUtf8(GateWay);
 }
 
-Interface* PredefinedIP::parent() const
+Configuration* PredefinedIP::parent() const
 {
     return this->Parent;
 }
