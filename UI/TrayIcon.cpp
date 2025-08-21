@@ -6,6 +6,9 @@
 #include "../Settings.hpp"
 #include "Dialog.hpp"
 #include "DlgConfiguration.hpp"
+#include "DlgHelp.hpp"
+#include "DlgSettings.hpp"
+#include <QCoreApplication>
 #include <QList>
 #include <QNetworkInterface>
 #include <QPair>
@@ -76,13 +79,13 @@ void TrayIcon::showContextMenu(QPoint position)
             }
         }
 
-        // Apply the user settings
+        // Apply user settings
         if ((Settings::instance()->showOnlyEthernetWifi())
-            && (!(NetworkInterface.type() != QNetworkInterface::Ethernet) || !(NetworkInterface.type() != QNetworkInterface::Wifi))) {
+            && (!((NetworkInterface.type() == QNetworkInterface::Ethernet) || (NetworkInterface.type() == QNetworkInterface::Wifi)))) {
             continue;
         }
 
-        if (Settings::instance()->showOnlyPredefined() && (Config != nullptr) && (!Config->hasPredefinedIP())) {
+        if (Settings::instance()->showOnlyPredefined() && (((Config != nullptr) && !Config->hasPredefinedIP()) || (Config == nullptr))) {
             continue;
         }
 
@@ -110,7 +113,9 @@ void TrayIcon::showContextMenu(QPoint position)
             QString TitleNetworkInterface(GlobalList.at(i).first.humanReadableName());
             if (GlobalList.at(i).second != nullptr) {
                 QString CustomName = GlobalList.at(i).second->customName();
-                TitleNetworkInterface.append(QString(" - %1").arg(CustomName));
+                if (!CustomName.isEmpty()) {
+                    TitleNetworkInterface.append(QString(" - %1").arg(CustomName));
+                }
             }
 
             // Network Interface action and submenu
@@ -190,6 +195,23 @@ void TrayIcon::showContextMenu(QPoint position)
             connect(ActionEditConfiguration, &QAction::triggered, this, [Configuration]() { DlgConfiguration::execDlgConfiguration(Configuration); });
         }
     }
+
+    // Settings
+    this->ContextMenu->addSeparator();
+    QAction* ActionSettings = new QAction("Settings", this->ContextMenu);
+    this->ContextMenu->addAction(ActionSettings);
+    connect(ActionSettings, &QAction::triggered, this, []() { DlgSettings::execDlgSettings(); });
+
+    // About / License / Log
+    QAction* ActionAbout = new QAction("About / License / Log", this->ContextMenu);
+    this->ContextMenu->addAction(ActionAbout);
+    connect(ActionAbout, &QAction::triggered, this, []() { DlgHelp::execDlgHelp(); });
+
+    // Exit
+    this->ContextMenu->addSeparator();
+    QAction* ActionExit = new QAction("Exit", this->ContextMenu);
+    this->ContextMenu->addAction(ActionExit);
+    connect(ActionExit, &QAction::triggered, []() { QCoreApplication::exit(0); });
 
     // Add the context menu to the tray icon
     setContextMenu(this->ContextMenu);
