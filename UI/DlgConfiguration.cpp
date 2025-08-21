@@ -159,12 +159,13 @@ void DlgConfiguration::execDlgConfiguration(QNetworkInterface NetworkInterface)
         Configuration* StoredConfiguration = ConfigurationList::instance()->configuration(NetworkInterface.hardwareAddress());
 
         if (StoredConfiguration == nullptr) {
-            if (Dlg->ui->TablePredefinedIP->rowCount() != 0) {
+            if ((Dlg->ui->TablePredefinedIP->rowCount() != 0) || !Dlg->ui->EditCustomName->text().isEmpty()) {
                 StoredConfiguration
                     = new Configuration(NetworkInterface.hardwareAddress(), Dlg->ui->EditCustomName->text(), NetworkInterface.humanReadableName());
                 Dlg->writeContent(StoredConfiguration);
+                ConfigurationList::instance()->addConfiguration(StoredConfiguration);
             }
-            // Nothing to do if we valitade an interface which does not exist yet and which has no content to store into
+            // Nothing to do if we validate an interface which does not exist yet and which has no content to store into
         }
         else {
             StoredConfiguration->clearContent();
@@ -191,8 +192,7 @@ void DlgConfiguration::writeContent(Configuration* configuration)
     Logger::instance()->addLogEntry(QString("Setting Predefined IP for Interface %1").arg(configuration->hardwareAddress()));
     configuration->setCustomName(ui->EditCustomName->text());
     for (int i = 0; i < ui->TablePredefinedIP->rowCount(); i++) {
-        PredefinedIP* ip = new PredefinedIP(configuration,
-                                            ui->TablePredefinedIP->item(i, COLUMN_NAME)->text(),
+        PredefinedIP* ip = new PredefinedIP(ui->TablePredefinedIP->item(i, COLUMN_NAME)->text(),
                                             ui->TablePredefinedIP->item(i, COLUMN_IP_ADDRESS)->text(),
                                             ui->TablePredefinedIP->item(i, COLUMN_NETWORK_MASK)->text(),
                                             ui->TablePredefinedIP->item(i, COLUMN_GATEWAY)->text());
@@ -295,7 +295,7 @@ void DlgConfiguration::forgetConfiguration(Configuration* configuration)
             this, QString("%1 - Forget interface").arg(APPLICATION_NAME), "Are you sure that you want to forget the settings of this interface?")
         == QMessageBox::Yes) {
         reject();
-        ConfigurationList::instance()->deleteConfiguration(configuration);
         Logger::instance()->addLogEntry(QString("Forgetting interface %1").arg(configuration->humanReadableName()));
+        ConfigurationList::instance()->deleteConfiguration(configuration);
     }
 }

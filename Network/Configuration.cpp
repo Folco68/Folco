@@ -44,7 +44,7 @@ Configuration::Configuration(QDataStream& stream, qint32 version)
 
         // Read the predefined IP
         for (int i = 0; i < Count; i++) {
-            PredefinedIP* IP = new PredefinedIP(this, stream);
+            PredefinedIP* IP = new PredefinedIP(stream);
             this->PredefinedIPlist.append(IP);
         }
     }
@@ -64,7 +64,7 @@ Configuration::Configuration(QDataStream& stream, qint32 version)
 
         // Read the predefined IP
         for (int i = 0; i < Count; i++) {
-            PredefinedIP* IP = new PredefinedIP(this, stream);
+            PredefinedIP* IP = new PredefinedIP(stream);
             this->PredefinedIPlist.append(IP);
         }
     }

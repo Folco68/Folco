@@ -29,8 +29,8 @@ class Configuration;
 class PredefinedIP
 {
   public:
-    PredefinedIP(Configuration* parent, QString Name, QString ip, QString mask, QString gateway);
-    PredefinedIP(Configuration* parent, QDataStream& stream);
+    PredefinedIP(QString Name, QString ip, QString mask, QString gateway);
+    PredefinedIP(QDataStream& stream);
     Configuration* parent() const;
     QString        name() const;
     QString        ipAddress() const;
@@ -43,7 +43,6 @@ class PredefinedIP
 
   private:
     // Keep a track of the Configuration which owns this settings, to find the Configuration to configure when this Predefined IP is selected in the tray icon context menu
-    Configuration* Parent;
     QString        Name;
     QString        IPaddress;
     QString        NetworkMask;
