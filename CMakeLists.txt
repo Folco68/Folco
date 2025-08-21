@@ -36,9 +36,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         UI/DlgHelp.hpp
         UI/DlgHelp.cpp
         UI/DlgHelp.ui
-        UI/DlgInterface.hpp
-        UI/DlgInterface.cpp
-        UI/DlgInterface.ui
+        UI/DlgConfiguration.hpp
+        UI/DlgConfiguration.cpp
+        UI/DlgConfiguration.ui
         UI/DlgMergeConnections.hpp
         UI/DlgMergeConnections.cpp
         UI/DlgMergeConnections.ui

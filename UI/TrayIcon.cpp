@@ -5,7 +5,7 @@
 #include "../Network/ConfigurationList.hpp"
 #include "../Settings.hpp"
 #include "Dialog.hpp"
-#include "DlgInterface.hpp"
+#include "DlgConfiguration.hpp"
 #include <QList>
 #include <QNetworkInterface>
 #include <QPair>
@@ -139,7 +139,7 @@ void TrayIcon::showContextMenu(QPoint position)
                     });
                 }
 
-                // Separate IP from DHCP
+                // Separate PDI from DHCP
                 if (!PredefinedIPlist.isEmpty()) {
                     Submenu->addSeparator();
                 }
@@ -154,7 +154,7 @@ void TrayIcon::showContextMenu(QPoint position)
             Submenu->addSeparator();
             QAction* ActionEditInterface = new QAction("Edit pre-defined IP", this->ContextMenu);
             Submenu->addAction(ActionEditInterface);
-            connect(ActionEditInterface, &QAction::triggered, this, [NetworkInterface]() { DlgInterface::execDlgInterface(NetworkInterface); });
+            connect(ActionEditInterface, &QAction::triggered, this, [NetworkInterface]() { DlgConfiguration::execDlgConfiguration(NetworkInterface); });
         }
     }
 
@@ -166,12 +166,36 @@ void TrayIcon::showContextMenu(QPoint position)
         DisconnectedInterfaces->setDisabled(true);
         this->ContextMenu->addAction(DisconnectedInterfaces);
 
-        // Disconnected interfaces
+        // Disconnected interfaces (ie. pure configurations)
         for (int i = 0; i < ConfigurationList.size(); i++) {
+            Configuration* Configuration = ConfigurationList.at(i);
+
+            // Configuration name
+            QString TitleConfiguration(Configuration->humanReadableName());
+            if (!Configuration->customName().isEmpty()) {
+                TitleConfiguration.append(QString(" - %1").arg(Configuration->customName()));
+            }
+
+            // Configuration action
+            QAction* ActionConfiguration = new QAction(TitleConfiguration, this->ContextMenu);
+            this->ContextMenu->addAction(ActionConfiguration);
+
+            // Submenu
+            QMenu* Submenu = new QMenu(this->ContextMenu);
+            ActionConfiguration->setMenu(Submenu);
+
+            // Edit Configuration action
+            QAction* ActionEditConfiguration = new QAction("Edit configuration", this->ContextMenu);
+            Submenu->addAction(ActionEditConfiguration);
+            connect(ActionEditConfiguration, &QAction::triggered, this, [Configuration]() { DlgConfiguration::execDlgConfiguration(Configuration); });
         }
     }
 
-    // Add the context menu to the Icon and make it clickable
+    // Add the context menu to the tray icon
+    setContextMenu(this->ContextMenu);
+
+    // Finally, show the context menu at cursor position
+    this->ContextMenu->popup(position);
 }
 
 void TrayIcon::configureInterfacePredefinedIP(QString name, PredefinedIP* ip)

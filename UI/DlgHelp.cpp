@@ -75,7 +75,7 @@ DlgHelp::~DlgHelp()
     delete ui;
 }
 
-void DlgHelp::showDlgHelp()
+void DlgHelp::execDlgHelp()
 {
     DlgHelp* Dlg = new DlgHelp; // Deleted on close
     Dlg->exec();

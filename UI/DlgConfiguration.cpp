@@ -18,13 +18,13 @@
  *                                                                                      * 
  ****************************************************************************************/
 
-#include "DlgInterface.hpp"
+#include "DlgConfiguration.hpp"
 #include "../Global.hpp"
 #include "../Logger.hpp"
 #include "../Network/ConfigurationList.hpp"
 #include "../Network/PredefinedIP.hpp"
 #include "DlgPredefinedIP.hpp"
-#include "ui_DlgInterface.h"
+#include "ui_DlgConfiguration.h"
 #include <QAbstractSocket>
 #include <QFile>
 #include <QHostAddress>
@@ -37,8 +37,8 @@
 
 // This dialog deals only with QString for editing a PredefinedIP, so that the Interface is not modified if the dialog is cancelled
 
-DlgInterface::DlgInterface(QNetworkInterface NetworkInterface)
-    : ui(new Ui::DlgInterface)
+DlgConfiguration::DlgConfiguration(QNetworkInterface NetworkInterface)
+    : ui(new Ui::DlgConfiguration)
     , Dialog(this)
 {
     commonInitialization(ConfigurationList::instance()->configuration(NetworkInterface.hardwareAddress()));
@@ -58,8 +58,8 @@ DlgInterface::DlgInterface(QNetworkInterface NetworkInterface)
     }
 }
 
-DlgInterface::DlgInterface(Configuration* configuration)
-    : ui(new Ui::DlgInterface)
+DlgConfiguration::DlgConfiguration(Configuration* configuration)
+    : ui(new Ui::DlgConfiguration)
     , Dialog(this)
 {
     commonInitialization(configuration);
@@ -68,7 +68,7 @@ DlgInterface::DlgInterface(Configuration* configuration)
     ui->EditHWaddress->setText(configuration->hardwareAddress());
 }
 
-void DlgInterface::commonInitialization(Configuration* configuration)
+void DlgConfiguration::commonInitialization(Configuration* configuration)
 {
     ui->setupUi(this);
     setWindowTitle(QString("%1 - Network Interface Configuration").arg(APPLICATION_NAME));
@@ -113,12 +113,12 @@ void DlgInterface::commonInitialization(Configuration* configuration)
     connect(ui->ButtonDown, &QPushButton::clicked, this, [this]() { moveDown(); });
 }
 
-DlgInterface::~DlgInterface()
+DlgConfiguration::~DlgConfiguration()
 {
     delete ui;
 }
 
-void DlgInterface::tableSelectionChanged()
+void DlgConfiguration::tableSelectionChanged()
 {
     QList<QTableWidgetItem*> SelectedItems = ui->TablePredefinedIP->selectedItems();
 
@@ -142,9 +142,9 @@ void DlgInterface::tableSelectionChanged()
     ui->ButtonDown->setEnabled(Enabled && !AtBottom);
 }
 
-void DlgInterface::execDlgInterface(QNetworkInterface NetworkInterface)
+void DlgConfiguration::execDlgConfiguration(QNetworkInterface NetworkInterface)
 {
-    DlgInterface* Dlg = new DlgInterface(NetworkInterface);
+    DlgConfiguration* Dlg = new DlgConfiguration(NetworkInterface);
     if (Dlg->exec() == QDialog::Accepted) {
         //
         // If the dialog is validated:
@@ -174,9 +174,9 @@ void DlgInterface::execDlgInterface(QNetworkInterface NetworkInterface)
     delete Dlg;
 }
 
-void DlgInterface::execDlgInterface(Configuration* configuration)
+void DlgConfiguration::execDlgConfiguration(Configuration* configuration)
 {
-    DlgInterface* Dlg = new DlgInterface(configuration);
+    DlgConfiguration* Dlg = new DlgConfiguration(configuration);
     // We are sure that the interface exists
     if (Dlg->exec() == QDialog::Accepted) {
         configuration->clearContent();
@@ -186,7 +186,7 @@ void DlgInterface::execDlgInterface(Configuration* configuration)
     delete Dlg;
 }
 
-void DlgInterface::writeContent(Configuration* configuration)
+void DlgConfiguration::writeContent(Configuration* configuration)
 {
     Logger::instance()->addLogEntry(QString("Setting Predefined IP for Interface %1").arg(configuration->hardwareAddress()));
     configuration->setCustomName(ui->EditCustomName->text());
@@ -201,7 +201,7 @@ void DlgInterface::writeContent(Configuration* configuration)
     }
 }
 
-void DlgInterface::newPredefinedIP()
+void DlgConfiguration::newPredefinedIP()
 {
     QString Name;
     QString IP;
@@ -224,7 +224,7 @@ void DlgInterface::newPredefinedIP()
     }
 }
 
-void DlgInterface::editPredefinedIP()
+void DlgConfiguration::editPredefinedIP()
 {
     // The Edit button is enabled only if there are selected items, so SelectedItems is not empty
     QList<QTableWidgetItem*> SelectedItems = ui->TablePredefinedIP->selectedItems();
@@ -243,7 +243,7 @@ void DlgInterface::editPredefinedIP()
     }
 }
 
-void DlgInterface::deletePredefinedIP()
+void DlgConfiguration::deletePredefinedIP()
 {
     // The Delete button is enabled only if there are selected items, so SelectedItems is not empty
     QList<QTableWidgetItem*> SelectedItems = ui->TablePredefinedIP->selectedItems();
@@ -251,7 +251,7 @@ void DlgInterface::deletePredefinedIP()
     ui->TablePredefinedIP->removeRow(Row);
 }
 
-void DlgInterface::moveUp()
+void DlgConfiguration::moveUp()
 {
     QList<QTableWidgetItem*> SelectedItems = ui->TablePredefinedIP->selectedItems();
     int                      Row           = ui->TablePredefinedIP->row(SelectedItems.at(0));
@@ -270,7 +270,7 @@ void DlgInterface::moveUp()
     ui->TablePredefinedIP->selectRow(Row - 1);
 }
 
-void DlgInterface::moveDown()
+void DlgConfiguration::moveDown()
 {
     QList<QTableWidgetItem*> SelectedItems = ui->TablePredefinedIP->selectedItems();
     int                      Row           = ui->TablePredefinedIP->row(SelectedItems.at(0));
@@ -289,7 +289,7 @@ void DlgInterface::moveDown()
     ui->TablePredefinedIP->selectRow(Row + 1);
 }
 
-void DlgInterface::forgetConfiguration(Configuration* configuration)
+void DlgConfiguration::forgetConfiguration(Configuration* configuration)
 {
     if (QMessageBox::question(
             this, QString("%1 - Forget interface").arg(APPLICATION_NAME), "Are you sure that you want to forget the settings of this interface?")
