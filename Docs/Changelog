@@ -188,3 +188,18 @@ Initial commit
 
 2025/08/12
 - Use a new clang-format configuration
+
+2025/08/21
+- Important revamping of name to improve consistency
+- Menu generation complete rewriting is on-going, should be easier to read and to maintain
+- Added "Disconnected interfaces" section generation
+- Renamed DlgInterface -> DlgConfiguration
+- Removed the Parent member of PredefinedIP (useless)
+- Don't log the deletion of a Configuration after its deletion... (null dereferencing...)
+- Merge DlgLog with About/Licence/Changelog
+- Fixed buggy filters showOnlyEthernetWifi and showOnlyPredefinedIP
+- Added Settings/About/Exit actions
+
+2025/08/21
+- Renamed DlgMergeConnections to DlgMergeConfigurations (consistency)
+- Removed log of system environment at boot

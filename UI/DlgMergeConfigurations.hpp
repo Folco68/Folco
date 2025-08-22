@@ -18,18 +18,36 @@
  *                                                                                      * 
  ****************************************************************************************/
 
-#include "DlgMergeConnections.hpp"
-#include "ui_DlgMergeConnections.h"
+#ifndef DLGMERGECONFIGURATIONS_HPP
+#define DLGMERGECONFIGURATIONS_HPP
 
-DlgMergeConnections::DlgMergeConnections(QWidget* parent)
-    : QDialog(parent)
-    , ui(new Ui::DlgMergeConnections)
-    , Dialog(this)
-{
-    ui->setupUi(this);
+#include "Dialog.hpp"
+#include <QDialog>
+
+namespace Ui {
+class DlgMergeConfigurations;
 }
 
-DlgMergeConnections::~DlgMergeConnections()
+/********************************************************************************************************************** 
+ *                                                                                                                    * 
+ *                                               DlgMergeConfigurations                                               * 
+ *                                                                                                                    * 
+ * This class allows to merge Configurations, in other words to give the configuration of an interface to another one * 
+ *                                                                                                                    * 
+ **********************************************************************************************************************/
+
+class DlgMergeConfigurations
+    : public QDialog
+    , public Dialog
 {
-    delete ui;
-}
+    Q_OBJECT
+
+  public:
+    explicit DlgMergeConfigurations(QWidget* parent = nullptr);
+    ~DlgMergeConfigurations();
+
+  private:
+    Ui::DlgMergeConfigurations* ui;
+};
+
+#endif // DLGMERGECONFIGURATIONS_HPP

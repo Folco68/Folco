@@ -44,10 +44,6 @@ void Logger::release()
 Logger::Logger()
     : FirstLogEntry(true)
 {
-    QList List(QProcess::systemEnvironment().toList());
-    while (!List.isEmpty()) {
-        addLogEntry(List.takeFirst());
-    }
 }
 
 QString Logger::log() const

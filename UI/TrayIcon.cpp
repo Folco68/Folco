@@ -60,10 +60,10 @@ void TrayIcon::showContextMenu(QPoint position)
     //
     // How the menu is generated:
     // - Start from 2 lists: Network Interfaces and Configurations
-    // - Create a list of pairs <Network Interface / Configuration*>. Configuration may be nullptr. Remove Configuration from their list when they match a Network Interface
+    // - Create a list of pairs <Network Interface / Configuration*>. Configuration may be nullptr. Remove Configurations from their list when they match a Network Interface
     // - Filter the list of pairs with user settings
-    // - Populate the menu with the list of pairs. The submenu will be populated according to the existence of a configuration
-    // - Finally, add the remaining items of the Configuration list in a "Disconnected interfaces"
+    // - Populate the menu with the list of pairs. The submenu will be populated according to the existence of a Configuration
+    // - Finally, add the remaining items of the Configuration list in a "Disconnected interfaces" section
 
     QList<QPair<QNetworkInterface, Configuration*>> GlobalList;
     QList<QNetworkInterface>                        NetworkInterfaceList(QNetworkInterface::allInterfaces());

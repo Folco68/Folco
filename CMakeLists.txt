@@ -39,9 +39,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         UI/DlgConfiguration.hpp
         UI/DlgConfiguration.cpp
         UI/DlgConfiguration.ui
-        UI/DlgMergeConnections.hpp
-        UI/DlgMergeConnections.cpp
-        UI/DlgMergeConnections.ui
+        UI/DlgMergeConfigurations.hpp
+        UI/DlgMergeConfigurations.cpp
+        UI/DlgMergeConfigurations.ui
         UI/DlgPredefinedIP.hpp
         UI/DlgPredefinedIP.cpp
         UI/DlgPredefinedIP.ui

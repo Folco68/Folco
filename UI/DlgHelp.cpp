@@ -83,7 +83,7 @@ DlgHelp::~DlgHelp()
 
 void DlgHelp::execDlgHelp()
 {
-    DlgHelp* Dlg = new DlgHelp; // Deleted on close
+    DlgHelp* Dlg = new DlgHelp;
     Dlg->exec();
     delete Dlg;
 }
