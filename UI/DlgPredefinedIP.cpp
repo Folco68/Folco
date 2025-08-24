@@ -39,6 +39,8 @@ DlgPredefinedIP::DlgPredefinedIP(QWidget* parent, QString* name, QString* ip, QS
         ui->EditName->setText(*name);
     }
 
+    // GIT test
+
     if (ip != nullptr) {
         ui->EditIP->setText(*ip);
     }
