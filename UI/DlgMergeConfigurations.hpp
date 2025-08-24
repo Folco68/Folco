@@ -18,47 +18,36 @@
  *                                                                                      * 
  ****************************************************************************************/
 
-#ifndef INTERFACE_HPP
-#define INTERFACE_HPP
+#ifndef DLGMERGECONFIGURATIONS_HPP
+#define DLGMERGECONFIGURATIONS_HPP
 
-#include "PredefinedIP.hpp"
-#include <QDataStream>
-#include <QList>
-#include <QString>
+#include "Dialog.hpp"
+#include <QDialog>
+
+namespace Ui {
+class DlgMergeConfigurations;
+}
 
 /********************************************************************************************************************** 
  *                                                                                                                    * 
- *                                                     Interface                                                      * 
+ *                                               DlgMergeConfigurations                                               * 
  *                                                                                                                    * 
- *                        This class holds the predefined IPs linked to a hardware interface.                         * 
+ * This class allows to merge Configurations, in other words to give the configuration of an interface to another one * 
  *                                                                                                                    * 
  **********************************************************************************************************************/
 
-class Interface
+class DlgMergeConfigurations
+    : public QDialog
+    , public Dialog
 {
+    Q_OBJECT
+
   public:
-    Interface(QString hwaddress, QString customname, QString name);
-    Interface(QDataStream& stream, qint32 version);
-    ~Interface();
-    void                 addPredefinedIP(PredefinedIP* ip);
-    void                 removePredefinedIP(PredefinedIP* ip);
-    int                  predefinedIPcount() const;
-    QString              hardwareAddress() const;
-    QList<PredefinedIP*> predefinedIPlist() const;
-    void                 clearContent();
-    void                 save(QDataStream& stream);
-    QString              humanReadableName() const;
-    void                 setHumanReadableName(QString name);
-    QString              customName() const;
-    void                 setCustomName(QString name);
+    explicit DlgMergeConfigurations(QWidget* parent = nullptr);
+    ~DlgMergeConfigurations();
 
   private:
-    QString              HardwareAddress;   // WW UID, the only identifier used in the application
-    QString              CustomName;        // Not mandatory, not OS-related. The scope is this application, as a reminder
-    QString              HumanReadableName; // This name can be changed by the user in the OS UI.
-    // It is only used to display the Interface related PredefinedIP
-    // when its hardware device is disconnected
-    QList<PredefinedIP*> PredefinedIPlist;
+    Ui::DlgMergeConfigurations* ui;
 };
 
-#endif // INTERFACE_HPP
+#endif // DLGMERGECONFIGURATIONS_HPP

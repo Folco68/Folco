@@ -18,13 +18,13 @@
  *                                                                                      * 
  ****************************************************************************************/
 
-#include "DlgInterface.hpp"
+#include "DlgConfiguration.hpp"
 #include "../Global.hpp"
 #include "../Logger.hpp"
-#include "../Network/InterfaceList.hpp"
+#include "../Network/ConfigurationList.hpp"
 #include "../Network/PredefinedIP.hpp"
 #include "DlgPredefinedIP.hpp"
-#include "ui_DlgInterface.h"
+#include "ui_DlgConfiguration.h"
 #include <QAbstractSocket>
 #include <QFile>
 #include <QHostAddress>
@@ -37,11 +37,11 @@
 
 // This dialog deals only with QString for editing a PredefinedIP, so that the Interface is not modified if the dialog is cancelled
 
-DlgInterface::DlgInterface(QNetworkInterface NetworkInterface)
-    : ui(new Ui::DlgInterface)
+DlgConfiguration::DlgConfiguration(QNetworkInterface NetworkInterface)
+    : ui(new Ui::DlgConfiguration)
     , Dialog(this)
 {
-    commonInitialization(InterfaceList::instance()->interface(NetworkInterface.hardwareAddress()));
+    commonInitialization(ConfigurationList::instance()->configuration(NetworkInterface.hardwareAddress()));
 
     // Fill the Interface properties field
     ui->EditName->setText(NetworkInterface.humanReadableName());
@@ -58,26 +58,26 @@ DlgInterface::DlgInterface(QNetworkInterface NetworkInterface)
     }
 }
 
-DlgInterface::DlgInterface(Interface* interface)
-    : ui(new Ui::DlgInterface)
+DlgConfiguration::DlgConfiguration(Configuration* configuration)
+    : ui(new Ui::DlgConfiguration)
     , Dialog(this)
 {
-    commonInitialization(interface);
-    ui->EditName->setText(interface->humanReadableName());
-    ui->EditCustomName->setText(interface->customName());
-    ui->EditHWaddress->setText(interface->hardwareAddress());
+    commonInitialization(configuration);
+    ui->EditName->setText(configuration->humanReadableName());
+    ui->EditCustomName->setText(configuration->customName());
+    ui->EditHWaddress->setText(configuration->hardwareAddress());
 }
 
-void DlgInterface::commonInitialization(Interface* interface)
+void DlgConfiguration::commonInitialization(Configuration* configuration)
 {
     ui->setupUi(this);
     setWindowTitle(QString("%1 - Network Interface Configuration").arg(APPLICATION_NAME));
-    ui->ButtonForgetInterface->setVisible(interface != nullptr);
+    ui->ButtonForgetConfiguration->setVisible(configuration != nullptr);
 
     // Interface is null if no PredefinedIP has been defined for this device yet
-    if (interface != nullptr) {
-        ui->EditCustomName->setText(interface->customName());
-        QList<PredefinedIP*> IPlist = interface->predefinedIPlist();
+    if (configuration != nullptr) {
+        ui->EditCustomName->setText(configuration->customName());
+        QList<PredefinedIP*> IPlist = configuration->predefinedIPlist();
         int                  Count  = IPlist.size();
         ui->TablePredefinedIP->setRowCount(Count);
 
@@ -99,8 +99,9 @@ void DlgInterface::commonInitialization(Interface* interface)
     // Dialog
     connect(ui->ButtonOK, &QPushButton::clicked, this, [this]() { accept(); });
     connect(ui->ButtonCancel, &QPushButton::clicked, this, [this]() { reject(); });
-    connect(
-        ui->ButtonForgetInterface, &QPushButton::clicked, this, [this, interface]() { forgetInterface(interface); }); // Button not visible if interface is null
+    connect(ui->ButtonForgetConfiguration, &QPushButton::clicked, this, [this, configuration]() {
+        forgetConfiguration(configuration);
+    }); // Button not visible if configuration is null
 
     // Table
     connect(ui->ButtoNewIP, &QPushButton::clicked, this, [this]() { newPredefinedIP(); });
@@ -112,12 +113,12 @@ void DlgInterface::commonInitialization(Interface* interface)
     connect(ui->ButtonDown, &QPushButton::clicked, this, [this]() { moveDown(); });
 }
 
-DlgInterface::~DlgInterface()
+DlgConfiguration::~DlgConfiguration()
 {
     delete ui;
 }
 
-void DlgInterface::tableSelectionChanged()
+void DlgConfiguration::tableSelectionChanged()
 {
     QList<QTableWidgetItem*> SelectedItems = ui->TablePredefinedIP->selectedItems();
 
@@ -141,72 +142,73 @@ void DlgInterface::tableSelectionChanged()
     ui->ButtonDown->setEnabled(Enabled && !AtBottom);
 }
 
-void DlgInterface::execDlgInterface(QNetworkInterface NetworkInterface)
+void DlgConfiguration::execDlgConfiguration(QNetworkInterface NetworkInterface)
 {
-    DlgInterface* Dlg = new DlgInterface(NetworkInterface);
+    DlgConfiguration* Dlg = new DlgConfiguration(NetworkInterface);
     if (Dlg->exec() == QDialog::Accepted) {
         //
         // If the dialog is validated:
-        // - if the interface does not exists yet and there is something to save
-        //      - create the interface
+        // - if the configuration does not exists yet and there is something to save
+        //      - create the configuration
         //      - write its new content
-        //      - add the interface to the list
-        // - if the interface already exists:
+        //      - add the configuration to the list
+        // - if the configuration already exists:
         //      - remove its content
         //      - write its new content
         //
-        Interface* StoredInterface = InterfaceList::instance()->interface(NetworkInterface.hardwareAddress());
+        Configuration* StoredConfiguration = ConfigurationList::instance()->configuration(NetworkInterface.hardwareAddress());
 
-        if (StoredInterface == nullptr) {
-            if (Dlg->ui->TablePredefinedIP->rowCount() != 0) {
-                StoredInterface = new Interface(NetworkInterface.hardwareAddress(), Dlg->ui->EditCustomName->text(), NetworkInterface.humanReadableName());
-                Dlg->writeContent(StoredInterface);
+        if (StoredConfiguration == nullptr) {
+            if ((Dlg->ui->TablePredefinedIP->rowCount() != 0) || !Dlg->ui->EditCustomName->text().isEmpty()) {
+                StoredConfiguration
+                    = new Configuration(NetworkInterface.hardwareAddress(), Dlg->ui->EditCustomName->text(), NetworkInterface.humanReadableName());
+                Dlg->writeContent(StoredConfiguration);
+                ConfigurationList::instance()->addConfiguration(StoredConfiguration);
             }
-            // Nothing to do if we valitade an interface which does not exist yet and which has no content to store into
+            // Nothing to do if we validate an interface which does not exist yet and which has no content to store into
         }
         else {
-            StoredInterface->clearContent();
-            Dlg->writeContent(StoredInterface);
+            StoredConfiguration->clearContent();
+            Dlg->writeContent(StoredConfiguration);
         }
     }
     delete Dlg;
 }
 
-void DlgInterface::execDlgInterface(Interface* interface)
+void DlgConfiguration::execDlgConfiguration(Configuration* configuration)
 {
-    DlgInterface* Dlg = new DlgInterface(interface);
+    DlgConfiguration* Dlg = new DlgConfiguration(configuration);
     // We are sure that the interface exists
     if (Dlg->exec() == QDialog::Accepted) {
-        interface->clearContent();
-        Dlg->writeContent(interface);
-        interface->setCustomName(Dlg->ui->EditCustomName->text());
+        configuration->clearContent();
+        Dlg->writeContent(configuration);
+        configuration->setCustomName(Dlg->ui->EditCustomName->text());
     }
     delete Dlg;
 }
 
-void DlgInterface::writeContent(Interface* interface)
+void DlgConfiguration::writeContent(Configuration* configuration)
 {
-    Logger::instance()->addLogEntry(QString("Setting Predefined IP for Interface %1").arg(interface->hardwareAddress()));
-    interface->setCustomName(ui->EditCustomName->text());
+    Logger::instance()->addLogEntry(QString("Setting Predefined IP for Interface %1").arg(configuration->hardwareAddress()));
+    configuration->setCustomName(ui->EditCustomName->text());
     for (int i = 0; i < ui->TablePredefinedIP->rowCount(); i++) {
-        PredefinedIP* ip = new PredefinedIP(interface,
-                                            ui->TablePredefinedIP->item(i, COLUMN_NAME)->text(),
+        PredefinedIP* ip = new PredefinedIP(ui->TablePredefinedIP->item(i, COLUMN_NAME)->text(),
                                             ui->TablePredefinedIP->item(i, COLUMN_IP_ADDRESS)->text(),
                                             ui->TablePredefinedIP->item(i, COLUMN_NETWORK_MASK)->text(),
                                             ui->TablePredefinedIP->item(i, COLUMN_GATEWAY)->text());
-        interface->addPredefinedIP(ip);
+        configuration->addPredefinedIP(ip);
         Logger::instance()->addLogEntry(QString("Name: %1. IP: %2. Mask: %3. Gateway: %4").arg(ip->name(), ip->ipAddress(), ip->networkMask(), ip->gateway()));
     }
 }
 
-void DlgInterface::newPredefinedIP()
+void DlgConfiguration::newPredefinedIP()
 {
     QString Name;
     QString IP;
     QString NetworkMask;
     QString Gateway;
 
-    if (DlgPredefinedIP::newPredefinedIP(this, &Name, &IP, &NetworkMask, &Gateway) == QDialog::Accepted) {
+    if (DlgPredefinedIP::newPredefinedIP(&Name, &IP, &NetworkMask, &Gateway) == QDialog::Accepted) {
         int Count = ui->TablePredefinedIP->rowCount();
         ui->TablePredefinedIP->setRowCount(Count + 1);
 
@@ -222,7 +224,7 @@ void DlgInterface::newPredefinedIP()
     }
 }
 
-void DlgInterface::editPredefinedIP()
+void DlgConfiguration::editPredefinedIP()
 {
     // The Edit button is enabled only if there are selected items, so SelectedItems is not empty
     QList<QTableWidgetItem*> SelectedItems = ui->TablePredefinedIP->selectedItems();
@@ -233,7 +235,7 @@ void DlgInterface::editPredefinedIP()
     QString NetworkMask(ui->TablePredefinedIP->item(Row, COLUMN_NETWORK_MASK)->text());
     QString Gateway(ui->TablePredefinedIP->item(Row, COLUMN_GATEWAY)->text());
 
-    if (DlgPredefinedIP::editPredefinedIP(this, &Name, &IP, &NetworkMask, &Gateway) == QDialog::Accepted) {
+    if (DlgPredefinedIP::editPredefinedIP(&Name, &IP, &NetworkMask, &Gateway) == QDialog::Accepted) {
         ui->TablePredefinedIP->item(Row, COLUMN_NAME)->setText(Name);
         ui->TablePredefinedIP->item(Row, COLUMN_IP_ADDRESS)->setText(IP);
         ui->TablePredefinedIP->item(Row, COLUMN_NETWORK_MASK)->setText(NetworkMask);
@@ -241,7 +243,7 @@ void DlgInterface::editPredefinedIP()
     }
 }
 
-void DlgInterface::deletePredefinedIP()
+void DlgConfiguration::deletePredefinedIP()
 {
     // The Delete button is enabled only if there are selected items, so SelectedItems is not empty
     QList<QTableWidgetItem*> SelectedItems = ui->TablePredefinedIP->selectedItems();
@@ -249,7 +251,7 @@ void DlgInterface::deletePredefinedIP()
     ui->TablePredefinedIP->removeRow(Row);
 }
 
-void DlgInterface::moveUp()
+void DlgConfiguration::moveUp()
 {
     QList<QTableWidgetItem*> SelectedItems = ui->TablePredefinedIP->selectedItems();
     int                      Row           = ui->TablePredefinedIP->row(SelectedItems.at(0));
@@ -268,7 +270,7 @@ void DlgInterface::moveUp()
     ui->TablePredefinedIP->selectRow(Row - 1);
 }
 
-void DlgInterface::moveDown()
+void DlgConfiguration::moveDown()
 {
     QList<QTableWidgetItem*> SelectedItems = ui->TablePredefinedIP->selectedItems();
     int                      Row           = ui->TablePredefinedIP->row(SelectedItems.at(0));
@@ -287,13 +289,13 @@ void DlgInterface::moveDown()
     ui->TablePredefinedIP->selectRow(Row + 1);
 }
 
-void DlgInterface::forgetInterface(Interface* interface)
+void DlgConfiguration::forgetConfiguration(Configuration* configuration)
 {
     if (QMessageBox::question(
             this, QString("%1 - Forget interface").arg(APPLICATION_NAME), "Are you sure that you want to forget the settings of this interface?")
         == QMessageBox::Yes) {
         reject();
-        InterfaceList::instance()->deleteInterface(interface);
-        Logger::instance()->addLogEntry(QString("Forgetting interface %1").arg(interface->humanReadableName()));
+        Logger::instance()->addLogEntry(QString("Forgetting interface %1").arg(configuration->humanReadableName()));
+        ConfigurationList::instance()->deleteConfiguration(configuration);
     }
 }

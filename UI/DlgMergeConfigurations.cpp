@@ -18,18 +18,20 @@
  *                                                                                      * 
  ****************************************************************************************/
 
-#include "DlgMergeConnections.hpp"
-#include "ui_DlgMergeConnections.h"
+#include "DlgMergeConfigurations.hpp"
+#include "../Global.hpp"
+#include "ui_DlgMergeConfigurations.h"
 
-DlgMergeConnections::DlgMergeConnections(QWidget* parent)
+DlgMergeConfigurations::DlgMergeConfigurations(QWidget* parent)
     : QDialog(parent)
-    , ui(new Ui::DlgMergeConnections)
+    , ui(new Ui::DlgMergeConfigurations)
     , Dialog(this)
 {
     ui->setupUi(this);
+    setWindowTitle(APPLICATION_NAME " - Merge Configurations");
 }
 
-DlgMergeConnections::~DlgMergeConnections()
+DlgMergeConfigurations::~DlgMergeConfigurations()
 {
     delete ui;
 }

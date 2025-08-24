@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>DlgInterface</class>
- <widget class="QDialog" name="DlgInterface">
+ <class>DlgConfiguration</class>
+ <widget class="QDialog" name="DlgConfiguration">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -221,7 +221,7 @@
    <item>
     <layout class="QHBoxLayout" name="HLayoutButtons">
      <item>
-      <widget class="QPushButton" name="ButtonForgetInterface">
+      <widget class="QPushButton" name="ButtonForgetConfiguration">
        <property name="text">
         <string>Forget interface configuration</string>
        </property>

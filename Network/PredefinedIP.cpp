@@ -21,17 +21,15 @@
 #include "PredefinedIP.hpp"
 #include <QByteArray>
 
-PredefinedIP::PredefinedIP(Interface* parent, QString Name, QString ip, QString mask, QString gateway)
-    : Parent(parent)
-    , Name(Name)
+PredefinedIP::PredefinedIP(QString Name, QString ip, QString mask, QString gateway)
+    : Name(Name)
     , IPaddress(ip)
     , NetworkMask(mask)
     , Gateway(gateway)
 {
 }
 
-PredefinedIP::PredefinedIP(Interface* parent, QDataStream& stream)
-    : Parent(parent)
+PredefinedIP::PredefinedIP(QDataStream& stream)
 {
     QByteArray Name;
     QByteArray IPaddress;
@@ -43,11 +41,6 @@ PredefinedIP::PredefinedIP(Interface* parent, QDataStream& stream)
     this->IPaddress   = QString::fromUtf8(IPaddress);
     this->NetworkMask = QString::fromUtf8(NetworkMask);
     this->Gateway     = QString::fromUtf8(GateWay);
-}
-
-Interface* PredefinedIP::parent() const
-{
-    return this->Parent;
 }
 
 QString PredefinedIP::name() const
@@ -72,8 +65,7 @@ QString PredefinedIP::gateway() const
 
 bool PredefinedIP::operator==(PredefinedIP ip) const
 {
-    return (this->Parent == ip.Parent) && (this->Name == ip.Name) && (this->IPaddress == ip.IPaddress) && (this->NetworkMask == ip.NetworkMask)
-        && (this->Gateway == ip.Gateway);
+    return (this->Name == ip.Name) && (this->IPaddress == ip.IPaddress) && (this->NetworkMask == ip.NetworkMask) && (this->Gateway == ip.Gateway);
 }
 
 void PredefinedIP::save(QDataStream& stream)

@@ -18,20 +18,20 @@
  *                                                                                      * 
  ****************************************************************************************/
 
-#include "InterfaceList.hpp"
+#include "ConfigurationList.hpp"
 #include "../Global.hpp"
 #include <QDataStream>
 #include <QFile>
 #include <QMessageBox>
 
-InterfaceList* InterfaceList::interfacelist = nullptr;
+ConfigurationList* ConfigurationList::configurationlist = nullptr;
 
-InterfaceList::InterfaceList()
+ConfigurationList::ConfigurationList()
 {
     open();
 }
 
-InterfaceList::~InterfaceList()
+ConfigurationList::~ConfigurationList()
 {
     save();
     for (int i = 0; i < this->List.count(); i++) {
@@ -39,29 +39,29 @@ InterfaceList::~InterfaceList()
     }
 }
 
-InterfaceList* InterfaceList::instance()
+ConfigurationList* ConfigurationList::instance()
 {
-    if (interfacelist == nullptr) {
-        interfacelist = new InterfaceList;
+    if (configurationlist == nullptr) {
+        configurationlist = new ConfigurationList;
     }
-    return interfacelist;
+    return configurationlist;
 }
 
-void InterfaceList::release()
+void ConfigurationList::release()
 {
-    if (interfacelist != nullptr) {
-        delete interfacelist;
+    if (configurationlist != nullptr) {
+        delete configurationlist;
     }
-    interfacelist = nullptr;
+    configurationlist = nullptr;
 }
 
-bool InterfaceList::hasPredefinedIP(QString hwaddress) const
+bool ConfigurationList::hasPredefinedIP(QString hwaddress) const
 {
     bool RetVal = false;
 
     for (int i = 0; i < this->List.size(); i++) {
-        Interface* Interface = this->List.at(i);
-        if ((Interface->hardwareAddress() == hwaddress) && (Interface->predefinedIPcount() != 0)) {
+        Configuration* Configuration = this->List.at(i);
+        if ((Configuration->hardwareAddress() == hwaddress) && (Configuration->predefinedIPcount() != 0)) {
             RetVal = true;
             break;
         }
@@ -70,43 +70,43 @@ bool InterfaceList::hasPredefinedIP(QString hwaddress) const
     return RetVal;
 }
 
-Interface* InterfaceList::interface(QString hwaddress) const
+Configuration* ConfigurationList::configuration(QString hwaddress) const
 {
-    Interface* Interface = nullptr;
+    Configuration* Configuration = nullptr;
 
-    // Lookup in the Interface list to find the one which owns the HW address
+    // Lookup in the Configuration list to find the one which owns the HW address
     // Maybe it does not exist
     for (int i = 0; i < this->List.size(); i++) {
-        class Interface* TmpInterface = this->List.at(i);
-        if (TmpInterface->hardwareAddress() == hwaddress) {
-            Interface = TmpInterface;
+        class Configuration* TmpConfiguration = this->List.at(i);
+        if (TmpConfiguration->hardwareAddress() == hwaddress) {
+            Configuration = TmpConfiguration;
             break;
         }
     }
 
-    return Interface;
+    return Configuration;
 }
 
-void InterfaceList::addInterface(Interface* interface)
+void ConfigurationList::addConfiguration(Configuration* configuration)
 {
-    this->List.append(interface);
+    this->List.append(configuration);
 }
 
-void InterfaceList::deleteInterface(Interface* interface)
+void ConfigurationList::deleteConfiguration(Configuration* configuration)
 {
-    qsizetype Index = this->List.indexOf(interface);
+    qsizetype Index = this->List.indexOf(configuration);
     // Should never return -1. Just a safety check
     if (Index != -1) {
         delete this->List.takeAt(Index);
     }
 }
 
-QList<Interface*> InterfaceList::interfaceList() const
+QList<Configuration*> ConfigurationList::configurationList() const
 {
     return this->List;
 }
 
-bool InterfaceList::save() const
+bool ConfigurationList::save() const
 {
     // Backup data file
     // Check existence because it is cleaner, but it is quite useless...
@@ -128,13 +128,13 @@ bool InterfaceList::save() const
     // Create associated stream
     QDataStream Stream(&File);
 
-    // Number of Interface to write
+    // Number of Configurations to write
     qint32 Count = this->List.size();
 
     // Header
     Stream << QString(FOLCO_SIGNATURE).toUtf8() << (qint32)DATA_VERSION << Count;
 
-    // Save every interface
+    // Save every Configuration
     for (int i = 0; i < Count; i++) {
         this->List.at(i)->save(Stream);
     }
@@ -148,7 +148,7 @@ bool InterfaceList::save() const
     return true;
 }
 
-void InterfaceList::open()
+void ConfigurationList::open()
 {
     // Early return if there is no stored file
     if (!QFile::exists(FOLCO_FILENAME)) {
@@ -186,7 +186,7 @@ void InterfaceList::open()
         return;
     }
 
-    // Read number of saved Interfaces
+    // Read number of Configurations
     Stream >> Count;
     if (Stream.status() != QDataStream::Ok) {
         QMessageBox::critical(
@@ -194,10 +194,10 @@ void InterfaceList::open()
         return;
     }
 
-    // Create the interface and add them to the list
-    // The Interface objects check the stream status while extracting themselves from the stream
+    // Create the Configurations and add them to the list
+    // The Configuration objects check the stream status while extracting themselves from the stream
     for (int i = 0; i < Count; i++) {
-        Interface* Interface = new class Interface(Stream, Version);
-        this->List.append(Interface);
+        Configuration* Configuration = new class Configuration(Stream, Version);
+        this->List.append(Configuration);
     }
 }

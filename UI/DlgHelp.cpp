@@ -21,9 +21,11 @@
 #include "DlgHelp.hpp"
 #include "../BeforeRelease.hpp"
 #include "../Global.hpp"
+#include "../Logger.hpp"
 #include "ui_DlgHelp.h"
 #include <QFile>
 #include <QPushButton>
+#include <QScrollBar>
 #include <QTextStream>
 
 DlgHelp::DlgHelp()
@@ -63,6 +65,10 @@ DlgHelp::DlgHelp()
         ui->TextEditLicense->setPlainText(StreamLicense.readAll());
     }
 
+    // Log
+    ui->TextEditLog->setPlainText(Logger::instance()->log());
+    ui->TextEditLog->verticalScrollBar()->setValue(ui->TextEditLog->verticalScrollBar()->maximum());
+
     // Always display the first index
     ui->Tabs->setCurrentIndex(0);
 
@@ -75,9 +81,9 @@ DlgHelp::~DlgHelp()
     delete ui;
 }
 
-void DlgHelp::showDlgHelp()
+void DlgHelp::execDlgHelp()
 {
-    DlgHelp* Dlg = new DlgHelp; // Deleted on close
+    DlgHelp* Dlg = new DlgHelp;
     Dlg->exec();
     delete Dlg;
 }

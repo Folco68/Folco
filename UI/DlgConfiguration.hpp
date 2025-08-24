@@ -18,40 +18,60 @@
  *                                                                                      * 
  ****************************************************************************************/
 
-#ifndef DLG_LOG_HPP
-#define DLG_LOG_HPP
+#ifndef DLG_CONFIGURATION_HPP
+#define DLG_CONFIGURATION_HPP
 
+#include "../Network/Configuration.hpp"
 #include "Dialog.hpp"
 #include <QDialog>
+#include <QNetworkInterface>
 
 namespace Ui {
-class DlgLog;
+class DlgConfiguration;
 }
 
 /********************************************************************************************************************** 
  *                                                                                                                    * 
- *                                                       DlgLog                                                       * 
+ *                                                  DlgConfiguration                                                  * 
  *                                                                                                                    * 
- *                                      This class displays the application log.                                      * 
+ *                    This dialog uses the list of PredefinedIP of an Interface to fill its table.                    * 
+ *                        Only the execDlgConfiguration really create and delete PredefinedIP.                        * 
+ *                                    All other functions just modify the tables.                                     * 
  *                                                                                                                    * 
  **********************************************************************************************************************/
 
-class DlgLog
+class DlgConfiguration
     : public QDialog
     , public Dialog
 {
     Q_OBJECT
 
   public:
-    static void showDlgLog();
+    static void execDlgConfiguration(QNetworkInterface NetworkInterface);
+    static void execDlgConfiguration(Configuration* configuration);
+    ~DlgConfiguration();
 
   private:
-    DlgLog();
-    ~DlgLog();
-    void scrollToTheEnd();
+    explicit DlgConfiguration(QNetworkInterface NetworkInterface); // For Network Interfaces
+    explicit DlgConfiguration(Configuration* configuration);       // For Configuration with disconnected Network Interfaces
+    void commonInitialization(Configuration* configuration); // Don't use a delegate constructor because the class inherits QDialog, which can't be built twice
+    void tableSelectionChanged();
+    void newPredefinedIP();
+    void editPredefinedIP();
+    void deletePredefinedIP();
+    void moveUp();
+    void moveDown();
+    void forgetConfiguration(Configuration* configuration);
+    void writeContent(Configuration* configuration);
 
-  private:
-    Ui::DlgLog* ui;
+    Ui::DlgConfiguration* ui;
 };
 
-#endif // DLG_LOG_HPP
+typedef enum {
+    COLUMN_NAME,
+    COLUMN_IP_ADDRESS,
+    COLUMN_NETWORK_MASK,
+    COLUMN_GATEWAY
+} COLUMN_HEADER;
+
+#endif // DLG_CONFIGURATION_HPP

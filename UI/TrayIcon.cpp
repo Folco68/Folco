@@ -1,44 +1,18 @@
-/**************************************************************************************** 
- *                                                                                      * 
- *     Folco - Program allowing to quickly change the IPv4 address of an interface      * 
- *                       Copyright (C) 2024-2025 Martial Demolins                       * 
- *                                                                                      * 
- *         This program is free software: you can redistribute it and/or modify         * 
- *         it under the terms of the GNU General Public License as published by         * 
- *          the Free Software Foundation, either version 3 of the License, or           * 
- *                          (at your option) any later version                          * 
- *                                                                                      * 
- *            This program is distributed in the hope that it will be useful            * 
- *            but WITHOUT ANY WARRANTY; without even the implied warranty of            * 
- *            MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             * 
- *                     GNU General Public License for more details                      * 
- *                                                                                      * 
- *          You should have received a copy of the GNU General Public License           * 
- *         along with this program.  If not, see <https://www.gnu.org/licenses>         * 
- *                                                                                      * 
- ****************************************************************************************/
-
 #include "TrayIcon.hpp"
 #include "../Global.hpp"
 #include "../Logger.hpp"
-#include "../Network/InterfaceList.hpp"
-#include "../Network/SystemInterfaces.hpp"
+#include "../Network/Configuration.hpp"
+#include "../Network/ConfigurationList.hpp"
 #include "../Settings.hpp"
 #include "Dialog.hpp"
+#include "DlgConfiguration.hpp"
 #include "DlgHelp.hpp"
-#include "DlgInterface.hpp"
-#include "DlgLog.hpp"
 #include "DlgSettings.hpp"
-#include <QAction>
 #include <QCoreApplication>
-#include <QCursor>
-#include <QIcon>
 #include <QList>
-#include <QMenu>
-#include <QNetworkAddressEntry>
 #include <QNetworkInterface>
+#include <QPair>
 #include <QProcess>
-#include <QString>
 
 TrayIcon::TrayIcon()
     : QSystemTrayIcon{QIcon(":/Icons/IconBase.png")}
@@ -65,183 +39,178 @@ TrayIcon::~TrayIcon()
         this->ContextMenu = nullptr;
     }
 
-    InterfaceList::release();
+    ConfigurationList::release();
     Settings::release();
     Logger::release();
 }
 
 void TrayIcon::showContextMenu(QPoint position)
 {
-    // Delete the previous menu if one was already created
+    // Delete previous menu if one exists
     if (this->ContextMenu != nullptr) {
         delete this->ContextMenu;
-        this->ContextMenu = nullptr;
     }
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ///                                                                                                                             ///
-    ///                           Generate the list of interfaces according to the user-defined settings                            ///
-    ///                                                                                                                             ///
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    QList<QNetworkInterface> FilteredInterfaces = SystemInterfaces::filteredInterfaces();
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ///                                                                                                                     ///
-    ///          Create the dynamic part of the menu, which contains the interfaces with predefined IP address              ///
-    ///                                                                                                                     ///
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     this->ContextMenu = new QMenu;
 
-    // Section title. Can't use QMenu::addSection because Windows 10/11 don't display it
-    QAction* Title = new QAction("*** Host interfaces ***");
-    Title->setDisabled(true);
-    this->ContextMenu->addAction(Title);
+    // There are three kinds of items:
+    // - Network Interfaces without Configuration
+    // - Network Interfaces with Configuration
+    // - Configuration existing without a Network Interface (unplugged, disabled, ...)
+    //
+    // How the menu is generated:
+    // - Start from 2 lists: Network Interfaces and Configurations
+    // - Create a list of pairs <Network Interface / Configuration*>. Configuration may be nullptr. Remove Configurations from their list when they match a Network Interface
+    // - Filter the list of pairs with user settings
+    // - Populate the menu with the list of pairs. The submenu will be populated according to the existence of a Configuration
+    // - Finally, add the remaining items of the Configuration list in a "Disconnected interfaces" section
 
-    for (int i = 0; i < FilteredInterfaces.size(); i++) {
-        // Create the Interface item in the main menu
-        QNetworkInterface NetworkInterface       = FilteredInterfaces.at(i);                          // Current Network Interface
-        QAction*          ActionNetworkInterface = new QAction(NetworkInterface.humanReadableName()); // Action (item) of this Network Interface
+    QList<QPair<QNetworkInterface, Configuration*>> GlobalList;
+    QList<QNetworkInterface>                        NetworkInterfaceList(QNetworkInterface::allInterfaces());
+    QList<Configuration*>                           ConfigurationList(ConfigurationList::instance()->configurationList());
 
-        // Initialize some other vars
-        QString HardwareAddress = NetworkInterface.hardwareAddress();   // HW address of this Network Interface
-        QString Name            = NetworkInterface.humanReadableName(); // Name, used to identify the interface in the netsh commands
-
-        // There is no stored Interface if there is not at least one predefined IP <===== TODO: this should be false now
-        // So, set the IP count to 0 by default, and update it only if there is really predefined IP
-        Interface* StoredInterface = InterfaceList::instance()->interface(HardwareAddress); // Stored Interface with predefined IP
-        int        IPcount         = 0;                                                     // Count of predefined IP for this Stored Interface
-        if (StoredInterface != nullptr) {
-            IPcount = StoredInterface->predefinedIPcount();
-
-            // Add the custom name if one exists
-            if (!StoredInterface->customName().isEmpty()) {
-                ActionNetworkInterface->setText(QString("%1 (%2)").arg(ActionNetworkInterface->text(), StoredInterface->customName()));
+    for (int i = 0; i < NetworkInterfaceList.size(); i++) {
+        QNetworkInterface NetworkInterface = NetworkInterfaceList.at(i);
+        Configuration*    Configuration    = nullptr;
+        for (int j = 0; j < ConfigurationList.size(); j++) {
+            if (NetworkInterface.hardwareAddress() == ConfigurationList.at(j)->hardwareAddress()) {
+                Configuration = ConfigurationList.takeAt(j--);
+                break;
             }
         }
 
-        // Create the sub-menu containing the predefined IP and the "Edit predefined IP" item
-        QMenu* Submenu = new QMenu;
-
-        // Create the dynamic part of the menu with the predefined IP
-        if (IPcount != 0) {
-            QList<PredefinedIP*> PredefinedIPList = StoredInterface->predefinedIPlist();
-            for (int j = 0; j < IPcount; j++) {
-                PredefinedIP* IP       = PredefinedIPList.at(j);
-                QAction*      ActionIP = new QAction(QString("%1: %2").arg(IP->name(), IP->ipAddress()));
-                Submenu->addAction(ActionIP);
-                connect(ActionIP, &QAction::triggered, this, [this, Name, IP]() { configureInterfacePredefinedIP(Name, IP); });
-            }
+        // Apply user settings
+        if ((Settings::instance()->showOnlyEthernetWifi())
+            && (!((NetworkInterface.type() == QNetworkInterface::Ethernet) || (NetworkInterface.type() == QNetworkInterface::Wifi)))) {
+            continue;
         }
 
-        // Add the "Use DHCP" item
-        QAction* ActionUseDHCP = new QAction("Use DHCP");
-        Submenu->addSeparator();
-        Submenu->addAction(ActionUseDHCP);
-        // TODO: get ipv4 address if one exists to delete it (if needed: call configureInterfaceDHCP() with a default argument)x
-        connect(ActionUseDHCP, &QAction::triggered, this, [this, Name]() { configureInterfaceDHCP(Name); });
-
-        // Add the "Edit predefined IP" item
-        QAction* ActionEditPredefinedIP = new QAction("Edit predefined IP");
-        Submenu->addSeparator();
-        Submenu->addAction(ActionEditPredefinedIP);
-        connect(ActionEditPredefinedIP, &QAction::triggered, this, [NetworkInterface]() { DlgInterface::execDlgInterface(NetworkInterface); });
-
-        // Fill the main context menu
-        this->ContextMenu->addAction(ActionNetworkInterface);
-        ActionNetworkInterface->setMenu(Submenu);
-    }
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ///                                                                                                                     ///
-    ///          Create the second dynamic part of the menu, which contains the known but unconnected interfaces            ///
-    ///                                                                                                                     ///
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    QList<QNetworkInterface> AllInterfaces = QNetworkInterface::allInterfaces();
-    QList<Interface*>        InterfaceList(InterfaceList::instance()->interfaceList());
-    QList<QString>           HardwareAddresses;
-    bool                     DisconnectedInterfaces = false;
-
-    // Generate the list of filtered hw addresses. Does not take filters in account
-    // to avoid displaying PredefinedIP of masked hardaware interface
-    for (int i = 0; i < AllInterfaces.size(); i++) {
-        HardwareAddresses.append(AllInterfaces.at(i).hardwareAddress());
-    }
-
-    // Check if at least one Interface exists, but its hw device is disconnected
-    for (int i = 0; i < InterfaceList.size(); i++) {
-        if (!HardwareAddresses.contains(InterfaceList.at(i)->hardwareAddress())) {
-            DisconnectedInterfaces = true;
-            break;
+        if (Settings::instance()->showOnlyPredefined() && (((Configuration != nullptr) && !Configuration->hasPredefinedIP()) || (Configuration == nullptr))) {
+            continue;
         }
+
+        if (Settings::instance()->showOnlyUp() && !(NetworkInterface.flags() & QNetworkInterface::IsUp)) {
+            continue;
+        }
+
+        // This entry is not filtered, add it to the global list
+        GlobalList.append(QPair<QNetworkInterface, class Configuration*>(NetworkInterface, Configuration));
     }
 
-    if (DisconnectedInterfaces) {
-        // Generate the menu header
-        QAction* Title = new QAction("*** Disconnected interfaces ***");
-        Title->setDisabled(true);
-        this->ContextMenu->addSeparator();
-        this->ContextMenu->addAction(Title);
+    // Create a section "Host interfaces" if at least one Network Interface must be displayed
+    if (!GlobalList.isEmpty()) {
+        // Section title. Don't use regular addSection because rendering is not guaranted
+        QAction* ActionHostInterfaces = new QAction("Host interfaces", this->ContextMenu);
+        ActionHostInterfaces->setDisabled(true);
+        this->ContextMenu->addAction(ActionHostInterfaces);
 
-        for (int i = 0; i < InterfaceList.size(); i++) {
-            if (!HardwareAddresses.contains(InterfaceList.at(i)->hardwareAddress())) {
-                QAction* ActionNetworkInterface = new QAction(InterfaceList.at(i)->humanReadableName());
-                this->ContextMenu->addAction(ActionNetworkInterface);
-                QMenu*   Submenu                = new QMenu;
-                QAction* ActionEditPredefinedIP = new QAction("Edit predefined IP");
-                Submenu->addAction(ActionEditPredefinedIP);
-                ActionNetworkInterface->setMenu(Submenu);
-                connect(ActionEditPredefinedIP, &QAction::triggered, this, [InterfaceList, i]() { DlgInterface::execDlgInterface(InterfaceList.at(i)); });
+        // Network Interfaces
+        for (int i = 0; i < GlobalList.size(); i++) {
+            QNetworkInterface NetworkInterface = GlobalList.at(i).first;
+            Configuration*    Configuration    = GlobalList.at(i).second;
 
-                // Add custom name if one is set
-                if (!InterfaceList.at(i)->customName().isEmpty()) {
-                    ActionNetworkInterface->setText(QString("%1 (%2)").arg(ActionNetworkInterface->text(), InterfaceList.at(i)->customName()));
+            // Network Interface name
+            QString TitleNetworkInterface(GlobalList.at(i).first.humanReadableName());
+            if (GlobalList.at(i).second != nullptr) {
+                QString CustomName = GlobalList.at(i).second->customName();
+                if (!CustomName.isEmpty()) {
+                    TitleNetworkInterface.append(QString(" - %1").arg(CustomName));
                 }
             }
+
+            // Network Interface action and submenu
+            QAction* ActionNetworkInterface = new QAction(TitleNetworkInterface, this->ContextMenu);
+            this->ContextMenu->addAction(ActionNetworkInterface);
+            QMenu* Submenu = new QMenu(this->ContextMenu);
+            ActionNetworkInterface->setMenu(Submenu);
+
+            // Add PDI
+            if (Configuration != nullptr) {
+                QList<PredefinedIP*> PredefinedIPlist = Configuration->predefinedIPlist();
+                for (int j = 0; j < PredefinedIPlist.size(); j++) {
+                    PredefinedIP* PredefinedIP = PredefinedIPlist.at(j);
+
+                    // PDI name
+                    QString NamePDI(PredefinedIP->ipAddress());
+                    if (!PredefinedIP->name().isEmpty()) {
+                        NamePDI.prepend(QString("%1 - ").arg(PredefinedIP->name()));
+                    }
+
+                    // PDI action
+                    QAction* ActionPDI = new QAction(NamePDI, this->ContextMenu);
+                    Submenu->addAction(ActionPDI);
+                    connect(ActionPDI, &QAction::triggered, this, [this, Configuration, PredefinedIP]() {
+                        configureInterfacePredefinedIP(Configuration->humanReadableName(), PredefinedIP);
+                    });
+                }
+
+                // Separate PDI from DHCP
+                if (!PredefinedIPlist.isEmpty()) {
+                    Submenu->addSeparator();
+                }
+            }
+
+            // Add DHCP configuration
+            QAction* ActionDHCP = new QAction("DHCP", this->ContextMenu);
+            Submenu->addAction(ActionDHCP);
+            connect(ActionDHCP, &QAction::triggered, this, [this, Configuration]() { configureInterfaceDHCP(Configuration->humanReadableName()); });
+
+            // Add Network Interface edition
+            Submenu->addSeparator();
+            QAction* ActionEditInterface = new QAction("Edit pre-defined IP", this->ContextMenu);
+            Submenu->addAction(ActionEditInterface);
+            connect(ActionEditInterface, &QAction::triggered, this, [NetworkInterface]() { DlgConfiguration::execDlgConfiguration(NetworkInterface); });
         }
     }
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ///                                                                                                                     ///
-    ///                                                 Fill the end of the menu                                            ///
-    ///                                                                                                                     ///
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Create a section "Disconnected interfaces" if at least one Configuration is orphean
+    if (!ConfigurationList.isEmpty()) {
+        // Section title
+        this->ContextMenu->addSeparator();
+        QAction* DisconnectedInterfaces = new QAction("Disconnected interfaces", this->ContextMenu);
+        DisconnectedInterfaces->setDisabled(true);
+        this->ContextMenu->addAction(DisconnectedInterfaces);
 
-    // Create the actions
-    QAction* ActionTools = new QAction("Tools");
-    QAction* ActionAbout = new QAction("About");
-    QAction* ActionExit  = new QAction("Exit");
+        // Disconnected interfaces (ie. pure configurations)
+        for (int i = 0; i < ConfigurationList.size(); i++) {
+            Configuration* Configuration = ConfigurationList.at(i);
 
-    // Fill the menu
+            // Configuration name
+            QString TitleConfiguration(Configuration->humanReadableName());
+            if (!Configuration->customName().isEmpty()) {
+                TitleConfiguration.append(QString(" - %1").arg(Configuration->customName()));
+            }
+
+            // Configuration action
+            QAction* ActionConfiguration = new QAction(TitleConfiguration, this->ContextMenu);
+            this->ContextMenu->addAction(ActionConfiguration);
+
+            // Submenu
+            QMenu* Submenu = new QMenu(this->ContextMenu);
+            ActionConfiguration->setMenu(Submenu);
+
+            // Edit Configuration action
+            QAction* ActionEditConfiguration = new QAction("Edit configuration", this->ContextMenu);
+            Submenu->addAction(ActionEditConfiguration);
+            connect(ActionEditConfiguration, &QAction::triggered, this, [Configuration]() { DlgConfiguration::execDlgConfiguration(Configuration); });
+        }
+    }
+
+    // Settings
     this->ContextMenu->addSeparator();
-    this->ContextMenu->addAction(ActionTools);
+    QAction* ActionSettings = new QAction("Settings", this->ContextMenu);
+    this->ContextMenu->addAction(ActionSettings);
+    connect(ActionSettings, &QAction::triggered, this, []() { DlgSettings::execDlgSettings(); });
+
+    // About / License / Log
+    QAction* ActionAbout = new QAction("About / License / Log", this->ContextMenu);
     this->ContextMenu->addAction(ActionAbout);
+    connect(ActionAbout, &QAction::triggered, this, []() { DlgHelp::execDlgHelp(); });
+
+    // Exit
     this->ContextMenu->addSeparator();
+    QAction* ActionExit = new QAction("Exit", this->ContextMenu);
     this->ContextMenu->addAction(ActionExit);
-
-    // Tools menu
-    QAction* ActionSettings = new QAction("Settings");
-    QAction* ActionLog      = new QAction("Log");
-    QAction* ActionMerge;
-    if (DisconnectedInterfaces) {
-        ActionMerge = new QAction("Merge connections");
-    }
-
-    QMenu* ToolMenu = new QMenu;
-    ToolMenu->addAction(ActionSettings);
-    ToolMenu->addAction(ActionLog);
-    if (DisconnectedInterfaces) {
-        ToolMenu->addAction(ActionMerge);
-    }
-    ActionTools->setMenu(ToolMenu);
-
-    // Connect the actions
-    connect(ActionSettings, &QAction::triggered, []() { DlgSettings::execDlgSettings(); });
-    //    connect(ActionMerge, &QAction::triggered, []() { DlgMerge::execDlgMerge(); });
-    connect(ActionLog, &QAction::triggered, []() { DlgLog::showDlgLog(); });
-    connect(ActionAbout, &QAction::triggered, []() { DlgHelp::showDlgHelp(); });
     connect(ActionExit, &QAction::triggered, []() { QCoreApplication::exit(0); });
 
     // Add the context menu to the tray icon

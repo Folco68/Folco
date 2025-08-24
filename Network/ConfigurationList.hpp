@@ -18,48 +18,45 @@
  *                                                                                      * 
  ****************************************************************************************/
 
-#include "DlgLog.hpp"
-#include "../Global.hpp"
-#include "../Logger.hpp"
-#include "ui_DlgLog.h"
-#include <QPushButton>
-#include <QScrollBar>
+#ifndef CONFIGURATION_LIST_HPP
+#define CONFIGURATION_LIST_HPP
 
-DlgLog::DlgLog()
-    : QDialog(nullptr)
-    , ui(new Ui::DlgLog)
-    , Dialog(this)
+#include "Configuration.hpp"
+#include "PredefinedIP.hpp"
+#include <QDataStream>
+#include <QList>
+#include <QString>
+
+/********************************************************************************************************************** 
+ *                                                                                                                    * 
+ *                                                 ConfigurationList                                                  * 
+ *                                                                                                                    * 
+ *                This class contains a list of all the interfaces showed when opening the tray menu.                 * 
+ *                                                                                                                    * 
+ **********************************************************************************************************************/
+
+class ConfigurationList
 {
-    // Setup UI
-    ui->setupUi(this);
-    setWindowTitle(QString("%1 - Log").arg(APPLICATION_NAME)); //
-    setAttribute(Qt::WA_DeleteOnClose);                        // Non modal
+  public:
+    static ConfigurationList* instance();
+    static void           release();
 
-    // Display log and scroll to the end
-    ui->TextEditLog->setPlainText(Logger::instance()->log());
-    scrollToTheEnd();
+    Configuration*        configuration(QString hwaddress) const;
+    bool                  hasPredefinedIP(QString hwaddress) const;
+    void                  addConfiguration(Configuration* configuration);
+    void                  deleteConfiguration(Configuration* configuration);
+    QList<Configuration*> configurationList() const;
 
-    // Log has been updated
-    connect(ui->ButtonClose, &QPushButton::clicked, this, [this]() { close(); });
-    connect(Logger::instance(), &Logger::newLogEntry, this, [this](QString entry) {
-        ui->TextEditLog->appendPlainText(entry);
-        scrollToTheEnd();
-    });
-}
+  private:
+    // Singleton stuff
+    static ConfigurationList* configurationlist;
+    ConfigurationList();
+    ~ConfigurationList();
 
-DlgLog::~DlgLog()
-{
-    delete ui;
-}
+    void open();
+    bool save() const;
 
-void DlgLog::showDlgLog()
-{
-    DlgLog* Dlg = new DlgLog;
-    Dlg->exec();
-    delete Dlg;
-}
-
-void DlgLog::scrollToTheEnd()
-{
-    ui->TextEditLog->verticalScrollBar()->setValue(ui->TextEditLog->verticalScrollBar()->maximum());
+    QList<Configuration*> List;
 };
+
+#endif // CONFIGURATION_LIST_HPP
