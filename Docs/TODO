@@ -41,5 +41,7 @@ o one technical dialog for Settings/Merge/Log
     -> create an empty list of Pairs: pick an HW address, and try to find a corresponding Interface
     -> remaining HW address are added and can be configured
     -> remaining Interfaces are Disconnected Interfaces
++ DlgPredefinedIP: inconsistency in window title setting (new/edit)
 - PredefinedIP embed the human readable name of their Interface, to display it when it's disconnected. Upate it from time to time
 - offer to merge connections, usefull when migrating a PC or changing an adapter
+- revamp dialogs (DlgPredefinedIP: OK)

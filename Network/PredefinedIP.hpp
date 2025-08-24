@@ -31,7 +31,6 @@ class PredefinedIP
   public:
     PredefinedIP(QString Name, QString ip, QString mask, QString gateway);
     PredefinedIP(QDataStream& stream);
-    Configuration* parent() const;
     QString        name() const;
     QString        ipAddress() const;
     QString        networkMask() const;

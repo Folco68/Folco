@@ -208,7 +208,7 @@ void DlgConfiguration::newPredefinedIP()
     QString NetworkMask;
     QString Gateway;
 
-    if (DlgPredefinedIP::newPredefinedIP(this, &Name, &IP, &NetworkMask, &Gateway) == QDialog::Accepted) {
+    if (DlgPredefinedIP::newPredefinedIP(&Name, &IP, &NetworkMask, &Gateway) == QDialog::Accepted) {
         int Count = ui->TablePredefinedIP->rowCount();
         ui->TablePredefinedIP->setRowCount(Count + 1);
 
@@ -235,7 +235,7 @@ void DlgConfiguration::editPredefinedIP()
     QString NetworkMask(ui->TablePredefinedIP->item(Row, COLUMN_NETWORK_MASK)->text());
     QString Gateway(ui->TablePredefinedIP->item(Row, COLUMN_GATEWAY)->text());
 
-    if (DlgPredefinedIP::editPredefinedIP(this, &Name, &IP, &NetworkMask, &Gateway) == QDialog::Accepted) {
+    if (DlgPredefinedIP::editPredefinedIP(&Name, &IP, &NetworkMask, &Gateway) == QDialog::Accepted) {
         ui->TablePredefinedIP->item(Row, COLUMN_NAME)->setText(Name);
         ui->TablePredefinedIP->item(Row, COLUMN_IP_ADDRESS)->setText(IP);
         ui->TablePredefinedIP->item(Row, COLUMN_NETWORK_MASK)->setText(NetworkMask);

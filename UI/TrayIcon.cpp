@@ -71,10 +71,10 @@ void TrayIcon::showContextMenu(QPoint position)
 
     for (int i = 0; i < NetworkInterfaceList.size(); i++) {
         QNetworkInterface NetworkInterface = NetworkInterfaceList.at(i);
-        Configuration*    Config           = nullptr;
+        Configuration*    Configuration    = nullptr;
         for (int j = 0; j < ConfigurationList.size(); j++) {
             if (NetworkInterface.hardwareAddress() == ConfigurationList.at(j)->hardwareAddress()) {
-                Config = ConfigurationList.takeAt(j--);
+                Configuration = ConfigurationList.takeAt(j--);
                 break;
             }
         }
@@ -85,7 +85,7 @@ void TrayIcon::showContextMenu(QPoint position)
             continue;
         }
 
-        if (Settings::instance()->showOnlyPredefined() && (((Config != nullptr) && !Config->hasPredefinedIP()) || (Config == nullptr))) {
+        if (Settings::instance()->showOnlyPredefined() && (((Configuration != nullptr) && !Configuration->hasPredefinedIP()) || (Configuration == nullptr))) {
             continue;
         }
 
@@ -94,7 +94,7 @@ void TrayIcon::showContextMenu(QPoint position)
         }
 
         // This entry is not filtered, add it to the global list
-        GlobalList.append(QPair<QNetworkInterface, Configuration*>(NetworkInterface, Config));
+        GlobalList.append(QPair<QNetworkInterface, class Configuration*>(NetworkInterface, Configuration));
     }
 
     // Create a section "Host interfaces" if at least one Network Interface must be displayed

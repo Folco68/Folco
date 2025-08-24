@@ -25,31 +25,12 @@
 #include <QPalette>
 #include <QStringList>
 
-// Support null ptrs. Useless here, but it supports it anyway
-DlgPredefinedIP::DlgPredefinedIP(QWidget* parent, QString* name, QString* ip, QString* networkmask, QString* gateway)
-    : QDialog(parent)
-    , ui(new Ui::DlgPredefinedIP)
+DlgPredefinedIP::DlgPredefinedIP(QString title)
+    : ui(new Ui::DlgPredefinedIP)
     , Dialog(this)
 {
     ui->setupUi(this);
-    setWindowTitle(QString("%1 - Edit Predefined IP").arg(APPLICATION_NAME));
-
-    // Fill the UI if arguments were provided
-    if (name != nullptr) {
-        ui->EditName->setText(*name);
-    }
-
-    if (ip != nullptr) {
-        ui->EditIP->setText(*ip);
-    }
-
-    if (networkmask != nullptr) {
-        ui->EditMask->setText(*networkmask);
-    }
-
-    if (gateway != nullptr) {
-        ui->EditGateway->setText(*gateway);
-    }
+    setWindowTitle(QString("%1 - %2").arg(APPLICATION_NAME, title == nullptr ? "New Predefined IP" : title));
 
     // Connections
     connect(ui->ButtonOK, &QPushButton::clicked, this, [this]() { accept(); });
@@ -58,8 +39,17 @@ DlgPredefinedIP::DlgPredefinedIP(QWidget* parent, QString* name, QString* ip, QS
     connect(ui->EditMask, &QLineEdit::textChanged, this, [this]() { updateButtonOK(); });
     connect(ui->EditGateway, &QLineEdit::textChanged, this, [this]() { updateButtonOK(); });
 
-    // Set OK button according to IPs
+    // Set OK button according to IP validity
     updateButtonOK();
+}
+
+DlgPredefinedIP::DlgPredefinedIP(QString* name, QString* ip, QString* networkmask, QString* gateway)
+    : DlgPredefinedIP("Edit Predefined IP")
+{
+        ui->EditName->setText(*name);
+        ui->EditIP->setText(*ip);
+        ui->EditMask->setText(*networkmask);
+        ui->EditGateway->setText(*gateway);
 }
 
 DlgPredefinedIP::~DlgPredefinedIP()
@@ -73,12 +63,11 @@ void DlgPredefinedIP::updateButtonOK()
                              && ui->EditGateway->hasAcceptableInput());
 }
 
-int DlgPredefinedIP::newPredefinedIP(QWidget* parent, QString* name, QString* ip, QString* networkmask, QString* gateway)
+int DlgPredefinedIP::newPredefinedIP(QString* name, QString* ip, QString* networkmask, QString* gateway)
 {
     int RetVal;
 
-    DlgPredefinedIP* Dlg = new DlgPredefinedIP(parent);
-    Dlg->setWindowTitle("New predefined IP");
+    DlgPredefinedIP* Dlg = new DlgPredefinedIP;
     RetVal = Dlg->exec();
 
     if (RetVal == QDialog::Accepted) {
@@ -93,12 +82,11 @@ int DlgPredefinedIP::newPredefinedIP(QWidget* parent, QString* name, QString* ip
     return RetVal;
 }
 
-int DlgPredefinedIP::editPredefinedIP(QWidget* parent, QString* name, QString* ip, QString* networkmask, QString* gateway)
+int DlgPredefinedIP::editPredefinedIP(QString* name, QString* ip, QString* networkmask, QString* gateway)
 {
     int RetVal;
 
-    DlgPredefinedIP* Dlg = new DlgPredefinedIP(parent, name, ip, networkmask, gateway);
-    Dlg->setWindowTitle("Edit predefined IP");
+    DlgPredefinedIP* Dlg = new DlgPredefinedIP(name, ip, networkmask, gateway);
     RetVal = Dlg->exec();
 
     if (RetVal == QDialog::Accepted) {
