@@ -47,7 +47,7 @@ class DlgPredefinedIP
     static int editPredefinedIP(QString* name, QString* ip, QString* networkmask, QString* gateway);
 
   private:
-    explicit DlgPredefinedIP(QString title = nullptr);
+    explicit DlgPredefinedIP(QString title = nullptr); // Delegate constructor
     DlgPredefinedIP(QString* name, QString* ip, QString* networkmask, QString* gateway);
     ~DlgPredefinedIP();
     void updateButtonOK();
