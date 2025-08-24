@@ -39,7 +39,10 @@ DlgPredefinedIP::DlgPredefinedIP(QString title)
     connect(ui->EditMask, &QLineEdit::textChanged, this, [this]() { updateButtonOK(); });
     connect(ui->EditGateway, &QLineEdit::textChanged, this, [this]() { updateButtonOK(); });
 
-    // Set OK button according to IP validity
+    // Set OK button according to IP validity.
+    // The button is disabled by default, which fits the dialog logic for a new IP.
+    // The connections are already established on textChanged() signal, so when DlgPredefinedIP()
+    // continues to build to edit an IP, the button will be updated accordingly
     updateButtonOK();
 }
 
