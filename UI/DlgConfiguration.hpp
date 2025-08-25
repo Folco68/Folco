@@ -53,8 +53,7 @@ class DlgConfiguration
 
   private:
     explicit DlgConfiguration(QNetworkInterface NetworkInterface); // For Network Interfaces
-    explicit DlgConfiguration(Configuration* configuration);       // For Configuration with disconnected Network Interfaces
-    void commonInitialization(Configuration* configuration); // Don't use a delegate constructor because the class inherits QDialog, which can't be built twice
+    explicit DlgConfiguration(Configuration* configuration); // Delegate constructor, or directly called for Configuration with disconnected Network Interfaces
     void tableSelectionChanged();
     void newPredefinedIP();
     void editPredefinedIP();

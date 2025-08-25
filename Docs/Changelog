@@ -200,6 +200,21 @@ Initial commit
 - Fixed buggy filters showOnlyEthernetWifi and showOnlyPredefinedIP
 - Added Settings/About/Exit actions
 
-2025/08/21
+2025/08/22
 - Renamed DlgMergeConnections to DlgMergeConfigurations (consistency)
 - Removed log of system environment at boot
+
+2025/08/24
+- Removed remaining chunks of old field PredefinedIP::parent
+- Use keywodr class in TrayIcon.cpp to improve readability
+- Revamped dialog DlgPredefinedIP, using a delegate constructor to avoid code duplication
+- Added a comment
+- Merged several revampings, especially TrayIcon.cpp
+- Fixed unmerged changes in DlgPredefinedIP.cpp
+- Added comment in DlgPredefinedIP.cpp
+
+2025/08/25
+- Update Configuration::HumanReadableName every time the Tray Icon menu pops up, because the name can change at the OS level
+- Removed useless Configuration::removePredefinedIP()
+- Fixed a memory leak when validating DlgConfiguration::execDlgConfiguration()
+- Reworked DlgConfiguration, using a delegate constructor to avoid code duplication

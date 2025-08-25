@@ -41,7 +41,6 @@ class Configuration
     Configuration(QDataStream& stream, qint32 version);
     ~Configuration();
     void                 addPredefinedIP(PredefinedIP* ip);
-    void                 removePredefinedIP(PredefinedIP* ip);
     int                  predefinedIPcount() const;
     bool                 hasPredefinedIP() const;
     QString              hardwareAddress() const;

@@ -82,17 +82,6 @@ void Configuration::addPredefinedIP(PredefinedIP* ip)
     this->PredefinedIPlist << ip;
 }
 
-void Configuration::removePredefinedIP(PredefinedIP* ip)
-{
-    for (int i = 0; i < this->PredefinedIPlist.size(); i++) {
-        if (*(this->predefinedIPlist().at(i)) == *ip) {
-            this->PredefinedIPlist.removeAt(i);
-            // Remove only one instance
-            break;
-        }
-    }
-}
-
 int Configuration::predefinedIPcount() const
 {
     return this->PredefinedIPlist.count();
@@ -115,7 +104,10 @@ QList<PredefinedIP*> Configuration::predefinedIPlist() const
 
 void Configuration::clearContent()
 {
-    this->PredefinedIPlist.clear();
+    this->CustomName.clear();
+    while (!this->PredefinedIPlist.isEmpty()) {
+        delete this->PredefinedIPlist.takeLast();
+    }
 }
 
 void Configuration::save(QDataStream& stream)
