@@ -75,6 +75,10 @@ void TrayIcon::showContextMenu(QPoint position)
         for (int j = 0; j < ConfigurationList.size(); j++) {
             if (NetworkInterface.hardwareAddress() == ConfigurationList.at(j)->hardwareAddress()) {
                 Configuration = ConfigurationList.takeAt(j--);
+
+                // The name of a Network Interface can change at the OS level.
+                // Refresh it every time the menu is triggerred
+                Configuration->setHumanReadableName(NetworkInterface.humanReadableName());
                 break;
             }
         }
