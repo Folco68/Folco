@@ -7,6 +7,7 @@
 #include "Dialog.hpp"
 #include "DlgConfiguration.hpp"
 #include "DlgHelp.hpp"
+#include "DlgMergeConfigurations.hpp"
 #include "DlgSettings.hpp"
 #include <QCoreApplication>
 #include <QList>
@@ -68,6 +69,7 @@ void TrayIcon::showContextMenu(QPoint position)
     QList<QPair<QNetworkInterface, Configuration*>> GlobalList;
     QList<QNetworkInterface>                        NetworkInterfaceList(QNetworkInterface::allInterfaces());
     QList<Configuration*>                           ConfigurationList(ConfigurationList::instance()->configurationList());
+    bool                                            EnableMergeConfigurations = !ConfigurationList.isEmpty();
 
     for (int i = 0; i < NetworkInterfaceList.size(); i++) {
         QNetworkInterface NetworkInterface = NetworkInterfaceList.at(i);
@@ -205,6 +207,13 @@ void TrayIcon::showContextMenu(QPoint position)
     QAction* ActionSettings = new QAction("Settings", this->ContextMenu);
     this->ContextMenu->addAction(ActionSettings);
     connect(ActionSettings, &QAction::triggered, this, []() { DlgSettings::execDlgSettings(); });
+
+    // Merge Configurations
+    if (EnableMergeConfigurations) {
+        QAction* ActionMergeConfigurations = new QAction("Merge configurations", this->ContextMenu);
+        this->ContextMenu->addAction(ActionMergeConfigurations);
+        connect(ActionMergeConfigurations, &QAction::triggered, this, []() { DlgMergeConfigurations::mergeConfigurations(); });
+    }
 
     // About / License / Log
     QAction* ActionAbout = new QAction("About / License / Log", this->ContextMenu);

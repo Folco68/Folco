@@ -21,8 +21,10 @@
 #ifndef DLGMERGECONFIGURATIONS_HPP
 #define DLGMERGECONFIGURATIONS_HPP
 
+#include "../Network/Configuration.hpp"
 #include "Dialog.hpp"
 #include <QDialog>
+#include <QMetaType>
 
 namespace Ui {
 class DlgMergeConfigurations;
@@ -43,11 +45,20 @@ class DlgMergeConfigurations
     Q_OBJECT
 
   public:
-    explicit DlgMergeConfigurations(QWidget* parent = nullptr);
+    static void mergeConfigurations();
     ~DlgMergeConfigurations();
 
   private:
+    DlgMergeConfigurations();
+    void updateButtons();
+    void merge();
+    void overwrite();
+
     Ui::DlgMergeConfigurations* ui;
 };
+
+Q_DECLARE_METATYPE(Configuration*)
+#define CONFIGURATION_ROLE Qt::UserRole
+#define INTERFACE_ROLE     (Qt::UserRole + 1)
 
 #endif // DLGMERGECONFIGURATIONS_HPP
