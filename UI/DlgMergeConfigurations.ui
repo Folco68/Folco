@@ -17,9 +17,9 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
-      <layout class="QVBoxLayout" name="verticalLayout">
+      <layout class="QVBoxLayout" name="VLayoutLists">
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout">
+        <layout class="QHBoxLayout" name="HLayoutLists">
          <item>
           <layout class="QVBoxLayout" name="VLayoutSource">
            <item>
@@ -30,7 +30,14 @@
             </widget>
            </item>
            <item>
-            <widget class="QListWidget" name="ListWidgetSource"/>
+            <widget class="QListWidget" name="ListWidgetSource">
+             <property name="editTriggers">
+              <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+             </property>
+             <property name="alternatingRowColors">
+              <bool>true</bool>
+             </property>
+            </widget>
            </item>
           </layout>
          </item>
@@ -44,14 +51,21 @@
             </widget>
            </item>
            <item>
-            <widget class="QListWidget" name="ListWidgetDestination"/>
+            <widget class="QListWidget" name="ListWidgetDestination">
+             <property name="editTriggers">
+              <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+             </property>
+             <property name="alternatingRowColors">
+              <bool>true</bool>
+             </property>
+            </widget>
            </item>
           </layout>
          </item>
         </layout>
        </item>
        <item>
-        <widget class="QLabel" name="label">
+        <widget class="QLabel" name="LabelTip">
          <property name="font">
           <font>
            <italic>true</italic>

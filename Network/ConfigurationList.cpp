@@ -57,25 +57,13 @@ void ConfigurationList::release()
 
 bool ConfigurationList::hasPredefinedIP(QString hwaddress) const
 {
-    bool RetVal = false;
-
-    for (int i = 0; i < this->List.size(); i++) {
-        Configuration* Configuration = this->List.at(i);
-        if ((Configuration->hardwareAddress() == hwaddress) && (Configuration->predefinedIPcount() != 0)) {
-            RetVal = true;
-            break;
-        }
-    }
-
-    return RetVal;
+    Configuration* Configuration = configuration(hwaddress);
+    return (Configuration != nullptr) && (Configuration->predefinedIPcount() != 0);
 }
 
 Configuration* ConfigurationList::configuration(QString hwaddress) const
 {
     Configuration* Configuration = nullptr;
-
-    // Lookup in the Configuration list to find the one which owns the HW address
-    // Maybe it does not exist
     for (int i = 0; i < this->List.size(); i++) {
         class Configuration* TmpConfiguration = this->List.at(i);
         if (TmpConfiguration->hardwareAddress() == hwaddress) {
@@ -95,7 +83,7 @@ void ConfigurationList::addConfiguration(Configuration* configuration)
 void ConfigurationList::deleteConfiguration(Configuration* configuration)
 {
     qsizetype Index = this->List.indexOf(configuration);
-    // Should never return -1. Just a safety check
+    // Should never return -1. Just a silent safety check
     if (Index != -1) {
         delete this->List.takeAt(Index);
     }

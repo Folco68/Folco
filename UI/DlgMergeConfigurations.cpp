@@ -120,6 +120,8 @@ DlgMergeConfigurations::DlgMergeConfigurations()
     connect(ui->ButtonClose, &QPushButton::clicked, this, [this]() { close(); });
     connect(ui->ListWidgetSource, &QListWidget::itemSelectionChanged, this, [this]() { updateButtons(); });
     connect(ui->ListWidgetDestination, &QListWidget::itemSelectionChanged, this, [this]() { updateButtons(); });
+    connect(ui->ButtonMerge, &QPushButton::clicked, this, [this]() { merge(); });
+    connect(ui->ButtonOverwrite, &QPushButton::clicked, this, [this]() { overwrite(); });
 }
 
 DlgMergeConfigurations::~DlgMergeConfigurations()
@@ -137,7 +139,7 @@ void DlgMergeConfigurations::mergeConfigurations()
 void DlgMergeConfigurations::updateButtons()
 {
     QList<QListWidgetItem*> SourceSelection      = ui->ListWidgetSource->selectedItems();
-    QList<QListWidgetItem*> DestinationSelection = ui->ListWidgetSource->selectedItems();
+    QList<QListWidgetItem*> DestinationSelection = ui->ListWidgetDestination->selectedItems();
     bool                    MergeEnabled         = true; // Default : both buttons enabled
     bool                    OverwriteEnabled     = true;
 
@@ -147,8 +149,9 @@ void DlgMergeConfigurations::updateButtons()
         OverwriteEnabled = false;
     }
 
-    // Else Merge is always enabled
-    // Overwrite is only if the destination already holds a Configuration. Let's check the data embedded in the item
+    // Else
+    // - Merge is always enabled
+    // - Overwrite is only if the destination already holds a Configuration. Let's check the data embedded in the item
     else {
         QListWidgetItem* Item          = DestinationSelection.at(0);
         Configuration*   Configuration = Item->data(INTERFACE_ROLE).value<class Configuration*>();
@@ -158,4 +161,24 @@ void DlgMergeConfigurations::updateButtons()
     // Update buttons
     ui->ButtonMerge->setEnabled(MergeEnabled);
     ui->ButtonOverwrite->setEnabled(OverwriteEnabled);
+}
+
+void DlgMergeConfigurations::merge()
+{
+}
+
+void DlgMergeConfigurations::overwrite()
+{
+    Configuration* SourceConfiguration      = ui->ListWidgetSource->selectedItems().at(0)->data(CONFIGURATION_ROLE).value<class Configuration*>();
+    Configuration* DestinationConfiguration = ui->ListWidgetDestination->selectedItems().at(0)->data(INTERFACE_ROLE).value<class Configuration*>();
+
+    DestinationConfiguration->clearContent();                                   // Delete all entries of this configuration, including custom name
+    DestinationConfiguration->setCustomName(SourceConfiguration->customName()); // Update custom name
+    QList<PredefinedIP*> PDIlist = SourceConfiguration->predefinedIPlist();
+
+    // Create the new list of Predefined IP, starting from the source one
+    for (int i = 0; i < PDIlist.size(); i++) {
+        PredefinedIP* PDI = new PredefinedIP(PDIlist.at(i));
+        DestinationConfiguration->addPredefinedIP(PDI);
+    }
 }

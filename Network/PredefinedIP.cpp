@@ -43,6 +43,14 @@ PredefinedIP::PredefinedIP(QDataStream& stream)
     this->Gateway     = QString::fromUtf8(GateWay);
 }
 
+PredefinedIP::PredefinedIP(PredefinedIP* PDI)
+{
+    this->Name        = PDI->Name;
+    this->IPaddress   = PDI->IPaddress;
+    this->NetworkMask = PDI->NetworkMask;
+    this->Gateway     = PDI->Gateway;
+}
+
 QString PredefinedIP::name() const
 {
     return this->Name;
