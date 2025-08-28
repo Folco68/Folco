@@ -44,6 +44,6 @@ o one technical dialog for Settings/Merge/Log
 + DlgPredefinedIP: inconsistency in window title setting (new/edit)
 + PredefinedIP embed the human readable name of their Interface, to display it when it's disconnected. Upate it from time to time
 + revamp dialogs (DlgPredefinedIP: OK, DlgConfiguration: OK)
-- offer to merge connections, usefull when migrating a PC or changing an adapter
++ offer to merge connections, usefull when migrating a PC or changing an adapter
 - make a real ReadMe, with pictures
 - replace all "manual" search of Configuration with ConfigurationList::configuration() and ConfigurationList::hasPredefinedIP()

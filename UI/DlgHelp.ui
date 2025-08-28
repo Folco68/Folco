@@ -85,7 +85,14 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_5">
        <item>
-        <widget class="QPlainTextEdit" name="TextEditLog"/>
+        <widget class="QPlainTextEdit" name="TextEditLog">
+         <property name="font">
+          <font>
+           <family>Consolas</family>
+           <pointsize>11</pointsize>
+          </font>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>

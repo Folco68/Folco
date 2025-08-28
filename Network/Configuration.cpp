@@ -92,6 +92,19 @@ bool Configuration::hasPredefinedIP() const
     return !this->PredefinedIPlist.isEmpty();
 }
 
+bool Configuration::hasPredefinedIP(PredefinedIP* PDI) const
+{
+    bool RetVal = false;
+    for (int i = 0; i < this->PredefinedIPlist.size(); i++) {
+        if (*this->PredefinedIPlist.at(i) == *PDI) {
+            RetVal = true;
+            break;
+        }
+    }
+
+    return RetVal;
+}
+
 QString Configuration::hardwareAddress() const
 {
     return this->HardwareAddress;

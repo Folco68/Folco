@@ -24,9 +24,9 @@ TrayIcon::TrayIcon()
 
     // The menu is created dynamically every time it is triggerred, to refresh the interface list
     connect(this,
-            &QSystemTrayIcon::activated, // Show the context menu regardless of the trigger (default: only the right click displays the menu)
-            this,
-            [this]() {
+            &QSystemTrayIcon::activated,             // Show the context menu regardless of the trigger (default: only the right click displays the menu)
+            this,                                    //
+            [this]() {                               //
                 if (!Dialog::display()) {            // If a window is already displayed, bring it to the foreground instead of showing the menu
                     showContextMenu(QCursor::pos()); // Read the cursor position now, to prevent a dialog box from moving the menu before it pops up
                 };
@@ -71,6 +71,11 @@ void TrayIcon::showContextMenu(QPoint position)
     QList<Configuration*>                           ConfigurationList(ConfigurationList::instance()->configurationList());
     bool                                            EnableMergeConfigurations = !ConfigurationList.isEmpty();
 
+    // Logging
+    int LogNetworkInterfaceCount          = NetworkInterfaceList.size();
+    int LogConfigurationCount             = ConfigurationList.size();
+    int LogFilteredNetworkInterfacesCount = 0;
+
     for (int i = 0; i < NetworkInterfaceList.size(); i++) {
         QNetworkInterface NetworkInterface = NetworkInterfaceList.at(i);
         Configuration*    Configuration    = nullptr;
@@ -88,14 +93,18 @@ void TrayIcon::showContextMenu(QPoint position)
         // Apply user settings
         if ((Settings::instance()->showOnlyEthernetWifi())
             && (!((NetworkInterface.type() == QNetworkInterface::Ethernet) || (NetworkInterface.type() == QNetworkInterface::Wifi)))) {
+            LogFilteredNetworkInterfacesCount++;
             continue;
         }
 
         if (Settings::instance()->showOnlyPredefined() && (((Configuration != nullptr) && !Configuration->hasPredefinedIP()) || (Configuration == nullptr))) {
+            LogFilteredNetworkInterfacesCount++;
+
             continue;
         }
 
         if (Settings::instance()->showOnlyUp() && !(NetworkInterface.flags() & QNetworkInterface::IsUp)) {
+            LogFilteredNetworkInterfacesCount++;
             continue;
         }
 
@@ -105,7 +114,7 @@ void TrayIcon::showContextMenu(QPoint position)
 
     // Create a section "Host interfaces" if at least one Network Interface must be displayed
     if (!GlobalList.isEmpty()) {
-        // Section title. Don't use regular addSection because rendering is not guaranted
+        // Section title. Don't use regular addSection() because rendering is not guaranted
         QAction* ActionHostInterfaces = new QAction("Host interfaces", this->ContextMenu);
         ActionHostInterfaces->setDisabled(true);
         this->ContextMenu->addAction(ActionHostInterfaces);
@@ -231,6 +240,12 @@ void TrayIcon::showContextMenu(QPoint position)
 
     // Finally, show the context menu at cursor position
     this->ContextMenu->popup(position);
+
+    // Some logging
+    Logger::instance()->addLogEntry(QString("Network interfaces: %1. Filtered: %2. Configurations: %3")
+                                        .arg(LogNetworkInterfaceCount)
+                                        .arg(LogFilteredNetworkInterfacesCount)
+                                        .arg(LogConfigurationCount));
 }
 
 void TrayIcon::configureInterfacePredefinedIP(QString name, PredefinedIP* ip)

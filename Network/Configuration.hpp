@@ -43,6 +43,7 @@ class Configuration
     void                 addPredefinedIP(PredefinedIP* ip);
     int                  predefinedIPcount() const;
     bool                 hasPredefinedIP() const;
+    bool                 hasPredefinedIP(PredefinedIP* PDI) const;
     QString              hardwareAddress() const;
     QList<PredefinedIP*> predefinedIPlist() const;
     void                 clearContent();

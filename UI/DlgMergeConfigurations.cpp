@@ -26,7 +26,7 @@
 #include <QList>
 #include <QListWidget>
 #include <QListWidgetItem>
-#include <QNetworkInterface>
+#include <QMessageBox>
 #include <QVariant>
 
 DlgMergeConfigurations::DlgMergeConfigurations()
@@ -35,12 +35,40 @@ DlgMergeConfigurations::DlgMergeConfigurations()
     , Dialog(this)
 {
     ui->setupUi(this);
-    setWindowTitle(APPLICATION_NAME " - Merge Configurations");
+    setWindowTitle(APPLICATION_NAME " - Merge/Replace Configurations");
+    refreshUI();
+
+    // Connections
+    connect(ui->ButtonClose, &QPushButton::clicked, this, [this]() { close(); });
+    connect(ui->ListWidgetSource, &QListWidget::itemSelectionChanged, this, [this]() { updateButtons(); });
+    connect(ui->ListWidgetDestination, &QListWidget::itemSelectionChanged, this, [this]() { updateButtons(); });
+    connect(ui->ButtonMerge, &QPushButton::clicked, this, [this]() { merge(); });
+    connect(ui->ButtonReplace, &QPushButton::clicked, this, [this]() { replace(); });
+}
+
+DlgMergeConfigurations::~DlgMergeConfigurations()
+{
+    delete ui;
+}
+
+void DlgMergeConfigurations::mergeConfigurations()
+{
+    DlgMergeConfigurations* Dlg = new DlgMergeConfigurations;
+    Dlg->exec();
+    delete Dlg;
+}
+
+void DlgMergeConfigurations::refreshUI()
+{
+    // Clear lists
+    ui->ListWidgetSource->clear();
+    ui->ListWidgetDestination->clear();
 
     // Create a list of tooltips at the global level because it is shared by the two lists
     QList<QString> TooltipList;
 
     // Fill source list
+    // Item data: Configuration*
     QList<Configuration*> ConfigurationList = ConfigurationList::instance()->configurationList();
 
     for (int i = 0; i < ConfigurationList.size(); i++) {
@@ -77,6 +105,7 @@ DlgMergeConfigurations::DlgMergeConfigurations()
     }
 
     // Fill destination list
+    // Item data: DestData
     QList<QNetworkInterface> InterfaceList = QNetworkInterface::allInterfaces();
 
     for (int i = 0; i < InterfaceList.size(); i++) {
@@ -104,7 +133,7 @@ DlgMergeConfigurations::DlgMergeConfigurations()
 
         // Create the item and add it to the list
         QListWidgetItem* Item = new QListWidgetItem(Text);
-        Item->setData(INTERFACE_ROLE, QVariant::fromValue(Configuration));
+        Item->setData(INTERFACE_ROLE, QVariant::fromValue(DestData{Interface, Configuration}));
         ui->ListWidgetDestination->addItem(Item);
 
         // Add the tooltip
@@ -116,24 +145,7 @@ DlgMergeConfigurations::DlgMergeConfigurations()
         }
     }
 
-    // Connections
-    connect(ui->ButtonClose, &QPushButton::clicked, this, [this]() { close(); });
-    connect(ui->ListWidgetSource, &QListWidget::itemSelectionChanged, this, [this]() { updateButtons(); });
-    connect(ui->ListWidgetDestination, &QListWidget::itemSelectionChanged, this, [this]() { updateButtons(); });
-    connect(ui->ButtonMerge, &QPushButton::clicked, this, [this]() { merge(); });
-    connect(ui->ButtonOverwrite, &QPushButton::clicked, this, [this]() { overwrite(); });
-}
-
-DlgMergeConfigurations::~DlgMergeConfigurations()
-{
-    delete ui;
-}
-
-void DlgMergeConfigurations::mergeConfigurations()
-{
-    DlgMergeConfigurations* Dlg = new DlgMergeConfigurations;
-    Dlg->exec();
-    delete Dlg;
+    updateButtons();
 }
 
 void DlgMergeConfigurations::updateButtons()
@@ -160,25 +172,56 @@ void DlgMergeConfigurations::updateButtons()
 
     // Update buttons
     ui->ButtonMerge->setEnabled(MergeEnabled);
-    ui->ButtonOverwrite->setEnabled(OverwriteEnabled);
+    ui->ButtonReplace->setEnabled(OverwriteEnabled);
 }
 
 void DlgMergeConfigurations::merge()
 {
+    QList<PredefinedIP*> SourceIPlist = ui->ListWidgetSource->selectedItems().at(0)->data(CONFIGURATION_ROLE).value<class Configuration*>()->predefinedIPlist();
+    DestData             Data         = ui->ListWidgetDestination->selectedItems().at(0)->data(INTERFACE_ROLE).value<DestData>();
+    QNetworkInterface    NetworkInterface = Data.NetworkInterface;
+    Configuration*       Configuration    = Data.Configuration;
+
+    if (Configuration == nullptr) {
+        Configuration = new class Configuration(NetworkInterface.hardwareAddress(), QString(""), NetworkInterface.humanReadableName());
+        ConfigurationList::instance()->addConfiguration(Configuration);
+        for (int i = 0; i < SourceIPlist.size(); i++) {
+            Configuration->addPredefinedIP(new PredefinedIP(SourceIPlist.at(i)));
+        }
+    }
+    else {
+        for (int i = 0; i < SourceIPlist.size(); i++) {
+            if (!Configuration->hasPredefinedIP(SourceIPlist.at(i))) {
+                Configuration->addPredefinedIP(new PredefinedIP(SourceIPlist.at(i)));
+            }
+        }
+    }
+
+    QMessageBox::information(nullptr,
+                             QString("%1 - Merging").arg(APPLICATION_NAME),
+                             QString("The configuration of %1 has been successfully merged with the Network Interface %2")
+                                 .arg(ui->ListWidgetSource->selectedItems().at(0)->text(), ui->ListWidgetDestination->selectedItems().at(0)->text()));
+    refreshUI();
 }
 
-void DlgMergeConfigurations::overwrite()
+void DlgMergeConfigurations::replace()
 {
     Configuration* SourceConfiguration      = ui->ListWidgetSource->selectedItems().at(0)->data(CONFIGURATION_ROLE).value<class Configuration*>();
     Configuration* DestinationConfiguration = ui->ListWidgetDestination->selectedItems().at(0)->data(INTERFACE_ROLE).value<class Configuration*>();
 
     DestinationConfiguration->clearContent();                                   // Delete all entries of this configuration, including custom name
     DestinationConfiguration->setCustomName(SourceConfiguration->customName()); // Update custom name
-    QList<PredefinedIP*> PDIlist = SourceConfiguration->predefinedIPlist();
+    QList<PredefinedIP*> SourceIPlist = SourceConfiguration->predefinedIPlist();
 
     // Create the new list of Predefined IP, starting from the source one
-    for (int i = 0; i < PDIlist.size(); i++) {
-        PredefinedIP* PDI = new PredefinedIP(PDIlist.at(i));
+    for (int i = 0; i < SourceIPlist.size(); i++) {
+        PredefinedIP* PDI = new PredefinedIP(SourceIPlist.at(i));
         DestinationConfiguration->addPredefinedIP(PDI);
     }
+
+    QMessageBox::information(nullptr,
+                             QString("%1 - Replacing").arg(APPLICATION_NAME),
+                             QString("The configuration of %1 has been successfully replaced the one of Network Interface %2")
+                                 .arg(ui->ListWidgetSource->selectedItems().at(0)->text(), ui->ListWidgetDestination->selectedItems().at(0)->text()));
+    refreshUI();
 }

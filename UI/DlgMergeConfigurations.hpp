@@ -25,6 +25,8 @@
 #include "Dialog.hpp"
 #include <QDialog>
 #include <QMetaType>
+#include <QNetworkInterface>
+#include <QPair>
 
 namespace Ui {
 class DlgMergeConfigurations;
@@ -38,6 +40,11 @@ class DlgMergeConfigurations;
  *                                                                                                                    * 
  **********************************************************************************************************************/
 
+typedef struct {
+    QNetworkInterface NetworkInterface;
+    Configuration*    Configuration;
+} DestData;
+
 class DlgMergeConfigurations
     : public QDialog
     , public Dialog
@@ -50,14 +57,17 @@ class DlgMergeConfigurations
 
   private:
     DlgMergeConfigurations();
+    void refreshUI();
     void updateButtons();
     void merge();
-    void overwrite();
+    void replace();
 
     Ui::DlgMergeConfigurations* ui;
 };
 
 Q_DECLARE_METATYPE(Configuration*)
+Q_DECLARE_METATYPE(DestData)
+
 #define CONFIGURATION_ROLE Qt::UserRole
 #define INTERFACE_ROLE     (Qt::UserRole + 1)
 

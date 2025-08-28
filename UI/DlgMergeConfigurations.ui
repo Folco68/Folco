@@ -107,12 +107,12 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="ButtonOverwrite">
+        <widget class="QPushButton" name="ButtonReplace">
          <property name="enabled">
           <bool>false</bool>
          </property>
          <property name="text">
-          <string>Overwrite</string>
+          <string>Replace</string>
          </property>
         </widget>
        </item>
