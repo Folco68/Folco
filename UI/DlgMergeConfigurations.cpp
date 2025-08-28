@@ -20,6 +20,7 @@
 
 #include "DlgMergeConfigurations.hpp"
 #include "../Global.hpp"
+#include "../Logger.hpp"
 #include "../Network/ConfigurationList.hpp"
 #include "../Network/PredefinedIP.hpp"
 #include "ui_DlgMergeConfigurations.h"
@@ -197,9 +198,12 @@ void DlgMergeConfigurations::merge()
         }
     }
 
+    // Logging and information
+    Logger::instance()->addLogEntry(QString("Merged Configurations: %1 > %2")
+                                        .arg(ui->ListWidgetSource->selectedItems().at(0)->text(), ui->ListWidgetDestination->selectedItems().at(0)->text()));
     QMessageBox::information(nullptr,
                              QString("%1 - Merging").arg(APPLICATION_NAME),
-                             QString("The configuration of %1 has been successfully merged with the Network Interface %2")
+                             QString("The configuration of %1 has been successfully merged with the Network Interface %2.")
                                  .arg(ui->ListWidgetSource->selectedItems().at(0)->text(), ui->ListWidgetDestination->selectedItems().at(0)->text()));
     refreshUI();
 }
@@ -219,9 +223,12 @@ void DlgMergeConfigurations::replace()
         DestinationConfiguration->addPredefinedIP(PDI);
     }
 
+    // Logging and information
+    Logger::instance()->addLogEntry(QString("Replaced Configuration: %1 > %2")
+                                        .arg(ui->ListWidgetSource->selectedItems().at(0)->text(), ui->ListWidgetDestination->selectedItems().at(0)->text()));
     QMessageBox::information(nullptr,
                              QString("%1 - Replacing").arg(APPLICATION_NAME),
-                             QString("The configuration of %1 has been successfully replaced the one of Network Interface %2")
+                             QString("The configuration of %1 has been successfully replaced the one of Network Interface %2.")
                                  .arg(ui->ListWidgetSource->selectedItems().at(0)->text(), ui->ListWidgetDestination->selectedItems().at(0)->text()));
     refreshUI();
 }
