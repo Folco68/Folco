@@ -62,5 +62,4 @@ void Logger::addLogEntry(QString entry)
 
     QString NewLine = QString("[%1] %2").arg(QTime::currentTime().toString("hh:mm:ss.zzz"), entry);
     this->Log.append(NewLine);
-    emit newLogEntry(NewLine);
 }

@@ -35,7 +35,7 @@ class IPvalidator: public QValidator
 {
   public:
     explicit IPvalidator(QObject* parent = nullptr);
-    QValidator::State validate(QString& input, int&) const override;
+    QValidator::State validate(QString& input, int&) const override; // Worker
 };
 
 #endif // IPVALIDATOR_HPP

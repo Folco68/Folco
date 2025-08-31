@@ -47,21 +47,22 @@ class DlgConfiguration
     Q_OBJECT
 
   public:
-    static void execDlgConfiguration(QNetworkInterface NetworkInterface);
-    static void execDlgConfiguration(Configuration* configuration);
+    static void execDlgConfiguration(QNetworkInterface NetworkInterface); // Edit a Configuration, starting from a Network Interface
+    static void execDlgConfiguration(Configuration* configuration);       // Edit a Configuration, starting from itself
     ~DlgConfiguration();
 
   private:
     explicit DlgConfiguration(QNetworkInterface NetworkInterface); // For Network Interfaces
-    explicit DlgConfiguration(Configuration* configuration); // Delegate constructor, or directly called for Configuration with disconnected Network Interfaces
-    void tableSelectionChanged();
-    void newPredefinedIP();
-    void editPredefinedIP();
-    void deletePredefinedIP();
-    void moveUp();
-    void moveDown();
-    void forgetConfiguration(Configuration* configuration);
+    explicit DlgConfiguration(Configuration* configuration);       // Delegate constructor
     void writeContent(Configuration* configuration);
+
+    void tableSelectionChanged();                           //Triggered every time the current item changes
+    void newPredefinedIP();                                 // Open the New Predefined IP dialog
+    void editPredefinedIP();                                // Open the Edit Predefined IP dialog
+    void deletePredefinedIP();                              // Delete the selected Predefined IP
+    void moveUp();                                          // Change the position of Predefined IP in the list
+    void moveDown();                                        //
+    void forgetConfiguration(Configuration* configuration); // Delete the whole Configuration of this Network Interface
 
     Ui::DlgConfiguration* ui;
 };

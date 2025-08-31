@@ -26,10 +26,10 @@
 #define APPLICATION_NAME        "Folco"
 #define APPLICATION_DESCRIPTION "Fast IP changer"
 
-#define FOLCO_FILENAME           "Folco.pdi"
-#define FOLCO_BACKUP_FILENAME    "Folco.bak"
-#define FOLCO_SIGNATURE          "FOLCO_BY_MARTIAL_DEMOLINS"
-#define DATA_VERSION             2
-#define HIGHER_SUPPORTED_VERSION 2
+#define FOLCO_FILENAME           "Folco.pdi"                 // Data file name
+#define FOLCO_BACKUP_FILENAME    "Folco.bak"                 // Backup file name
+#define FOLCO_SIGNATURE          "FOLCO_BY_MARTIAL_DEMOLINS" // Internal signature of data file
+#define DATA_VERSION             2                           // Internal data version
+#define HIGHER_SUPPORTED_VERSION 2                           // Max internal data version
 
 #endif // GLOBAL_HPP

@@ -55,19 +55,12 @@ void ConfigurationList::release()
     configurationlist = nullptr;
 }
 
-bool ConfigurationList::hasPredefinedIP(QString hwaddress) const
-{
-    Configuration* Configuration = configuration(hwaddress);
-    return (Configuration != nullptr) && (Configuration->predefinedIPcount() != 0);
-}
-
 Configuration* ConfigurationList::configuration(QString hwaddress) const
 {
     Configuration* Configuration = nullptr;
     for (int i = 0; i < this->List.size(); i++) {
-        class Configuration* TmpConfiguration = this->List.at(i);
-        if (TmpConfiguration->hardwareAddress() == hwaddress) {
-            Configuration = TmpConfiguration;
+        if (this->List.at(i)->hardwareAddress() == hwaddress) {
+            Configuration = this->List.at(i);
             break;
         }
     }

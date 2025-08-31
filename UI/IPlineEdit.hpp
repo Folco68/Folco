@@ -39,11 +39,11 @@ class IPlineEdit: public QLineEdit
 {
   public:
     IPlineEdit(QWidget* parent);
-    void dragEnterEvent(QDragEnterEvent* event) override;
-    void dropEvent(QDropEvent* event) override;
+    void dragEnterEvent(QDragEnterEvent* event) override; // Allow drap & drop operation into IPv4 fields
+    void dropEvent(QDropEvent* event) override;           //
 
   private:
-    bool isIPvalid(QString ip) const;
+    bool isIPvalid(QString ip) const; // Triggered while editing
 };
 
 #endif // IPLINEEDIT_HPP

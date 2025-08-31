@@ -37,27 +37,30 @@
 class Configuration
 {
   public:
-    Configuration(QString hwaddress, QString customname, QString name);
-    Configuration(QDataStream& stream, qint32 version);
+    Configuration(QString hwaddress, QString customname, QString name); // Create a Configuration on user request
+    Configuration(QDataStream& stream, qint32 version);                 // Create all saved Configurations at startup
     ~Configuration();
-    void                 addPredefinedIP(PredefinedIP* ip);
-    int                  predefinedIPcount() const;
-    bool                 hasPredefinedIP() const;
-    bool                 hasPredefinedIP(PredefinedIP* PDI) const;
-    QString              hardwareAddress() const;
-    QList<PredefinedIP*> predefinedIPlist() const;
-    void                 clearContent();
-    void                 save(QDataStream& stream);
-    QString              humanReadableName() const;          // Name given par the OS (Ethernet, Ethernet2, Ethernet3, VMWare Network Adapter, ...)
-    void                 setHumanReadableName(QString name); //
-    QString              customName() const;                 // More suitable name (Office Workstation, USB Adapter, ...)
-    void                 setCustomName(QString name);
+
+    void addPredefinedIP(PredefinedIP* ip); // Add one Predefined IP
+    void clearContent();                    // Delete all the Predefined IP and the custom name
+    void save(QDataStream& stream);         // Save the Configuration into a file
+    void setHumanReadableName(QString name);
+    void setCustomName(QString name);
+
+    int  predefinedIPcount() const;                // Return the Predefined IP count
+    bool hasPredefinedIP() const;                  // Return true if the Configuration holds at least one Predefined IP
+    bool hasPredefinedIP(PredefinedIP* PDI) const; // Return true if PDI is held by this Configuration
+
+    QString              hardwareAddress() const;   // Return the MAC address to which the Configuration is linked
+    QString              customName() const;        // User-defined name, more suitable (Office Workstation, USB Adapter, ...)
+    QString              humanReadableName() const; // Name given by the OS (Ethernet, Ethernet2, Ethernet3, VMWare Network Adapter, ...)
+    QList<PredefinedIP*> predefinedIPlist() const;  // Return the Predefined IP list
 
   private:
     QString              HardwareAddress;   // MAC address
     QString              CustomName;        // Not mandatory, not OS-related. The scope is this application, as a reminder
     QString              HumanReadableName; // This name can be changed by the user in the OS UI.
-                                            // It is only used to display the Configuration related PredefinedIP when its hardware device is disconnected
+                                            // It is used as a reminder when the Network Interface is disconnected
     QList<PredefinedIP*> PredefinedIPlist;
 };
 

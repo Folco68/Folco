@@ -49,7 +49,6 @@ DlgSettings::~DlgSettings()
 
 void DlgSettings::execDlgSettings()
 {
-
     DlgSettings* Dlg = new DlgSettings();
     if (Dlg->exec() == QDialog::Accepted) {
         Settings::instance()->setShowOnlyEthernetWifi(Dlg->ui->CheckShowOnlyEthernetWiFi->isChecked());

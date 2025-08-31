@@ -21,26 +21,31 @@
 #ifndef LOGGER_HPP
 #define LOGGER_HPP
 
-#include <QObject>
 #include <QString>
 
-class Logger: public QObject
+class Logger
 {
-    Q_OBJECT
+    //--------------------------------------------------------------------------
+    //                             Singleton stuff                             -
+    //--------------------------------------------------------------------------
 
   public:
     static Logger* instance();
     static void    release();
-    void           addLogEntry(QString entry);
-    QString        log() const;
-
-  signals:
-    void newLogEntry(QString entry);
 
   private:
     Logger();
     static Logger* logger;
 
+    //--------------------------------------------------------------------------
+    //                                 Logger                                  -
+    //--------------------------------------------------------------------------
+
+  public:
+    void           addLogEntry(QString entry);
+    QString        log() const;
+
+  private:
     QString Log;
     bool    FirstLogEntry;
 };

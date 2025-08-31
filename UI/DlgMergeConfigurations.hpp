@@ -32,6 +32,15 @@ namespace Ui {
 class DlgMergeConfigurations;
 }
 
+// This structure is made to be pointed to by the data() pointer of the ListWidgetDestination items.
+// For some reason, it was not possible to store a QPair pointer/reference in this field.
+// This structure is needed to retrieve the Configuration (if one exists) starting from a Network Interface
+// which linked with an item in the destination list.
+typedef struct {
+    QNetworkInterface NetworkInterface;
+    Configuration*    Configuration;
+} DestData;
+
 /********************************************************************************************************************** 
  *                                                                                                                    * 
  *                                               DlgMergeConfigurations                                               * 
@@ -39,11 +48,6 @@ class DlgMergeConfigurations;
  * This class allows to merge Configurations, in other words to give the configuration of an interface to another one * 
  *                                                                                                                    * 
  **********************************************************************************************************************/
-
-typedef struct {
-    QNetworkInterface NetworkInterface;
-    Configuration*    Configuration;
-} DestData;
 
 class DlgMergeConfigurations
     : public QDialog
@@ -56,17 +60,18 @@ class DlgMergeConfigurations
     ~DlgMergeConfigurations();
 
   private:
-    DlgMergeConfigurations();
-    void refreshUI();
-    void updateButtons();
-    void merge();
-    void replace();
+    DlgMergeConfigurations(); //
+    void refreshUI();         // Called by the constructor, and after the merge / replace operations
+    void updateButtons();     // Called according to the selections in the source and destination lists
+    void merge();             // Merge two configurations
+    void replace();           // Replace a Configuration with another one
 
     Ui::DlgMergeConfigurations* ui;
 };
 
+// Data type used in QVariant of the data field
 Q_DECLARE_METATYPE(Configuration*)
-Q_DECLARE_METATYPE(DestData)
+Q_DECLARE_METATYPE(DestData*)
 
 #define CONFIGURATION_ROLE Qt::UserRole
 #define INTERFACE_ROLE     (Qt::UserRole + 1)

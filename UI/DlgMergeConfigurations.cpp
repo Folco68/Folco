@@ -112,7 +112,7 @@ void DlgMergeConfigurations::refreshUI()
     for (int i = 0; i < InterfaceList.size(); i++) {
         QNetworkInterface Interface     = InterfaceList.at(i);
         Configuration*    Configuration = nullptr;
-        int               TooltipIndex  = -1; // Default: no configuration, so no Configuration-related tooltip
+        int               TooltipIndex  = -1; // Default: no Configuration, so no Configuration-related tooltip
 
         // Try to find a matching configuration
         for (int j = 0; j < ConfigurationList.size(); j++) {
@@ -184,13 +184,17 @@ void DlgMergeConfigurations::merge()
     Configuration*       Configuration    = Data.Configuration;
 
     if (Configuration == nullptr) {
+        // No Configuration was defined for this Network Interface. Create one and add it to the ConfigurationList
         Configuration = new class Configuration(NetworkInterface.hardwareAddress(), QString(""), NetworkInterface.humanReadableName());
         ConfigurationList::instance()->addConfiguration(Configuration);
+
+        // Copy all the PDI into the new Configuration
         for (int i = 0; i < SourceIPlist.size(); i++) {
             Configuration->addPredefinedIP(new PredefinedIP(SourceIPlist.at(i)));
         }
     }
     else {
+        // Add the source Configuration only if they don't exist yet in the destination
         for (int i = 0; i < SourceIPlist.size(); i++) {
             if (!Configuration->hasPredefinedIP(SourceIPlist.at(i))) {
                 Configuration->addPredefinedIP(new PredefinedIP(SourceIPlist.at(i)));

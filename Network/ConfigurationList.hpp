@@ -31,30 +31,38 @@
  *                                                                                                                    * 
  *                                                 ConfigurationList                                                  * 
  *                                                                                                                    * 
- *                This class contains a list of all the interfaces showed when opening the tray menu.                 * 
+ *                          This class holds and manage the list of all the Configurations                            * 
  *                                                                                                                    * 
  **********************************************************************************************************************/
 
 class ConfigurationList
 {
+    //--------------------------------------------------------------------------
+    //                             Singleton stuff                             -
+    //--------------------------------------------------------------------------
+
   public:
     static ConfigurationList* instance();
-    static void           release();
-
-    Configuration*        configuration(QString hwaddress) const;
-    bool                  hasPredefinedIP(QString hwaddress) const;
-    void                  addConfiguration(Configuration* configuration);
-    void                  deleteConfiguration(Configuration* configuration);
-    QList<Configuration*> configurationList() const;
+    static void               release();
 
   private:
-    // Singleton stuff
     static ConfigurationList* configurationlist;
     ConfigurationList();
     ~ConfigurationList();
 
-    void open();
-    bool save() const;
+    //--------------------------------------------------------------------------
+    //                            ConfigurationList                            -
+    //--------------------------------------------------------------------------
+
+  public:
+    Configuration*        configuration(QString hwaddress) const;            // Return a pointer to a Configuration or nullptr, starting from a MAC address
+    void                  addConfiguration(Configuration* configuration);    // Add a Configuration to the list
+    void                  deleteConfiguration(Configuration* configuration); // Delete a Configuration from the list
+    QList<Configuration*> configurationList() const;                         // Return the list itself
+
+  private:
+    void open();       // Open the data file on start-up
+    bool save() const; // Save the data file on exit
 
     QList<Configuration*> List;
 };

@@ -25,10 +25,24 @@
 
 class Settings: public QSettings
 {
+    //--------------------------------------------------------------------------
+    //                             Singleton stuff                             -
+    //--------------------------------------------------------------------------
+
   public:
     static Settings* instance();
     static void      release();
 
+  private:
+    static Settings* settings;
+    Settings();
+    ~Settings();
+
+    //--------------------------------------------------------------------------
+    //                                Settings                                 -
+    //--------------------------------------------------------------------------
+
+  public:
     bool showOnlyEthernetWifi() const;
     void setShowOnlyEthernetWifi(bool enabled);
 
@@ -39,9 +53,6 @@ class Settings: public QSettings
     void setShowOnlyPredefined(bool enabled);
 
   private:
-    static Settings* settings;
-    Settings();
-    ~Settings();
     void logSetting(QString name, bool enabled) const;
 };
 

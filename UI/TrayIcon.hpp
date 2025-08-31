@@ -37,9 +37,9 @@ class TrayIcon: public QSystemTrayIcon
   private:
     QMenu* ContextMenu;
 
-    void showContextMenu(QPoint position);
-    void configureInterfacePredefinedIP(QString name, PredefinedIP* ip);
-    void configureInterfaceDHCP(QString name);
+    void showContextMenu(QPoint position);                               // Triggered when the icon of the System Tray is clicked
+    void configureInterfacePredefinedIP(QString name, PredefinedIP* ip); // Set a IPv4 address to a Network Interface
+    void configureInterfaceDHCP(QString name);                           // Set a Network Interface to DHCP
 };
 
 #endif // TRAYICON_HPP

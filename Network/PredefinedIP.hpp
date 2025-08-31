@@ -29,24 +29,23 @@ class Configuration;
 class PredefinedIP
 {
   public:
-    PredefinedIP(QString Name, QString ip, QString mask, QString gateway);
-    PredefinedIP(QDataStream& stream);
-    PredefinedIP(PredefinedIP* PDI);
-    QString        name() const;
-    QString        ipAddress() const;
-    QString        networkMask() const;
-    QString        gateway() const;
-    bool           operator==(PredefinedIP ip) const;
-    void           save(QDataStream& stream);
-    bool           hasNetworkMask() const;
-    bool           hasGateway() const;
+    PredefinedIP(QString Name, QString ip, QString mask, QString gateway); // "Manual" creation of a PDI
+    PredefinedIP(QDataStream& stream);                                     // Used on startup, when reading data file
+    PredefinedIP(PredefinedIP* PDI);                                       // Used when merging 2 Configurations
+
+    bool operator==(PredefinedIP ip) const; // Deep comparison, used when merging 2 Configurations
+    void save(QDataStream& stream);         // Save in the data file. Called on exit
+
+    QString name() const;        //
+    QString ipAddress() const;   // Getters
+    QString networkMask() const; //
+    QString gateway() const;     //
 
   private:
-    // Keep a track of the Configuration which owns this settings, to find the Configuration to configure when this Predefined IP is selected in the tray icon context menu
-    QString        Name;
-    QString        IPaddress;
-    QString        NetworkMask;
-    QString        Gateway;
+    QString Name;        // User-defined name, to easily remember the purpose of the IP
+    QString IPaddress;   //
+    QString NetworkMask; // IPv4 stuff...
+    QString Gateway;     //
 };
 
 #endif // PREDEFINED_IP_HPP

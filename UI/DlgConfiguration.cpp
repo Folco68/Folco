@@ -35,7 +35,7 @@
 #include <QTableWidgetItem>
 #include <QWindow>
 
-// This dialog deals only with QString for editing a PredefinedIP, so that the Interface is not modified if the dialog is cancelled
+// This dialog deals only with QString for editing a PredefinedIP, so that the Configuration is not modified if the dialog is cancelled
 
 DlgConfiguration::DlgConfiguration(QNetworkInterface NetworkInterface)
     : DlgConfiguration(ConfigurationList::instance()->configuration(NetworkInterface.hardwareAddress()))

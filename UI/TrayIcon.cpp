@@ -22,7 +22,7 @@ TrayIcon::TrayIcon()
     Logger::instance()->addLogEntry("Folco started...");
     setToolTip(APPLICATION_NAME " - " APPLICATION_DESCRIPTION);
 
-    // The menu is created dynamically every time it is triggerred, to refresh the interface list
+    // The menu is created dynamically every time it is triggered, to refresh the interface list
     connect(this,
             &QSystemTrayIcon::activated,             // Show the context menu regardless of the trigger (default: only the right click displays the menu)
             this,                                    //
@@ -78,16 +78,10 @@ void TrayIcon::showContextMenu(QPoint position)
 
     for (int i = 0; i < NetworkInterfaceList.size(); i++) {
         QNetworkInterface NetworkInterface = NetworkInterfaceList.at(i);
-        Configuration*    Configuration    = nullptr;
-        for (int j = 0; j < ConfigurationList.size(); j++) {
-            if (NetworkInterface.hardwareAddress() == ConfigurationList.at(j)->hardwareAddress()) {
-                Configuration = ConfigurationList.takeAt(j--);
-
-                // The name of a Network Interface can change at the OS level.
-                // Refresh it every time the menu is triggerred
-                Configuration->setHumanReadableName(NetworkInterface.humanReadableName());
-                break;
-            }
+        Configuration*    Configuration    = ConfigurationList::instance()->configuration(NetworkInterface.hardwareAddress());
+        if (Configuration != nullptr) {
+            ConfigurationList.removeOne(Configuration);                                // We have a match so remove the Configuration from the list
+            Configuration->setHumanReadableName(NetworkInterface.humanReadableName()); // The name of a Network Interface can change at the OS level. Refresh it
         }
 
         // Apply user settings

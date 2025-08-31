@@ -218,3 +218,16 @@ Initial commit
 - Removed useless Configuration::removePredefinedIP()
 - Fixed a memory leak when validating DlgConfiguration::execDlgConfiguration()
 - Reworked DlgConfiguration, using a delegate constructor to avoid code duplication
+
+2025/08/27
+- Started implementation of DlgMergeConfigurations
+- Implemented DlgMergeConfigurations::overwrite()
+- Tweaked ConfigurationList::hasPredefinedIP() to prepare global revamping using this function
+- Added the constructor PredefinedIP(PredefinedIP* PDI)
+
+2025/08/28
+- Added bool Configuration::hasPredefinedIP(PredefinedIP*)
+- Use fixed size font in log window
+- Finished Merge / Replace functionnality
+- Added some logging on main menu generation
+- Added log when merging/replacing

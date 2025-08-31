@@ -21,6 +21,10 @@
 #include "Configuration.hpp"
 #include <QByteArray>
 
+//  Configuration()
+//
+// Used when the user creates a Configuration for a Network Interface
+//
 Configuration::Configuration(QString hwaddress, QString customname, QString name)
     : HardwareAddress(hwaddress)
     , CustomName(customname)
@@ -28,6 +32,11 @@ Configuration::Configuration(QString hwaddress, QString customname, QString name
 {
 }
 
+//  Configuration
+//
+// Used when opening the data file.
+// Openings according to version number are clearly separated to facilitate the maintenance
+//
 Configuration::Configuration(QDataStream& stream, qint32 version)
 {
     if (version == 1) {
@@ -96,7 +105,7 @@ bool Configuration::hasPredefinedIP(PredefinedIP* PDI) const
 {
     bool RetVal = false;
     for (int i = 0; i < this->PredefinedIPlist.size(); i++) {
-        if (*this->PredefinedIPlist.at(i) == *PDI) {
+        if (*this->PredefinedIPlist.at(i) == *PDI) { // == is defined by PredefinedIP class
             RetVal = true;
             break;
         }
