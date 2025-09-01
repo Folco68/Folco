@@ -47,5 +47,5 @@ o one technical dialog for Settings/Merge/Log
 + offer to merge connections, usefull when migrating a PC or changing an adapter
 - make a real ReadMe, with pictures
 + replace all "manual" search of Configuration with ConfigurationList::configuration() and ConfigurationList::hasPredefinedIP()
-- comment code
-- review code for Interface/Cnofiguration confusion (for example, see DlgConfiguration::forgetConfiguration)
++ comment code
+- review code for Interface/Configuration confusion (for example, see DlgConfiguration::forgetConfiguration)

@@ -64,12 +64,15 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         Network/PredefinedIP.cpp
 
         # Resources
-        Resources/Icons.qrc
-        Resources/Icons.rc
-        Resources/IconBase.png
-        Resources/IconBase.ico
-#        Resources/Folco.exe.manifest
-#        Resources/Folco.rc
+        Resources/Icon/Icons.qrc
+        Resources/Icon/Icons.rc
+        Resources/Icon/IconBase.png
+        Resources/Icon/IconBase.ico
+
+        Resources/HowTo/HowTo.qrc
+        Resources/HowTo/RunAsAdministrator.png
+        Resources/HowTo/MainMenu.png
+        REsources/HowTo/IPsetting.png
 
         #Docs
         Docs/Docs.qrc

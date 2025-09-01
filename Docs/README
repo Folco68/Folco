@@ -3,7 +3,7 @@
      *                                                                         *
      *                                  Folco                                  *
      *                                                                         *
-     **************************************************************************/
+     ***************************************************************************/
 
 
 About
@@ -28,3 +28,13 @@ Purpose
 This program is intended to change easily the IPv4 address of any ethernet interface.
 To launch it, right click its icon and click "Run as administrator".
 The program lives as an icon in the system tray.
+
+
+Thanks
+------
+
+David Adolphe and Robert Korsstrom for testing.
+Huge thanks, because improving a software is all about user feedback.
+
+Don't hesitate to write to ask features, improvements, bug fixes or anything else.
+Thanks in advance!

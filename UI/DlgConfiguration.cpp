@@ -66,7 +66,7 @@ DlgConfiguration::DlgConfiguration(Configuration* configuration)
     if (configuration != nullptr) {
         ui->ButtonForgetConfiguration->setVisible(true);
 
-        // Name and HWaddress are already displayed if this Configuration is attached to a Newtork Interface
+        // Name and HW address are already displayed if this Configuration is attached to a Newtork Interface
         // Not a big deal though, it's harmless
         ui->EditName->setText(configuration->humanReadableName());
         ui->EditCustomName->setText(configuration->customName());
@@ -182,7 +182,8 @@ void DlgConfiguration::execDlgConfiguration(Configuration* configuration)
 
 void DlgConfiguration::writeContent(Configuration* configuration)
 {
-    Logger::instance()->addLogEntry(QString("Setting Predefined IP for Interface %1 (%2)").arg(configuration->hardwareAddress(), ui->EditCustomName->text()));
+    Logger::instance()->addLogEntry(
+        QString("Setting Predefined IP for Configuration %1 (%2)").arg(configuration->humanReadableName(), ui->EditCustomName->text()));
 
     // Write Configuration custom name
     configuration->setCustomName(ui->EditCustomName->text());
@@ -289,10 +290,10 @@ void DlgConfiguration::moveDown()
 void DlgConfiguration::forgetConfiguration(Configuration* configuration)
 {
     if (QMessageBox::question(
-            this, QString("%1 - Forget interface").arg(APPLICATION_NAME), "Are you sure that you want to forget the settings of this interface?")
+            this, QString("%1 - Forget Configuration").arg(APPLICATION_NAME), "Are you sure that you want to forget the configuration of this interface?")
         == QMessageBox::Yes) {
         reject();
-        Logger::instance()->addLogEntry(QString("Forgetting interface %1").arg(configuration->humanReadableName()));
+        Logger::instance()->addLogEntry(QString("Forgetting Configuration %1").arg(configuration->humanReadableName()));
         ConfigurationList::instance()->deleteConfiguration(configuration);
     }
 }

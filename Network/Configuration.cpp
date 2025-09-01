@@ -105,7 +105,7 @@ bool Configuration::hasPredefinedIP(PredefinedIP* PDI) const
 {
     bool RetVal = false;
     for (int i = 0; i < this->PredefinedIPlist.size(); i++) {
-        if (*this->PredefinedIPlist.at(i) == *PDI) { // == is defined by PredefinedIP class
+        if (*this->PredefinedIPlist.at(i) == *PDI) { // operator== is defined by PredefinedIP class
             RetVal = true;
             break;
         }

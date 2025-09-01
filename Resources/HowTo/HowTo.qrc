@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/HowTo">
+        <file>RunAsAdministrator.png</file>
+        <file>MainMenu.png</file>
+        <file>IPsetting.png</file>
+    </qresource>
+</RCC>
