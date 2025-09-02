@@ -69,10 +69,16 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         Resources/Icon/IconBase.png
         Resources/Icon/IconBase.ico
 
+        Resources/HowTo/BooGray4.png
+        Resources/HowTo/Configuration.png
+        Resources/HowTo/DHCPsetting.png
+        Resources/HowTo/DisconnectedInterface.png
+        Resources/HowTo/EditIP.png
         Resources/HowTo/HowTo.qrc
-        Resources/HowTo/RunAsAdministrator.png
+        Resources/HowTo/IPsetting.png
         Resources/HowTo/MainMenu.png
-        REsources/HowTo/IPsetting.png
+        Resources/HowTo/MergeConfigurations.png
+        Resources/HowTo/RunAsAdministrator.png
 
         #Docs
         Docs/Docs.qrc

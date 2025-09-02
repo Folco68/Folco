@@ -1,7 +1,13 @@
 <RCC>
     <qresource prefix="/HowTo">
         <file>RunAsAdministrator.png</file>
-        <file>MainMenu.png</file>
+        <file>DHCPsetting.png</file>
         <file>IPsetting.png</file>
+        <file>MainMenu.png</file>
+        <file>BooGray4.png</file>
+        <file>Configuration.png</file>
+        <file>EditIP.png</file>
+        <file>DisconnectedInterface.png</file>
+        <file>MergeConfigurations.png</file>
     </qresource>
 </RCC>
