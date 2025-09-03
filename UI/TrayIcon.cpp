@@ -119,9 +119,9 @@ void TrayIcon::showContextMenu(QPoint position)
             Configuration*    Configuration    = GlobalList.at(i).second;
 
             // Network Interface name
-            QString TitleNetworkInterface(GlobalList.at(i).first.humanReadableName());
-            if (GlobalList.at(i).second != nullptr) {
-                QString CustomName = GlobalList.at(i).second->customName();
+            QString TitleNetworkInterface(NetworkInterface.humanReadableName());
+            if (Configuration != nullptr) {
+                QString CustomName = Configuration->customName();
                 if (!CustomName.isEmpty()) {
                     TitleNetworkInterface.append(QString(" - %1").arg(CustomName));
                 }
@@ -162,7 +162,7 @@ void TrayIcon::showContextMenu(QPoint position)
             // Add DHCP configuration
             QAction* ActionDHCP = new QAction("DHCP", this->ContextMenu);
             Submenu->addAction(ActionDHCP);
-            connect(ActionDHCP, &QAction::triggered, this, [this, Configuration]() { configureInterfaceDHCP(Configuration->humanReadableName()); });
+            connect(ActionDHCP, &QAction::triggered, this, [this, NetworkInterface]() { configureInterfaceDHCP(NetworkInterface.humanReadableName()); });
 
             // Add Network Interface edition
             Submenu->addSeparator();
