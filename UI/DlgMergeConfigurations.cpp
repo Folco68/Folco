@@ -153,19 +153,20 @@ void DlgMergeConfigurations::updateButtons()
 {
     QList<QListWidgetItem*> SourceSelection      = ui->ListWidgetSource->selectedItems();
     QList<QListWidgetItem*> DestinationSelection = ui->ListWidgetDestination->selectedItems();
-    bool                    MergeEnabled         = true; // Default : both buttons enabled
-    bool                    OverwriteEnabled     = true;
+    bool                    MergeEnabled         = false; // Default : both buttons disabled
+    bool                    OverwriteEnabled     = false;
 
     // We need selections in both lists to perform an action
-    if (SourceSelection.isEmpty() || DestinationSelection.isEmpty()) {
+    if (!SourceSelection.isEmpty() && !DestinationSelection.isEmpty()) {
+
+        /*        || (SourceSelection.at(0)->data(CONFIGURATION_ROLE).value<class Configuration*>() != DestinationSelection.at(0)->data(INTERFACE_ROLE).value<DestData*>()->Configuration)) {
         MergeEnabled     = false;
         OverwriteEnabled = false;
     }
-
-    // Else
-    // - Merge is always enabled
-    // - Overwrite is only if the destination already holds a Configuration. Let's check the data embedded in the item
-    else {
+*/
+        // Else
+        // - Merge is always enabled
+        // - Overwrite is only if the destination already holds a Configuration. Let's check the data embedded in the item
         QListWidgetItem* Item          = DestinationSelection.at(0);
         Configuration*   Configuration = Item->data(INTERFACE_ROLE).value<class Configuration*>();
         OverwriteEnabled               = Configuration != nullptr;
