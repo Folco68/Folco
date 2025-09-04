@@ -1,3 +1,12 @@
+commit be47d6481cd19834510568f17955007b5a0a432c
+Author: Martial Demolins <martial.demolins@gmail.com>
+Date:   Thu Sep 4 09:41:08 2025 +0200
+
+    - Use auto-generated git changelog
+    - Bumped version to 1.0.0
+    
+    Signed-off-by: Martial Demolins <martial.demolins@gmail.com>
+
 commit 5853de12afda02db4e534abe711632775bc5e034
 Author: Martial Demolins <martial.demolins@gmail.com>
 Date:   Thu Sep 4 08:52:09 2025 +0200
