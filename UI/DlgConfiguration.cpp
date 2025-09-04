@@ -93,18 +93,21 @@ DlgConfiguration::DlgConfiguration(Configuration* configuration)
     }
 
     // Dialog connections
-    connect(ui->ButtonOK, &QPushButton::clicked, this, [this]() { accept(); });
+    connect(ui->ButtonSave, &QPushButton::clicked, this, [this]() { accept(); });
     connect(ui->ButtonCancel, &QPushButton::clicked, this, [this]() { reject(); });
     connect(ui->ButtonForgetConfiguration, &QPushButton::clicked, this, [this, configuration]() { forgetConfiguration(configuration); });
 
     // Table connections
     connect(ui->ButtoNewIP, &QPushButton::clicked, this, [this]() { newPredefinedIP(); });
-    connect(ui->TablePredefinedIP, &QTableWidget::itemSelectionChanged, this, [this]() { tableSelectionChanged(); });
+    connect(ui->TablePredefinedIP, &QTableWidget::itemSelectionChanged, this, [this]() { updateButtons(); });
     connect(ui->TablePredefinedIP, &QTableWidget::doubleClicked, this, [this]() { editPredefinedIP(); });
     connect(ui->ButtonEditIP, &QPushButton::clicked, this, [this]() { editPredefinedIP(); });
     connect(ui->ButtonDeleteIP, &QPushButton::clicked, this, [this]() { deletePredefinedIP(); });
     connect(ui->ButtonUp, &QPushButton::clicked, this, [this]() { moveUp(); });
     connect(ui->ButtonDown, &QPushButton::clicked, this, [this]() { moveDown(); });
+
+    // Finally, update buttons by
+    updateButtons();
 }
 
 DlgConfiguration::~DlgConfiguration()
@@ -112,7 +115,7 @@ DlgConfiguration::~DlgConfiguration()
     delete ui;
 }
 
-void DlgConfiguration::tableSelectionChanged()
+void DlgConfiguration::updateButtons()
 {
     QList<QTableWidgetItem*> SelectedItems = ui->TablePredefinedIP->selectedItems();
 
@@ -219,6 +222,9 @@ void DlgConfiguration::newPredefinedIP()
         ui->TablePredefinedIP->setItem(Count, COLUMN_IP_ADDRESS, ItemIP);
         ui->TablePredefinedIP->setItem(Count, COLUMN_NETWORK_MASK, ItemNetworkMask);
         ui->TablePredefinedIP->setItem(Count, COLUMN_GATEWAY, ItemGateway);
+
+        // Update the buttons according to the selection, especially the Move up / Move Down buttons
+        updateButtons();
     }
 }
 
@@ -247,6 +253,7 @@ void DlgConfiguration::deletePredefinedIP()
     QList<QTableWidgetItem*> SelectedItems = ui->TablePredefinedIP->selectedItems();
     int                      Row           = ui->TablePredefinedIP->row(SelectedItems.at(0));
     ui->TablePredefinedIP->removeRow(Row);
+    updateButtons();
 }
 
 void DlgConfiguration::moveUp()

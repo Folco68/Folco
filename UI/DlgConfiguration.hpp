@@ -56,7 +56,7 @@ class DlgConfiguration
     explicit DlgConfiguration(Configuration* configuration);       // Delegate constructor
     void writeContent(Configuration* configuration);
 
-    void tableSelectionChanged();                           //Triggered every time the current item changes
+    void updateButtons();                           //Triggered every time the current item changes
     void newPredefinedIP();                                 // Open the New Predefined IP dialog
     void editPredefinedIP();                                // Open the Edit Predefined IP dialog
     void deletePredefinedIP();                              // Delete the selected Predefined IP

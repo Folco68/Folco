@@ -162,9 +162,6 @@
         </item>
         <item>
          <widget class="QPushButton" name="ButtonEditIP">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
           <property name="text">
            <string>EditIP</string>
           </property>
@@ -172,9 +169,6 @@
         </item>
         <item>
          <widget class="QPushButton" name="ButtonDeleteIP">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
           <property name="text">
            <string>Delete IP</string>
           </property>
@@ -195,9 +189,6 @@
         </item>
         <item>
          <widget class="QPushButton" name="ButtonUp">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
           <property name="text">
            <string>Move up</string>
           </property>
@@ -205,9 +196,6 @@
         </item>
         <item>
          <widget class="QPushButton" name="ButtonDown">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
           <property name="text">
            <string>Move down</string>
           </property>
@@ -222,9 +210,6 @@
     <layout class="QHBoxLayout" name="HLayoutButtons">
      <item>
       <widget class="QPushButton" name="ButtonForgetConfiguration">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
        <property name="text">
         <string>Forget interface configuration</string>
        </property>
@@ -244,19 +229,19 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="ButtonCancel">
+      <widget class="QPushButton" name="ButtonSave">
        <property name="text">
-        <string>Cancel</string>
+        <string>Save</string>
+       </property>
+       <property name="default">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="ButtonOK">
+      <widget class="QPushButton" name="ButtonCancel">
        <property name="text">
-        <string>OK</string>
-       </property>
-       <property name="default">
-        <bool>true</bool>
+        <string>Cancel</string>
        </property>
       </widget>
      </item>

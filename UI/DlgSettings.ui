@@ -51,19 +51,19 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="ButtonCancel">
-       <property name="text">
-        <string>Cancel</string>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QPushButton" name="ButtonOK">
        <property name="text">
         <string>OK</string>
        </property>
        <property name="default">
         <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="ButtonCancel">
+       <property name="text">
+        <string>Cancel</string>
        </property>
       </widget>
      </item>
@@ -75,7 +75,6 @@
   <tabstop>CheckShowOnlyEthernetWiFi</tabstop>
   <tabstop>CheckShowOnlyUp</tabstop>
   <tabstop>CheckShowOnlyPredefined</tabstop>
-  <tabstop>ButtonOK</tabstop>
   <tabstop>ButtonCancel</tabstop>
  </tabstops>
  <resources/>
