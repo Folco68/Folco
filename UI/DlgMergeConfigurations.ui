@@ -98,9 +98,6 @@
        </item>
        <item>
         <widget class="QPushButton" name="ButtonMerge">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
          <property name="text">
           <string>Merge</string>
          </property>
@@ -108,9 +105,6 @@
        </item>
        <item>
         <widget class="QPushButton" name="ButtonReplace">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
          <property name="text">
           <string>Replace</string>
          </property>

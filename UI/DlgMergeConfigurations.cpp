@@ -153,28 +153,24 @@ void DlgMergeConfigurations::updateButtons()
 {
     QList<QListWidgetItem*> SourceSelection      = ui->ListWidgetSource->selectedItems();
     QList<QListWidgetItem*> DestinationSelection = ui->ListWidgetDestination->selectedItems();
-    bool                    MergeEnabled         = false; // Default : both buttons disabled
-    bool                    OverwriteEnabled     = false;
+    bool                    MergeEnabled         = false; //
+    bool                    ReplaceEnabled       = false; // Default : both buttons disabled
 
     // We need selections in both lists to perform an action
     if (!SourceSelection.isEmpty() && !DestinationSelection.isEmpty()) {
+        Configuration* SourceConfiguration      = SourceSelection.at(0)->data(CONFIGURATION_ROLE).value<class Configuration*>();
+        Configuration* DestinationConfiguration = DestinationSelection.at(0)->data(INTERFACE_ROLE).value<DestData>().Configuration;
 
-        /*        || (SourceSelection.at(0)->data(CONFIGURATION_ROLE).value<class Configuration*>() != DestinationSelection.at(0)->data(INTERFACE_ROLE).value<DestData*>()->Configuration)) {
-        MergeEnabled     = false;
-        OverwriteEnabled = false;
-    }
-*/
-        // Else
-        // - Merge is always enabled
-        // - Overwrite is only if the destination already holds a Configuration. Let's check the data embedded in the item
-        QListWidgetItem* Item          = DestinationSelection.at(0);
-        Configuration*   Configuration = Item->data(INTERFACE_ROLE).value<class Configuration*>();
-        OverwriteEnabled               = Configuration != nullptr;
+        // Don't enable any button if the source and the destination Configurations are the same
+        if (SourceConfiguration != DestinationConfiguration) {
+            MergeEnabled   = true;                                // Else Merge is always enabled
+            ReplaceEnabled = DestinationConfiguration != nullptr; // While Replace is active only if a destination Configuration exists
+        }
     }
 
     // Update buttons
     ui->ButtonMerge->setEnabled(MergeEnabled);
-    ui->ButtonReplace->setEnabled(OverwriteEnabled);
+    ui->ButtonReplace->setEnabled(ReplaceEnabled);
 }
 
 void DlgMergeConfigurations::merge()
