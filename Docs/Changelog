@@ -1,233 +1,637 @@
-Folco changelog
+commit 5853de12afda02db4e534abe711632775bc5e034
+Author: Martial Demolins <martial.demolins@gmail.com>
+Date:   Thu Sep 4 08:52:09 2025 +0200
 
-2024/09/05
-Initial commit
+    - Inverted the position of OK / Cancel buttons
+    - DlgConfiguration: Re-labelled butotn OK to Save
+    - DlgConfiguration: update the buttons after some operations, to keep a consistent UI
+    
+    Signed-off-by: Martial Demolins <martial.demolins@gmail.com>
 
-2024/09/07
-- Initial commit
-- Tray icon active only with base menu
-- Started to write the Configure dialog
+commit 8de72197ba692bb1c1634a158d270a899aa4530c
+Author: Martial Demolins <martial.demolins@gmail.com>
+Date:   Thu Sep 4 08:36:54 2025 +0200
 
-2024/09/07
-- DlgConfig: configured ui->TableInterfaces
-- DlgConfig: removed the display of the interface internal type
-- DlgConfig: added IPv4 and up connections filters
-- DlgConfig: added window title
-- DlgConfig: added a splitter in the main view, allowing the complete display of the interfaces
+    - DlgMergeConfigurations: don't allow to merge two identical Configurations
+    - Don't rely anymore on UI designer to enable/disable buttons by default
+    
+    Signed-off-by: Martial Demolins <martial.demolins@gmail.com>
 
-2024/09/07
-- DlgConfig: remove the "Name" column, use only the human friendly name
-- ./Configuration/*: started to implement data loading/save
+commit dd71697ddec36d9301b4132247edcec66b99d9cf
+Author: Folco <martial.demolins@gmail.com>
+Date:   Wed Sep 3 22:10:54 2025 +0200
 
-2024/09/07
-- IFCfg: changed the storage format (use QVector<QString>)
-- IFCfg: write some access functions
-- DlgConfig: updated interfaces filters
-- DlgConfig: updated column index macros
-- DlgConfig: started to manage the Easy  Switch Table
+    - WIP
+    
+    Signed-off-by: Folco <martial.demolins@gmail.com>
 
-2024/09/07
-- Started to implement the Configuration edition dialog
-- Removed QVector, which is now an alias of QList
-- Added the handling of the Add/Edit/Remove Configuration buttons when the selection change in the Interface table
+commit 3176190d0395c8c64d6f245ae0404c81b9c0e26c
+Author: Folco <martial.demolins@gmail.com>
+Date:   Wed Sep 3 15:26:38 2025 +0200
 
-2024/09/08
-- Changed the name of the data files and the names of the class
-- Revamped the DlgConfig UI, dropped the QTableWidget for the interfaces: too many useless informations. Replaced by a QComboBox
+    - Disabled ButtonForgetConfiguration by default
+    - Fixed a crash when setting a Network Interface to DHCP if it was not configured
+    
+    Signed-off-by: Folco <martial.demolins@gmail.com>
 
-2024/09/09
-- UI: changed once again the design
-- Global settings (implemented with QSetting) will be used to show/hide some interfaces
-- Predefined IP will be set interface per interface, from the tray icon menu
+commit 23ee41add41f45e2c4c98eb4064510c192d5cf81
+Author: Martial Demolins <martial.demolins@gmail.com>
+Date:   Wed Sep 3 09:16:07 2025 +0200
 
-2024/09/14
-- Added a custom name to predefined IP
-- Improved predefined IP comparison
-- Made InterfaceList::hasConfiguration() more accurate: now answer yes if there is at least one predefined IP
-- Drafted the interface edition dialog
-- Added the Settings edition dialog
-- Dynamically display the interface in the context menu, according to the application settings
+    - Fixed a text in a picture
+    
+    Signed-off-by: Martial Demolins <martial.demolins@gmail.com>
 
-2024/09/16
-- Partially implemented the DlgEditInterface dialog
-- Implemented the DlgEditPredefinedIP dialog (validation is still rough, to be completed)
+commit 175f33514c88e00e7ee40cd60bf5c4ff6ac4574e
+Author: Martial Demolins <martial.demolins@gmail.com>
+Date:   Tue Sep 2 21:42:22 2025 +0200
 
-2024/09/17
-- Changed the default value for the Setting key DEFAULT_SHOW_ONLY_ETHERNET_WIFI to true, to remove Loopback interface by default
-- TrayIcon: fixed the submenu showing only the first Predefined IP
-- TrayIcon: added the name of the Predefined IP if one exists
+    - Added documentation with pictures
+    
+    Signed-off-by: Martial Demolins <martial.demolins@gmail.com>
 
-2024/09/21
-- performed tests with netsh, skelton of calls written
-- renamed the Dialog files and classes by removing the "Edit" word
-- removed useless methods of PredefinedIP class
+commit 75a24485b1ec87776ffeed7215fb1923203a73d9
+Author: Martial Demolins <martial.demolins@gmail.com>
+Date:   Mon Sep 1 08:32:27 2025 +0200
 
-2024/09/21
-- finally found how to call netsh to set an ipv4 interface to DHCP
-- updated the call to set the IP by replacing hw address with interface name because:
-1. netsh needs a name
-2. if I use another backend to replace netsh, there is a static method to recover easily the QNetworkInterface starting from the name
+    - Modify a bit the Resources folder layout, to add HowTo resources
+    - Completed wtritten documentation and started to add pictures
+    
+    Signed-off-by: Martial Demolins <martial.demolins@gmail.com>
 
-2024/10/04
-- added data opening and saving
-- revamped DlgPredefinedIP UI by using QSpinBox instead of QLineEdit + InputMask
-- added netsh call, first test show that it looks to work
+commit aba06a68a11f8548d72dd91061e8ac2b5f7c3aad
+Author: Martial Demolins <martial.demolins@gmail.com>
+Date:   Sun Aug 31 17:35:00 2025 +0200
 
-2024/10/04
-- set the buddy IPspinBox in DlgPredefinedIP
-- allow the dot char to navigate between IP bytes
-- wrote IPspinBox which inherits QSpinBox to extend some functionnalities
+    - Added many comments in the headers
+    - Removed the QObject inheritance of Logger. Useless since no more than 1 dialog can be opened at once
+    - PredefinedIP: removed useless methods
+    
+    Signed-off-by: Martial Demolins <martial.demolins@gmail.com>
 
-2024/10/05
-- properly delete InterfaceList/Interface/PredefinedIP
-- DlgInterface: edit a PredefinedIP by doubleclicking it
-- always show the context menu close to the tray icon, even in case of file opening error
+commit c15786bc3f20aa1a1d18c8471c63eae401268a7c
+Author: Martial Demolins <martial.demolins@gmail.com>
+Date:   Thu Aug 28 09:03:29 2025 +0200
 
-2024/10/07
-- try to select the content of a IPspinBox when activated by a mouse event
-- delete all the IPv4 of an interface when setting one to DHCP
-- DlgInterface: display the last IPv4 address available
+    - Added log when merging/replacing
+    
+    Signed-off-by: Martial Demolins <martial.demolins@gmail.com>
 
-2024/10/12
-- DlgInterface: added moveUp/moveDown() methods
-- added AddTop/AddBottom boolean in tableSelectionChanged()
+commit 53e9c5bf0bac5c4a97c00836b63fc6dfa0dbdb3b
+Author: Martial Demolins <martial.demolins@gmail.com>
+Date:   Thu Aug 28 08:35:51 2025 +0200
 
-2024/10/12
-- added datafile backup
+    - Added bool Configuration::hasPredefinedIP(PredefinedIP*)
+    - Use fixed size font in log window
+    - Finished Merge / Replace functionnality
+    - Added some logging on main menu generation
+    
+    Signed-off-by: Martial Demolins <martial.demolins@gmail.com>
 
-2024/10/13
-- secure DlgPredefinedIP(QWidget* parent) with default args set at nullptr to avoid random pointer dereferencing
-- display a message in case of failure of saving InterfaceList file
+commit 7c5d07925841ab8b344f5b5174c93f3de0acf4de
+Author: Martial Demolins <martial.demolins@gmail.com>
+Date:   Wed Aug 27 21:11:12 2025 +0200
 
-2024/10/13
-- started to implement drag&drop + pasting IP functionnality
-- still fail at using netsh as a backend...
+    - Implemented DlgMergeConfigurations::overwrite()
+    - Tweaked ConfigurationList::hasPredefinedIP() to prepare global revamping using this function
+    - Added the constructor PredefinedIP(PredefinedIP* PDI)
+    
+    Signed-off-by: Martial Demolins <martial.demolins@gmail.com>
 
-2024/11/02
-- Don't use anymore QSpinBox to enter IP (it's a mess to intercept events)
-- Instead use a QLineEdit + custom validator based on QValidator
+commit 808f81d306fe64eeab8d996bad572a314a74f581
+Author: Martial Demolins <martial.demolins@gmail.com>
+Date:   Wed Aug 27 07:31:39 2025 +0200
 
-2024/11/03
-- Don't delete manually custom validator (thanks to Qt parentality)
-- Make IPvalidator::validate more elegant
+    - Started implementation of DlgMergeConfigurations
 
-2024/11/04
-- Created the DlgAbout class & UI
-- Created the Logger class
-- GPLed the code
+commit 770c7a327a87a70c7434c711af0de17168ae63bf
+Author: Martial Demolins <martial.demolins@gmail.com>
+Date:   Mon Aug 25 07:19:04 2025 +0200
 
-2024/11/18
-- Added "BeforeRelease.hpp" to update some strings and vars every release
-- Put all the doc files in a separate directory
-- Added a logger which can be accessed in the WindowInfos Dialog
-- Made the Settings Dialog unique
-- Settings log current settings on validation
+    - Removed useless Configuration::removePredefinedIP()
+    - Fixed a memory leak when validating DlgConfiguration::execDlgConfiguration()
+    - Reworked DlgConfiguration, using a delegate constructor to avoid code duplication
+    
+    Signed-off-by: Martial Demolins <martial.demolins@gmail.com>
 
-2024/11/21
-- Moved Docs.qrc to the Docs folder
-- Set a program icon (.exe)
-- Set a program icon (windows)
-- Set a name for every window
-- Add some logs
-- Cleaned the final comment in IPvalidator.cpp
+commit 1fbe360b1312660a3951d257532775e51e67aa2f
+Author: Martial Demolins <martial.demolins@gmail.com>
+Date:   Mon Aug 25 04:59:37 2025 +0200
 
-2024/12/04
-- Added the human readable name in the Interface class
-- Added the ability to see and configure Interfaces of disconnected devices
+    - Update Configuration::HumanReadableName every time the Tray Icon menu pops up, because the name can change at the OS level
+    
+    Signed-off-by: Martial Demolins <martial.demolins@gmail.com>
 
-2024/12/05
-- Implemented InterfaceList::deleteInterface()
-- An interface can be now deleted from the DlgInterface dialog
-- Defined version to 0.9.0 (unrelated to a Git tag though)
+commit 257ce7c87e5c191a3f2fe6d861bc902a20f65f90
+Author: Martial Demolins <martial.demolins@gmail.com>
+Date:   Sun Aug 24 20:24:46 2025 +0200
 
-2024/12/05
-- Removed the "Delete Interface" button in the DlgInterface dialog if there is no configured interface
+    - Added comment in DlgPredefinedIP.cpp
+    
+    Signed-off-by: Martial Demolins <martial.demolins@gmail.com>
 
-2024/12/05
-- Removed color of the "Delete Interface Configuration" button
-- Fixed the "Delete Interface Configuration" QMessageBox not checking correctly the dialog result
-- Added a log in the PredefinedIP Dialog
+commit d47ad38226b2122e09023412645222276f305568
+Author: Martial Demolins <martial.demolins@gmail.com>
+Date:   Sun Aug 24 19:27:47 2025 +0200
 
-2025/03/06
-- Added logging when changing an interface configuration
+    - Fixed unmerged changes in DlgPredefinedIP.cpp
+    
+    Signed-off-by: Martial Demolins <martial.demolins@gmail.com>
 
-2025/03/17
-- Simplified the "Interface filtered" log message
+commit 2d7f7d34ebf30541d86a43034c7b0a483387f3ec
+Merge: bbae1d4 26c453e
+Author: Martial Demolins <martial.demolins@gmail.com>
+Date:   Sun Aug 24 19:24:08 2025 +0200
 
-2025/03/23
-- Renamed some vars
-- Removed tab Help in WindowInfo dialog
+    Merge branch 'New-menu-generation'
+    
+    # Conflicts:
+    #       UI/DlgPredefinedIP.cpp
+    
+    Merged several revampings, especially TrayIcon.cpp
+    
+    Signed-off-by: Martial Demolins <martial.demolins@gmail.com>
 
-2025/03/25
-- Attempted a configuration to prompt for admin rights at startup. Failed ATM
-- Removed the Settings item in the main menu
-- Removed the log tab in the Informations dialog
-- Added a Tools item which contains Settings, Log, and a new Merge Connections tool, useful when migrating to another computer
+commit bbae1d4fc8e2999129e86e384233190d0655b326
+Author: Martial Demolins <martial.demolins@gmail.com>
+Date:   Sun Aug 24 19:20:42 2025 +0200
 
-2025/04/14
-- Fixed a crash when attempting to delete the last PDI of an interface
-- Used QDialog instead of QWindows in all cases
+    - Git test
+    
+    Signed-off-by: Martial Demolins <martial.demolins@gmail.com>
 
-2025/08/04
-- Updated GPL notices (I don't remember why)
-- Replace "Delete interface" with "Forget interface"
-- Don't allow to re-open the menu if a dialog is opened (class Dialog)
+commit 26c453e02ebebde3fdc36c88b0672b1972eb00c7
+Author: Martial Demolins <martial.demolins@gmail.com>
+Date:   Sun Aug 24 18:10:10 2025 +0200
 
-2025/08/08
-- Added a short description in classes headers
+    - Added a comment
+    
+    Signed-off-by: Martial Demolins <martial.demolins@gmail.com>
 
-2025/08/08
-- Using MoveUp/MoveDown in DlgInterface selects the moved interface after the operation
+commit 663cd66e5d59163869f1ae1e07f807403a16ca56
+Author: Martial Demolins <martial.demolins@gmail.com>
+Date:   Sun Aug 24 16:46:51 2025 +0200
 
-2025/08/10
-- Remove unnecessary setCurrentItem(), just use the correct plugin to get "almost" native look & feel
+    - Removed remaining chunks of old field PredefinedIP::parent
+    - Use keywodr class in TrayIcon.cpp to improve readability
+    - Revamped dialog DlgPredefinedIP, using a delegate constructor to avoid code duplication
+    
+    Signed-off-by: Martial Demolins <martial.demolins@gmail.com>
 
-2025/08/10
-- Added the ability to define a custom name for an interface
-- Bumped internal version of data file to 2
+commit b20e48d2c3aa68e347a333d39a3774bd3010230f
+Author: Martial Demolins <martial.demolins@gmail.com>
+Date:   Fri Aug 22 05:32:37 2025 +0200
 
-2025/08/12
-- Use a new clang-format configuration
+    - Renamed DlgMergeConnections to DlgMergeConfigurations (consistency)
+    - Removed log of system environment at boot
+    
+    Signed-off-by: Martial Demolins <martial.demolins@gmail.com>
 
-2025/08/21
-- Important revamping of name to improve consistency
-- Menu generation complete rewriting is on-going, should be easier to read and to maintain
-- Added "Disconnected interfaces" section generation
-- Renamed DlgInterface -> DlgConfiguration
-- Removed the Parent member of PredefinedIP (useless)
-- Don't log the deletion of a Configuration after its deletion... (null dereferencing...)
-- Merge DlgLog with About/Licence/Changelog
-- Fixed buggy filters showOnlyEthernetWifi and showOnlyPredefinedIP
-- Added Settings/About/Exit actions
+commit 20067a4b08a5fea873dcbb61db2876ab34801216
+Author: Martial Demolins <martial.demolins@gmail.com>
+Date:   Thu Aug 21 16:26:08 2025 +0200
 
-2025/08/22
-- Renamed DlgMergeConnections to DlgMergeConfigurations (consistency)
-- Removed log of system environment at boot
+    - Removed the Parent member of PredefinedIP (useless)
+    - Don't log the deletion of a Configuration after its deletion... (null dereferencing...)
+    - Merge DlgLog with About/Licence/Changelog
+    - Fixed buggy filters showOnlyEthernetWifi and showOnlyPredefinedIP
+    - Added Settings/About/Exit actions
+    
+    Signed-off-by: Martial Demolins <martial.demolins@gmail.com>
 
-2025/08/24
-- Removed remaining chunks of old field PredefinedIP::parent
-- Use keywodr class in TrayIcon.cpp to improve readability
-- Revamped dialog DlgPredefinedIP, using a delegate constructor to avoid code duplication
-- Added a comment
-- Merged several revampings, especially TrayIcon.cpp
-- Fixed unmerged changes in DlgPredefinedIP.cpp
-- Added comment in DlgPredefinedIP.cpp
+commit d995eaf2b4c4a8437d541ad4decabbd7c31d7810
+Author: Martial Demolins <martial.demolins@gmail.com>
+Date:   Thu Aug 21 16:24:56 2025 +0200
 
-2025/08/25
-- Update Configuration::HumanReadableName every time the Tray Icon menu pops up, because the name can change at the OS level
-- Removed useless Configuration::removePredefinedIP()
-- Fixed a memory leak when validating DlgConfiguration::execDlgConfiguration()
-- Reworked DlgConfiguration, using a delegate constructor to avoid code duplication
+    - Removed the Parent member of PredefinedIP (useless)
+    - Don't log the deletion of a Configuration after its deletion... (null dereferencing...)
+    - Merge DlgLog with About/Licence/Changelog
+    - Fixed buggy filters showOnlyEthernetWifi and showOnlyPredefinedIP
+    - Added Settings/About/Exit actions
+    
+    Signed-off-by: Martial Demolins <martial.demolins@gmail.com>
 
-2025/08/27
-- Started implementation of DlgMergeConfigurations
-- Implemented DlgMergeConfigurations::overwrite()
-- Tweaked ConfigurationList::hasPredefinedIP() to prepare global revamping using this function
-- Added the constructor PredefinedIP(PredefinedIP* PDI)
+commit 85c56fe1e5a6cef087dda21c5fb5e944bdd31d16
+Author: Martial Demolins <martial.demolins@gmail.com>
+Date:   Thu Aug 21 06:23:12 2025 +0200
 
-2025/08/28
-- Added bool Configuration::hasPredefinedIP(PredefinedIP*)
-- Use fixed size font in log window
-- Finished Merge / Replace functionnality
-- Added some logging on main menu generation
-- Added log when merging/replacing
+    - Added "Disconnected interfaces" section generation
+    - Renamed DlgInterface -> DlgConfiguration
+    
+    Signed-off-by: Martial Demolins <martial.demolins@gmail.com>
+
+commit ba9b60d53c52e28ab772c3999a5ec9ef0f752c1a
+Author: Martial Demolins <martial.demolins@gmail.com>
+Date:   Thu Aug 21 00:35:53 2025 +0200
+
+    - Important revamping of name to improve consistency
+    - Menu generation complete rewriting is on-going, should be easier to read and to maintain
+    
+    Signed-off-by: Martial Demolins <martial.demolins@gmail.com>
+
+commit 62f5d64181899f15929cdeebe1b2b44442dc8248
+Author: Martial Demolins <martial.demolins@gmail.com>
+Date:   Sun Aug 17 10:49:58 2025 +0200
+
+    - Removed some static members useless since the implementation of the class Dialog
+    
+    Signed-off-by: Martial Demolins <martial.demolins@gmail.com>
+
+commit d195fe35b2b6a59c1d0bde7fc9b7d0394fb1a678
+Author: Martial Demolins <martial.demolins@gmail.com>
+Date:   Thu Aug 14 19:18:53 2025 +0200
+
+    - Performed some administrative tasks
+    
+    Signed-off-by: Martial Demolins <martial.demolins@gmail.com>
+
+commit d6be529c527c5d7c901f11f1a1e0ef823866a988
+Author: Martial Demolins <martial.demolins@gmail.com>
+Date:   Tue Aug 12 13:37:19 2025 +0200
+
+    - use a new clang-format configuration
+    
+    Signed-off-by: Martial Demolins <martial.demolins@gmail.com>
+
+commit cbf1aaa8c65ea3db2903f4a3489b5ffc0212171c
+Author: Martial Demolins <martial.demolins@gmail.com>
+Date:   Sun Aug 10 17:36:51 2025 +0200
+
+    - added the ability to define a custom name for an interface
+    - bumped internal version of data file to 2
+    
+    Signed-off-by: Martial Demolins <martial.demolins@gmail.com>
+
+commit b86e4f96a76b9dbaa6c4f787565707a733150c66
+Author: Martial Demolins <martial.demolins@gmail.com>
+Date:   Sun Aug 10 09:11:40 2025 +0200
+
+    - remove unnecessary setCurrentImte(), just use the correct plugin to get "almost" native look & feel
+    
+    Signed-off-by: Martial Demolins <martial.demolins@gmail.com>
+
+commit cf411a646175df4fb38cac73ca4f81e52271fed5
+Author: Martial Demolins <martial.demolins@gmail.com>
+Date:   Fri Aug 8 22:20:58 2025 +0200
+
+    - Using MoveUp/MoveDown in DlgInterface selects the moved interface after the operation
+    
+    Signed-off-by: Martial Demolins <martial.demolins@gmail.com>
+
+commit f03c76d66fe912cdd297ea5fd3d4cbceb40f4d77
+Author: Martial Demolins <martial.demolins@gmail.com>
+Date:   Fri Aug 8 21:44:34 2025 +0200
+
+    Added a short description in classes headers
+    
+    Signed-off-by: Martial Demolins <martial.demolins@gmail.com>
+
+commit 0e71f5ff242bfff6d6df1025cd2f51eb2c65d018
+Author: Martial Demolins <martial.demolins@gmail.com>
+Date:   Mon Aug 4 09:12:32 2025 +0200
+
+    - updated GPL notices (I don't remember why)
+    - replace "Delete interface" with "Forget interface"
+    - don't allow to re-open the menu if a dialog is opened (class Dialog)
+    
+    Signed-off-by: Martial Demolins <martial.demolins@gmail.com>
+
+commit 7a6c89e4893b01e0b110dd997dc49439878c15dd
+Author: Martial Demolins <martial.demolins@gmail.com>
+Date:   Mon Apr 14 06:45:33 2025 +0200
+
+    - Fixed a crash when attempting to delete the last PDI of an interface
+    - Used QDialog instead of QWindows in all cases
+    
+    Signed-off-by: Martial Demolins <martial.demolins@gmail.com>
+
+commit 8e4e9a940b85355ad0ca25d4c914189beddff035
+Author: Martial Demolins <martial.demolins@gmail.com>
+Date:   Tue Mar 25 11:27:44 2025 +0100
+
+    - Attemtped a configuration to prompt for admin rights at startup. Failed ATM
+    - Removed the Settings item in the main menu
+    - Removed the log tab in the Informations dialog
+    - Added a Tools item which contains Settings, Log, and a new Merge Connections tool, useful when migrating to another computer
+    
+    Signed-off-by: Martial Demolins <martial.demolins@gmail.com>
+
+commit 703a13365bcaea57c40bc70f02f5a93577e1333f
+Author: Martial Demolins <martial.demolins@gmail.com>
+Date:   Sun Mar 23 08:58:23 2025 +0100
+
+    - Renamed some vars
+    - Removed tab Help in WindowInfo dialog
+    
+    Signed-off-by: Martial Demolins <martial.demolins@gmail.com>
+
+commit c2134bd635412f6473d9b8189c94df9bff6060be
+Author: Martial Demolins <martial.demolins@gmail.com>
+Date:   Mon Mar 17 03:59:18 2025 +0100
+
+    - Updated version to release binaries
+    
+    Signed-off-by: Martial Demolins <martial.demolins@gmail.com>
+
+commit ee14cbd08e587f68c10720ec15c585aae51592d3
+Author: Folco <martial.demolins@gmail.com>
+Date:   Sun Mar 16 21:38:52 2025 +0100
+
+    - simplified the "Interface filtered" log message
+    
+    Signed-off-by: Folco <martial.demolins@gmail.com>
+
+commit 2524012f7f03520744a8b273051300e78e4cd98f
+Author: Folco <martial.demolins@gmail.com>
+Date:   Thu Mar 6 14:43:11 2025 +0100
+
+    - Added logs when changing an interface configuration
+    
+    Signed-off-by: Folco <martial.demolins@gmail.com>
+
+commit 90b34a00129d3fea0f9058b9c9c9199aa87f133c
+Author: Folco <martial.demolins@gmail.com>
+Date:   Fri Dec 6 18:13:04 2024 +0100
+
+    - simplified the netsh command to set a static IP
+    - add .gitignore
+    
+    Signed-off-by: Folco <martial.demolins@gmail.com>
+
+commit ff725f055e558a5067d52b8ff3c70e3c3a3907e4
+Author: Folco <martial.demolins@gmail.com>
+Date:   Thu Dec 5 16:54:22 2024 +0100
+
+    - Removed color of the "Delete Interface Configuration" button
+    - Fixed the "Delete Interface Configuration" QMessageBox not checking correctly the dialog result
+    - Added a log in the PredefinedIP Dialog
+    
+    Signed-off-by: Folco <martial.demolins@gmail.com>
+
+commit 5cfb27e9bd81e289cfd4cb440d4078cab9637b3b
+Author: Folco <martial.demolins@gmail.com>
+Date:   Thu Dec 5 16:15:20 2024 +0100
+
+    - Removed the "Delete Interface" button in the DlgInterface dialog if there is no configured interface
+    
+    Signed-off-by: Folco <martial.demolins@gmail.com>
+
+commit ee9df1d16baa22074e49ef48bf807a02669c6676
+Author: Folco <martial.demolins@gmail.com>
+Date:   Thu Dec 5 08:02:21 2024 +0100
+
+    - Implemented InterfaceList::deleteInterface()
+    - An interface can be now deleted from the DlgInterface dialog
+    - Defined version to 0.9.0 (unrelated to a Git tag though)
+    
+    Signed-off-by: Folco <martial.demolins@gmail.com>
+
+commit a88ac8488279371a5ae01aa0a84cf9bed0eea23b
+Author: Folco <martial.demolins@gmail.com>
+Date:   Wed Dec 4 20:23:00 2024 +0100
+
+    - Added the human readable name in the Interface class
+    - Added the ability to see and configure Interfaces of disconnected devices
+    
+    Signed-off-by: Folco <martial.demolins@gmail.com>
+
+commit f273bc1090d2514f88b35e111011f10f32e9c8f0
+Author: Folco <martial.demolins@gmail.com>
+Date:   Thu Nov 21 16:22:59 2024 +0100
+
+    - Moved Docs.qrc to the Docs folder
+    - Set a program icon (.exe)
+    - Set a program icon (windows)
+    - Set a name for every window
+    - Add some logs
+    - Cleaned the final comment in IPvalidator.cpp
+    
+    Signed-off-by: Folco <martial.demolins@gmail.com>
+
+commit 6778583f0d29017a927ea817b4af0f2045e69cef
+Author: Folco <martial.demolins@gmail.com>
+Date:   Mon Nov 18 19:16:24 2024 +0100
+
+    - Added "BeforeRelease.hpp" to update some strings and vars every release
+    - Put all the doc files in a separate duirectory
+    - Added a logger which can be accessed in the WindowInfos Dialog
+    - Made the Settings Dialog unique
+    - Settings log current settings on validation
+    
+    Signed-off-by: Folco <martial.demolins@gmail.com>
+
+commit 3e8f4c2d7d478f5aed402eee4cec8e258a2653b8
+Author: Folco <martial.demolins@gmail.com>
+Date:   Mon Nov 4 06:26:16 2024 +0100
+
+    - Created the DlgAbout class & UI
+    - Created the Logger class
+    - GPLed the code
+    
+    Signed-off-by: Folco <martial.demolins@gmail.com>
+
+commit 9f0be00c521a018a2266fe13135463a802863446
+Author: Folco <martial.demolins@gmail.com>
+Date:   Sun Nov 3 08:45:04 2024 +0100
+
+    - Don't delete manually custom validator (thanks to Qt parentality)
+    - Make IPvalidator::validate more elegant
+    
+    Signed-off-by: Folco <martial.demolins@gmail.com>
+
+commit d446c42812c78e34882b9f6aabede59b2ff7a5de
+Author: Folco <martial.demolins@gmail.com>
+Date:   Sat Nov 2 17:59:36 2024 +0100
+
+    - Don't use anymore QSpinBox to enter IP (it's a mess to intercept events)
+    - Instead use a QLineEdit + custom validator based on QValidator
+    
+    Signed-off-by: Folco <martial.demolins@gmail.com>
+
+commit acc00eabe2336a6ab149ea49d6cc5863670508d8
+Author: Folco <martial.demolins@gmail.com>
+Date:   Sun Oct 13 22:39:16 2024 +0200
+
+    - started to implement drag&drop + pasting IP functionnality
+    - still fail at using netsh as a backend...
+    
+    Signed-off-by: Folco <martial.demolins@gmail.com>
+
+commit a1439d6cd7d660c2a0845b9339d5ae7381f6b79a
+Author: Folco <martial.demolins@gmail.com>
+Date:   Sun Oct 13 07:11:23 2024 +0200
+
+    - secure DlgPredefinedIP(QWidget* parent) with default args set at nullptr to avoid random pointer dereferencing
+    - display a message in case of failure of saving InterfaceList file
+    
+    Signed-off-by: Folco <martial.demolins@gmail.com>
+
+commit ca44bf2018dd97dbff62e6ca955ea2be430f356f
+Author: Folco <martial.demolins@gmail.com>
+Date:   Sat Oct 12 21:09:00 2024 +0200
+
+    - added datafile backup
+    
+    Signed-off-by: Folco <martial.demolins@gmail.com>
+
+commit 2f44f12ddc2899e12946d1161cb9046ebcee854c
+Author: Folco <martial.demolins@gmail.com>
+Date:   Sat Oct 12 20:49:33 2024 +0200
+
+    - DlgInterface: added moveUp/moveDown() methods
+    - added AddTop/AddBottom boolean in tableSelectionChanged()
+    
+    Signed-off-by: Folco <martial.demolins@gmail.com>
+
+commit e915564fd254cb3078cf008d11c51d772495b019
+Author: Folco <martial.demolins@gmail.com>
+Date:   Mon Oct 7 06:57:30 2024 +0200
+
+    - try to select the content of a IPspinBox when activated by a mouse event
+    - delete all the IPv4 of an interface when setting one to DHCP
+    - DlgInterface: display the last IPv4 address available
+    
+    Signed-off-by: Folco <martial.demolins@gmail.com>
+
+commit f9afc9af7e6977e5a3aeb816bec1d07311526a76
+Author: Folco <martial.demolins@gmail.com>
+Date:   Sat Oct 5 10:57:51 2024 +0200
+
+    - properly delete InterfaceList/Interface/PredefinedIP
+    - DlgInterface: edit a PredefinedIP by doubleclicking it
+    - always show the context menu close to the tray icon, even in case of file opening error
+    
+    Signed-off-by: Folco <martial.demolins@gmail.com>
+
+commit b854a5eb787d8863fa375879d58afebefa74cb50
+Author: Folco <martial.demolins@gmail.com>
+Date:   Fri Oct 4 22:47:18 2024 +0200
+
+    - set the buddy IPspinBox in DlgPredefinedIP
+    - allow the dot char to navigate between IP bytes
+    - wrote IPspinBox which inherits QSpinBox to extend some functionnalities
+    
+    Signed-off-by: Folco <martial.demolins@gmail.com>
+
+commit 2b46fdfcb43e0e5c6db5e10de3bcccd21b316631
+Author: Folco <martial.demolins@gmail.com>
+Date:   Fri Oct 4 21:17:09 2024 +0200
+
+    - added data opening and saving
+    - revamped DlgPredefinedIP UI by using QSpinBox instead of QLineEdit + InputMask
+    - added netsh call, first test show that it looks to work
+    
+    Signed-off-by: Folco <martial.demolins@gmail.com>
+
+commit 7573f6168752ce2fb77ab5dbd6ec71f2b80c5d17
+Author: Folco <martial.demolins@gmail.com>
+Date:   Sat Sep 21 13:02:24 2024 +0200
+
+    - finally found how to call netsh to set an ipv4 interface to DHCP
+    - updated the call to set the IP by replacing hw address with interface name because:
+    1. netsh needs a name
+    2. if I use another backend to replace netsh, there is a static method to recover easily the QNetworkInterface starting from the name
+
+commit 287c5d82665c229d1ef3642d44477dacce8af1cf
+Author: Folco <martial.demolins@gmail.com>
+Date:   Sat Sep 21 11:06:24 2024 +0200
+
+    - performed tests with netsh, skelton of calls written
+    - renamed the Dialog files and classes by removing the "Edit" word
+    - removed useless methods of PredefinedIP class
+
+commit ef2b591fd65a212457b1f1fc15bd44440e0ec6ea
+Author: Folco <martial.demolins@gmail.com>
+Date:   Tue Sep 17 10:30:29 2024 +0200
+
+    - Changed the default value for the Setting key DEFAULT_SHOW_ONLY_ETHERNET_WIFI to true, to remove Loopback interface by default
+    - TrayIcon: fixed the submenu showing only the first Predefined IP
+    - TrayIcon: added the name of the Predefined IP if one exists
+
+commit 6e30f508de57dce11aa90b1c36dd5311b81d65f6
+Author: Folco <martial.demolins@gmail.com>
+Date:   Mon Sep 16 20:01:07 2024 +0200
+
+    - Add DlgEditPredefinedIP files
+
+commit ed7c700316c0cb300f7c67beb01936893988c166
+Author: Folco <martial.demolins@gmail.com>
+Date:   Mon Sep 16 19:59:23 2024 +0200
+
+    - Partially implemented the DlgEditInterface dialog
+    - Implemented the DlgEditPredefinedIP dialog (validation is still rough, to be completed)
+
+commit a372edfae6f39bed340cb0eee4ccb533cf78bd66
+Author: Folco <martial.demolins@gmail.com>
+Date:   Sat Sep 14 18:54:24 2024 +0200
+
+    - Added a custom name to predefined IP
+    - Improved predefined IP comparison
+    - Made InterfaceList::hasConfiguration() more accurate: now answer yes if there is at least one predefined IP
+    - Drafted the interface edition dialog
+    - Added the Settings edition dialog
+    - Dynamically display the interface in the context menu, according to the application settings
+
+commit 7319ad22746b29ce6826f83dea5552c584562570
+Author: Folco <martial.demolins@gmail.com>
+Date:   Mon Sep 9 17:15:12 2024 +0200
+
+    - UI: changed once again the design
+    - Global settings (implemented with QSetting) will be used to show/hide some interfaces
+    - Predefined IP will be set interface per interface, from the tray icon menu
+
+commit 14cf709436cb8b435122dd9fedacfb17f0417785
+Author: Folco <martial.demolins@gmail.com>
+Date:   Sun Sep 8 17:45:04 2024 +0200
+
+    - Changed the name of the data files and the names of the class
+    - Revamped the DlgConfig UI, dropped the QTableWidget for the interfaces: too many useless informations. Replaced by a QComboBox
+
+commit 51ac9a3bcf48691cfaa253db87c19221c5bfc0ed
+Author: Folco <martial.demolins@gmail.com>
+Date:   Sat Sep 7 20:05:48 2024 +0200
+
+    - Started to implement the Configuration edition dialog
+    - Removed QVector, which is now an alias of QList
+    - Added the handling of the Add/Edit/Remove Configuration buttons when the selection change in the Interface table
+
+commit 5e64fd31ee55af68cdbb8197e7ad22d5fc4850f1
+Author: Folco <martial.demolins@gmail.com>
+Date:   Sat Sep 7 17:56:51 2024 +0200
+
+    - IFCfg: changed the storage format (use QVector<QString>)
+    - IFCfg: write some access functions
+    - DlgConfig: updated interfaces filters
+    - DlgConfig: updated column index macros
+    - DlgConfig: started to manage the Easy  Switch Table
+
+commit 32e16d5dcc8b2ecf1f01a1b49a9a40899843dbfd
+Author: Folco <martial.demolins@gmail.com>
+Date:   Sat Sep 7 15:20:41 2024 +0200
+
+    - DlgConfig: remove the "Name" column, use only the human friendly name
+    - ./Configuration/*: started to implement data loading/save
+
+commit 57004ae77f6e97ac06029e777eec456f68dd10ef
+Author: Folco <martial.demolins@gmail.com>
+Date:   Sat Sep 7 12:36:33 2024 +0200
+
+    - DlgConfig: configured ui->TableInterfaces
+    - DlgConfig: removed the display of the interface internal type
+    - DlgConfig: added IPv4 and up connections filters
+    - DlgConfig: added window title
+    - DlgConfig: added a splitter in the main view, allowing the complete display of the interfaces
+
+commit baff4cf087639f0dadd1f68982514862a098ec79
+Author: Folco <martial.demolins@gmail.com>
+Date:   Sat Sep 7 09:06:27 2024 +0200
+
+    - Initial commit
+    - Tray icon active only with base menu
+    - Started to write the Configure dialog
+
+commit fe468f9832e1c7ed6598002cf5d554e775be5a86
+Author: Folco <martial.demolins@gmail.com>
+Date:   Thu Sep 5 16:15:26 2024 +0200
+
+    Initial commit

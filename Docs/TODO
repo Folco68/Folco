@@ -49,5 +49,5 @@ o one technical dialog for Settings/Merge/Log
 + comment code
 + review code for Interface/Configuration confusion (for example, see DlgConfiguration::forgetConfiguration)
 + make a real ReadMe, with pictures
-- use a QTextBrowser to have clickable links for the Readme
-- prevent from merging a Configuration to an Interface which already holds that configuration
+o use a QTextBrowser to have clickable links for the Readme
++ prevent from merging a Configuration to an Interface which already holds that configuration
