@@ -285,5 +285,5 @@ void TrayIcon::configureInterfaceDHCP(QString name)
     QList<QString> ArgDNS;
     ArgDNS << QString("/c netsh interface ipv4 set dns \"%1\" dhcp").arg(name);
     QProcess::execute("cmd.exe", ArgDNS);
-    Logger::instance()->addLogEntry(tr("Enabling DHCP for the DNS servers: %1").arg(ArgAddress.at(0)));
+    Logger::instance()->addLogEntry(tr("Enabling DHCP for the DNS servers: %1").arg(ArgDNS.at(0)));
 }
