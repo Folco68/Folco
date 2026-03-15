@@ -1,3 +1,17 @@
+commit ed159763cbead534e8e9c8173adb53b08752861e
+Author: Martial Demolins <martial.demolins@gmail.com>
+Date:   Sun Mar 15 16:56:20 2026 +0100
+
+    Fix wrong log entry when configuring DNS for DHCP
+
+commit 9414a2bff0b70603143392feb98a45012551cda1
+Author: Martial Demolins <martial.demolins@gmail.com>
+Date:   Thu Sep 4 16:03:43 2025 +0200
+
+    no message
+    
+    Signed-off-by: Martial Demolins <martial.demolins@gmail.com>
+
 commit be47d6481cd19834510568f17955007b5a0a432c
 Author: Martial Demolins <martial.demolins@gmail.com>
 Date:   Thu Sep 4 09:41:08 2025 +0200
