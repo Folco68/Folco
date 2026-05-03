@@ -18,27 +18,41 @@
  *                                                                                      * 
  ****************************************************************************************/
 
+#include "Global.hpp"
 #include "UI/TrayIcon.hpp"
 #include <QApplication>
 #include <QGuiApplication>
+#include <QMessageBox>
+#include <QSharedMemory>
 
 int main(int argc, char* argv[])
 {
     // Create and set up the application
     QApplication Application(argc, argv);
-    Application.setWindowIcon(QIcon(":/Icons/IconBase.ico"));
+    int          RetVal = -1; // Default: already running
 
-    // We don't want the application to exit when a window is closed
-    Application.setQuitOnLastWindowClosed(false);
+    // Check that the application is not running yet. Use a 8 bytes buffer to read the return value of QSharedMemory::create()
+    QSharedMemory SharedMemory(APPLICATION_NAME " - " APPLICATION_DESCRIPTION);
+    if (SharedMemory.create(8)) {
+        // Set up the icon
+        Application.setWindowIcon(QIcon(":/Icons/IconBase.ico"));
 
-    // Create and install the tray icon
-    TrayIcon* TrayIcon = new class TrayIcon;
-    TrayIcon->show();
+        // We don't want the application to exit when a window is closed
+        Application.setQuitOnLastWindowClosed(false);
 
-    // Start the event loop
-    int RetVal = Application.exec();
+        // Create and install the tray icon
+        TrayIcon* TrayIcon = new class TrayIcon;
+        TrayIcon->show();
 
-    // Clean and quit
-    delete TrayIcon;
+        // Start the event loop
+        RetVal = Application.exec();
+
+        // Clean and quit
+        delete TrayIcon;
+    }
+    else {
+        QMessageBox::critical(nullptr, APPLICATION_NAME, "Folco is already running");
+    }
+
     return RetVal;
 }
