@@ -11,13 +11,13 @@
 #include "DlgSettings.hpp"
 #include <QCoreApplication>
 #include <QList>
+#include <QMenu>
 #include <QNetworkInterface>
 #include <QPair>
 #include <QProcess>
 
 TrayIcon::TrayIcon()
     : QSystemTrayIcon{QIcon(":/Icons/IconBase.png")}
-    , ContextMenu(nullptr)
 {
     Logger::instance()->addLogEntry("Folco started...");
     setToolTip(APPLICATION_NAME " - " APPLICATION_DESCRIPTION);
@@ -35,11 +35,6 @@ TrayIcon::TrayIcon()
 
 TrayIcon::~TrayIcon()
 {
-    if (this->ContextMenu != nullptr) {
-        delete this->ContextMenu;
-        this->ContextMenu = nullptr;
-    }
-
     ConfigurationList::release();
     Settings::release();
     Logger::release();
@@ -47,12 +42,7 @@ TrayIcon::~TrayIcon()
 
 void TrayIcon::showContextMenu(QPoint position)
 {
-    // Delete previous menu if one exists
-    if (this->ContextMenu != nullptr) {
-        delete this->ContextMenu;
-    }
-
-    this->ContextMenu = new QMenu;
+    QMenu* ContextMenu = new QMenu;
 
     // There are three kinds of items:
     // - Network Interfaces without Configuration
@@ -109,9 +99,9 @@ void TrayIcon::showContextMenu(QPoint position)
     // Create a section "Host interfaces" if at least one Network Interface must be displayed
     if (!GlobalList.isEmpty()) {
         // Section title. Don't use regular addSection() because rendering is not guaranted
-        QAction* ActionHostInterfaces = new QAction("Host interfaces", this->ContextMenu);
+        QAction* ActionHostInterfaces = new QAction("Host interfaces", ContextMenu);
         ActionHostInterfaces->setDisabled(true);
-        this->ContextMenu->addAction(ActionHostInterfaces);
+        ContextMenu->addAction(ActionHostInterfaces);
 
         // Network Interfaces
         for (int i = 0; i < GlobalList.size(); i++) {
@@ -128,9 +118,9 @@ void TrayIcon::showContextMenu(QPoint position)
             }
 
             // Network Interface action and submenu
-            QAction* ActionNetworkInterface = new QAction(TitleNetworkInterface, this->ContextMenu);
-            this->ContextMenu->addAction(ActionNetworkInterface);
-            QMenu* Submenu = new QMenu(this->ContextMenu);
+            QAction* ActionNetworkInterface = new QAction(TitleNetworkInterface, ContextMenu);
+            ContextMenu->addAction(ActionNetworkInterface);
+            QMenu* Submenu = new QMenu(ContextMenu);
             ActionNetworkInterface->setMenu(Submenu);
 
             // Add PDI
@@ -146,7 +136,7 @@ void TrayIcon::showContextMenu(QPoint position)
                     }
 
                     // PDI action
-                    QAction* ActionPDI = new QAction(NamePDI, this->ContextMenu);
+                    QAction* ActionPDI = new QAction(NamePDI, ContextMenu);
                     Submenu->addAction(ActionPDI);
                     connect(ActionPDI, &QAction::triggered, this, [this, Configuration, PredefinedIP]() {
                         configureInterfacePredefinedIP(Configuration->humanReadableName(), PredefinedIP);
@@ -160,13 +150,13 @@ void TrayIcon::showContextMenu(QPoint position)
             }
 
             // Add DHCP configuration
-            QAction* ActionDHCP = new QAction("DHCP", this->ContextMenu);
+            QAction* ActionDHCP = new QAction("DHCP", ContextMenu);
             Submenu->addAction(ActionDHCP);
             connect(ActionDHCP, &QAction::triggered, this, [this, NetworkInterface]() { configureInterfaceDHCP(NetworkInterface.humanReadableName()); });
 
             // Add Network Interface edition
             Submenu->addSeparator();
-            QAction* ActionEditInterface = new QAction("Edit pre-defined IP", this->ContextMenu);
+            QAction* ActionEditInterface = new QAction("Edit pre-defined IP", ContextMenu);
             Submenu->addAction(ActionEditInterface);
             connect(ActionEditInterface, &QAction::triggered, this, [NetworkInterface]() { DlgConfiguration::execDlgConfiguration(NetworkInterface); });
         }
@@ -175,10 +165,10 @@ void TrayIcon::showContextMenu(QPoint position)
     // Create a section "Disconnected interfaces" if at least one Configuration is orphean
     if (!ConfigurationList.isEmpty()) {
         // Section title
-        this->ContextMenu->addSeparator();
-        QAction* DisconnectedInterfaces = new QAction("Disconnected interfaces", this->ContextMenu);
+        ContextMenu->addSeparator();
+        QAction* DisconnectedInterfaces = new QAction("Disconnected interfaces", ContextMenu);
         DisconnectedInterfaces->setDisabled(true);
-        this->ContextMenu->addAction(DisconnectedInterfaces);
+        ContextMenu->addAction(DisconnectedInterfaces);
 
         // Disconnected interfaces (ie. pure configurations)
         for (int i = 0; i < ConfigurationList.size(); i++) {
@@ -191,49 +181,50 @@ void TrayIcon::showContextMenu(QPoint position)
             }
 
             // Configuration action
-            QAction* ActionConfiguration = new QAction(TitleConfiguration, this->ContextMenu);
-            this->ContextMenu->addAction(ActionConfiguration);
+            QAction* ActionConfiguration = new QAction(TitleConfiguration, ContextMenu);
+            ContextMenu->addAction(ActionConfiguration);
 
             // Submenu
-            QMenu* Submenu = new QMenu(this->ContextMenu);
+            QMenu* Submenu = new QMenu(ContextMenu);
             ActionConfiguration->setMenu(Submenu);
 
             // Edit Configuration action
-            QAction* ActionEditConfiguration = new QAction("Edit configuration", this->ContextMenu);
+            QAction* ActionEditConfiguration = new QAction("Edit configuration", ContextMenu);
             Submenu->addAction(ActionEditConfiguration);
             connect(ActionEditConfiguration, &QAction::triggered, this, [Configuration]() { DlgConfiguration::execDlgConfiguration(Configuration); });
         }
     }
 
     // Settings
-    this->ContextMenu->addSeparator();
-    QAction* ActionSettings = new QAction("Settings", this->ContextMenu);
-    this->ContextMenu->addAction(ActionSettings);
+    ContextMenu->addSeparator();
+    QAction* ActionSettings = new QAction("Settings", ContextMenu);
+    ContextMenu->addAction(ActionSettings);
     connect(ActionSettings, &QAction::triggered, this, []() { DlgSettings::execDlgSettings(); });
 
     // Merge Configurations
     if (EnableMergeConfigurations) {
-        QAction* ActionMergeConfigurations = new QAction("Merge configurations", this->ContextMenu);
-        this->ContextMenu->addAction(ActionMergeConfigurations);
+        QAction* ActionMergeConfigurations = new QAction("Merge configurations", ContextMenu);
+        ContextMenu->addAction(ActionMergeConfigurations);
         connect(ActionMergeConfigurations, &QAction::triggered, this, []() { DlgMergeConfigurations::mergeConfigurations(); });
     }
 
     // About / License / Log
-    QAction* ActionAbout = new QAction("About / License / Log", this->ContextMenu);
-    this->ContextMenu->addAction(ActionAbout);
+    QAction* ActionAbout = new QAction("About / License / Log", ContextMenu);
+    ContextMenu->addAction(ActionAbout);
     connect(ActionAbout, &QAction::triggered, this, []() { DlgHelp::execDlgHelp(); });
 
     // Exit
-    this->ContextMenu->addSeparator();
-    QAction* ActionExit = new QAction("Exit", this->ContextMenu);
-    this->ContextMenu->addAction(ActionExit);
+    ContextMenu->addSeparator();
+    QAction* ActionExit = new QAction("Exit", ContextMenu);
+    ContextMenu->addAction(ActionExit);
     connect(ActionExit, &QAction::triggered, []() { QCoreApplication::exit(0); });
 
     // Add the context menu to the tray icon
-    setContextMenu(this->ContextMenu);
+    setContextMenu(ContextMenu);
 
-    // Finally, show the context menu at cursor position
-    this->ContextMenu->popup(position);
+    // Finally, show the context menu at cursor position. QMenu::exec() is synchronous, so ContextMenu can be destroyed afterwards
+    ContextMenu->exec(position);
+    delete ContextMenu;
 
     // Some logging
     Logger::instance()->addLogEntry(QString("Network interfaces: %1. Filtered: %2. Configurations: %3")

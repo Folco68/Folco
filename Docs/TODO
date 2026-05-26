@@ -51,3 +51,5 @@ o one technical dialog for Settings/Merge/Log
 + make a real ReadMe, with pictures
 o use a QTextBrowser to have clickable links for the Readme
 + prevent from merging a Configuration to an Interface which already holds that configuration
++ In TrayIcon.cpp, try do not use popup() to show the menu (asynchronous), but exec() (synchronous).
+  It would allow to delete the menu after a click, and maybe prevent the crash after a VM sleep
